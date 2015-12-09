@@ -76,11 +76,11 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '0')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '1')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '2')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '3')))]",
-      "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '4')))]"
+      "pivhdsweb01",
+      "pivhdsweb02",
+      "pivhdsweb03",
+      "pivhdsweb04",
+      "pivhdsweb05"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
@@ -141,7 +141,7 @@
     },
     {
       "type":"Microsoft.Storage/storageAccounts",
-      "name":"[concat(variables('uniqueStringArray')[copyIndex()], variables('newStorageAccountSuffix'))]",
+      "name":"[variables('uniqueStringArray')[copyIndex()]]",
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "copy":{
@@ -235,7 +235,7 @@
                 "[concat('https://', variables('uniqueStringArray')[1], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
                 "[concat('https://', variables('uniqueStringArray')[2], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
                 "[concat('https://', variables('uniqueStringArray')[3], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[4], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]"
+                "[concat('https://', variables('uniqueStringArray')[4], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
               ],
               "name":"[variables('osDiskName')]",
               "caching":"ReadOnly",
