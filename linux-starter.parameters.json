@@ -1,0 +1,21 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "newStorageAccountName": {
+      "value": "sidtest1231i234i23"
+    },
+    "adminUsername": {
+      "value": "sidi"
+    },
+    "adminPassword": {
+      "value": "Sidi123_"
+    },
+    "dnsNameForPublicIP": {
+      "value": "siditestdeployment"
+    },
+    "ubuntuOSVersion": {
+      "value": "14.04.2-LTS"
+    }
+  }
+}
