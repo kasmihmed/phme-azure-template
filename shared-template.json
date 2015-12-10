@@ -1,81 +1,73 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "location": {
-      "type": "string",
-      "metadata": {
-        "description": "Deployment location"
-      }
-    },
 
-    "addressPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/16",
-      "metadata": {
-        "description": "Address prefix"
-      }
-    },
-    "subnetPrefix": {
-      "type": "string",
-      "defaultValue": "10.0.0.0/24",
-      "metadata": {
-        "Description": "Subnet Prefix"
-      }
-    }
+  },
+  "variables": {
+      "pickitvnPrefix": "10.0.0.0/16",
+      "pickitvnSubnet1Name": "web",
+      "pickitvnSubnet1Prefix": "10.0.0.0/24",
+      "pickitvnSubnet2Name": "searchmaster",
+      "pickitvnSubnet2Prefix": "10.0.1.0/24",
+      "pickitvnSubnet3Name": "searchdata",
+      "pickitvnSubnet3Prefix": "10.0.2.0/24",
+      "pickitvnSubnet4Name": "worker",
+      "pickitvnSubnet4Prefix": "10.0.3.0/24",
+      "pickitvnSubnet5Name": "db",
+      "pickitvnSubnet5Prefix": "10.0.4.0/24"
+
   },
   "resources": [
-    {
-      "apiVersion": "2015-05-01-preview",
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "pickitvn1",
-      "location": "[parameters('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[parameters('addressPrefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "web",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
+      {
+          "name": "pickitvn",
+          "type": "Microsoft.Network/virtualNetworks",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-05-01-preview",
+          "dependsOn": [ ],
+          "tags": {
+              "displayName": "pickitvn"
           },
-           {
-            "name": "searchmaster",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
-          },
-           {
-            "name": "searchdata",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
-          },
-           {
-            "name": "dbdmz",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
-          },
-           {
-            "name": "db",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
-          },
-           {
-            "name": "worker",
-            "properties": {
-              "addressPrefix": "[parameters('subnetPrefix')]"
-            }
+          "properties": {
+              "addressSpace": {
+                  "addressPrefixes": [
+                      "[variables('pickitvnPrefix')]"
+                  ]
+              },
+              "subnets": [
+                  {
+                      "name": "[variables('pickitvnSubnet1Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet1Prefix')]"
+                      }
+                  },
+                  {
+                      "name": "[variables('pickitvnSubnet2Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet2Prefix')]"
+                      }
+                  },
+                  {
+                      "name": "[variables('pickitvnSubnet3Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet3Prefix')]"
+                      }
+                  },
+                  {
+                      "name": "[variables('pickitvnSubnet4Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet4Prefix')]"
+                      }
+                  },
+                  {
+                      "name": "[variables('pickitvnSubnet5Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet5Prefix')]"
+                      }
+                  }
+              ]
           }
-
-        ]
       }
-    }
+
   ]
 }
