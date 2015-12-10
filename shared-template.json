@@ -4,14 +4,6 @@
   "parameters": {
     "location": {
       "type": "string",
-      "allowedValues": [
-        "East US",
-        "West US",
-        "West Europe",
-        "North Europe",
-        "East Asia",
-        "South East Asia"
-      ],
       "metadata": {
         "description": "Deployment location"
       }
@@ -36,7 +28,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/virtualNetworks",
-      "name": "pickitvn",
+      "name": "pickitvn1",
       "location": "[parameters('location')]",
       "properties": {
         "addressSpace": {

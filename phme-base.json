@@ -1,10 +1,25 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
+  "parameters": {
+    "location":{
+      "type": "string",
+      "allowedValues": [
+        "East US",
+        "West US",
+        "West Europe",
+        "North Europe",
+        "East Asia",
+        "South East Asia"
+      ],
+      "metadata": {
+        "description": "Deployment location"
+      }
+    }
+  },
   "variables": {
-    "sharedTemplateUri":"",
-    "websTemplateUri":"",
+    "sharedTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/shared-template.json",
+    "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
     "databaseTemplateUri":"",
     "elasticsearchTemplateUri":"",
     "workerTemplateUri":""
@@ -19,75 +34,14 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUri')]" ,
           "contentVersion":"1.0.0.0"
+        },
+        "parameters":{
+          "location":{
+            "value":"[parameters('location')]"
+          }
         }
       }
 
 
-    },
-    {"name":"Webs",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('websTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        }
-      }
-
-
-    },
-    {"name":"database",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('databaseTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        }
-      }
-
-
-    },
-    {"name":"elasticsearch",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('elasticsearchTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        }
-      }
-
-
-    },
-    {"name":"worker",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('workerTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        }
-      }
-
-
-    }
-
-  ]
-}
+    }]
+   }
