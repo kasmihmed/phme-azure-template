@@ -15,6 +15,18 @@
       "metadata": {
         "description": "Deployment location"
       }
+    },
+    "adminUsername":{
+      "type":"string",
+      "metadata":{
+        "description":"Admin username on all VMs."
+      }
+    },
+    "adminPassword":{
+      "type":"securestring",
+      "metadata":{
+        "description":"Admin password on all VMs."
+      }
     }
   },
   "variables": {
@@ -58,6 +70,12 @@
           },
           "instanceCount":{
             "value":2
+          },
+          "adminUsername":{
+            "value":"[parameters('adminusername')]"
+          },
+          "adminPassword":{
+            "value":"[parameters('adminpassword')]"
           }
           }
          }
