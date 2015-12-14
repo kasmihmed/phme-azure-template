@@ -76,11 +76,11 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "pivhdsweb01",
-      "pivhdsweb02",
-      "pivhdsweb03",
-      "pivhdsweb04",
-      "pivhdsweb05"
+      "testpivhdsweb01",
+      "testpivhdsweb02",
+      "testpivhdsweb03",
+      "testpivhdsweb04",
+      "testpivhdsweb05"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
