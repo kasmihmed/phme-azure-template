@@ -49,7 +49,7 @@
          "uri":"[variables('websTemplateUri')]" ,
           "contentVersion":"1.0.0.0"
         },
-        "parameters":{
+        "resourceLocation":{
           "location":{
             "value":"[parameters('location')]"
           }
