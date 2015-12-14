@@ -55,6 +55,9 @@
           },
           "vmssName":{
             "value":"testwebss"
+          },
+          "instanceCount":{
+            "value":"2"
           }
           }
          }
