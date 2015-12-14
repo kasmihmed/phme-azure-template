@@ -53,7 +53,10 @@
           "resourceLocation":{
             "value":"[parameters('location')]"
           },
-          "vmssName":"webss"
+          "vmssName":{
+            "value":"webss"
+          }
+          }
          }
       }
 
