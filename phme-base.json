@@ -34,14 +34,29 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUri')]" ,
           "contentVersion":"1.0.0.0"
+        }
+      }
+
+
+    },
+    {"name":"webs",
+      "type":"Microsoft.Resources/deployments",
+      "apiVersion":"2015-01-01",
+      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "properties":{
+        "mode":"Incremental",
+        "templateLink":{
+         "uri":"[variables('websTemplateUri')]" ,
+          "contentVersion":"1.0.0.0"
         },
         "parameters":{
           "location":{
             "value":"[parameters('location')]"
           }
-        }
+         }
       }
 
 
-    }]
+    }
+  ]
    }
