@@ -34,7 +34,7 @@
     "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
     "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/db-template.json",
     "elasticsearchTemplateUri":"",
-    "workerTemplateUri":""
+    "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
 
   },
   "resources":[
@@ -118,6 +118,36 @@
 
         }
         }
+      },
+    {
+      "name":"workers",
+      "type":"Microsoft.Resources/deployments",
+      "apiVersion":"2015-01-01",
+      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "properties":{
+        "mode":"Incremental",
+        "templateLink": {
+          "uri": "[variables('workerTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters":{
+          "resourceLocation":{
+            "value":"[parameters('location')]"
+          },
+          "instanceCount":{
+            "value":1
+          },
+          "adminUsername":{
+            "value":"[parameters('adminusername')]"
+          },
+          "adminPassword":{
+            "value":"[parameters('adminpassword')]"
+          }
+
+        }
+
       }
+
+    }
   ]
    }
