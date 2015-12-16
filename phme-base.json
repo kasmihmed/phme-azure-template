@@ -32,7 +32,7 @@
   "variables": {
     "sharedTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/shared-template.json",
     "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
-    "databaseTemplateUri":"",
+    "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/db-template.json",
     "elasticsearchTemplateUri":"",
     "workerTemplateUri":""
 
@@ -79,9 +79,45 @@
           }
           }
          }
+      },
+    {"name":"dbs",
+      "type":"Microsoft.Resources/deployments",
+      "apiVersion":"2015-01-01",
+      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "properties":{
+        "mode":"Incremental",
+        "templateLink": {
+          "uri": "[variables('databaseTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters":{
+          "region":{
+            "value":"[parameters('location')]"
+          },
+          "storageAccountNamePrefix":{
+            "value":"testdbstorageaccount"
+          },
+          "domainName":{
+            "value":"test-phme-jumpbox"
+          },
+          "adminUsername":{
+            "value":"[parameters('adminusername')]"
+          },
+          "adminPassword":{
+            "value":"[parameters('adminpassword')]"
+          },
+          "tshirtSize":{
+            "value":"small"
+          },
+          "replicatorPassword":{
+            "value":"[parameters('adminpassword')]"
+          },
+          "jumpbox":{
+            "value":"Enabled"
+          }
+
+        }
+        }
       }
-
-
-
   ]
    }
