@@ -15,8 +15,9 @@
       "pickitvnSubnet4Name": "worker",
       "pickitvnSubnet4Prefix": "10.0.3.0/24",
       "pickitvnSubnet5Name": "db",
-      "pickitvnSubnet5Prefix": "10.0.4.0/24"
-
+      "pickitvnSubnet5Prefix": "10.0.4.0/24",
+      "pickitvnSubnet6Name": "dbdmz",
+      "pickitvnSubnet6Prefix": "10.0.5.0/24"
   },
   "resources": [
       {
@@ -63,6 +64,12 @@
                       "name": "[variables('pickitvnSubnet5Name')]",
                       "properties": {
                           "addressPrefix": "[variables('pickitvnSubnet5Prefix')]"
+                      }
+                  },
+                  {
+                      "name": "[variables('pickitvnSubnet6Name')]",
+                      "properties": {
+                          "addressPrefix": "[variables('pickitvnSubnet6Prefix')]"
                       }
                   }
               ]
