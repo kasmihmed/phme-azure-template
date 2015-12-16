@@ -107,7 +107,7 @@
             "value":"[parameters('adminpassword')]"
           },
           "tshirtSize":{
-            "value":"small"
+            "value":"Small"
           },
           "replicatorPassword":{
             "value":"[parameters('adminpassword')]"
