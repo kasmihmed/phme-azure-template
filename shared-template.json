@@ -17,7 +17,9 @@
       "pickitvnSubnet5Name": "db",
       "pickitvnSubnet5Prefix": "10.0.4.0/24",
       "pickitvnSubnet6Name": "dbdmz",
-      "pickitvnSubnet6Prefix": "10.0.5.0/24"
+      "pickitvnSubnet6Prefix": "10.0.5.0/24",
+      "storagephotoAccountName":"testphoto",
+      "storagebackupAccountName":"testbackup"
   },
   "resources": [
       {
@@ -74,6 +76,24 @@
                   }
               ]
           }
+      },
+      {
+           "type": "Microsoft.Storage/storageAccounts",
+           "name": "[variables('storagephotoAccountName')]",
+           "apiVersion": "2015-06-15",
+           "location": "[parameters('location')]",
+           "properties": {
+               "accountType": "Standard-GRS"
+      }
+      },
+      {
+           "type": "Microsoft.Storage/storageAccounts",
+           "name": "[variables('storagebackupAccountName')]",
+           "apiVersion": "2015-06-15",
+           "location": "[parameters('location')]",
+           "properties": {
+               "accountType": "Standard-GRS"
+      }
       }
 
   ]
