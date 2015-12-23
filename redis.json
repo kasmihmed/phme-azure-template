@@ -1,0 +1,155 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "redisCacheName": {
+            "type": "string",
+            "default": "redis-cache",
+            "metadata": {
+              "description": "The name of the Azure Redis Cache to create."
+            }
+        },
+        "redisCacheCeleryName": {
+            "type": "string",
+            "default": "redis-celery",
+            "metadata": {
+              "description": "The name of the Azure Redis Cache to create."
+            }
+        },
+        "redisCacheLocation": {
+            "type":"string",
+            "defaultValue":"North Europe",
+            "allowedValues":[
+                "East US",
+                "East US 2",
+                "West US",
+                "Central US",
+                "South Central US",
+                "North Central US",
+                "North Europe",
+                "West Europe",
+                "Southeast Asia",
+                "East Asia",
+                "Japan West",
+                "Japan East",
+                "Brazil South",
+                "Australia East",
+                "Australia Southeast"
+            ],
+            "metadata":{
+              "description":"Azure region where all resources will be deployed. This is distinct from resource group location."
+            }
+        },
+        "redisCacheSKU": {
+            "type": "string",
+            "allowedValues": [
+              "Basic",
+              "Standard"
+            ],
+            "defaultValue": "Standard",
+            "metadata": {
+              "description": "The pricing tier of the new Azure Redis Cache."
+            }
+        },
+        "redisCacheFamily": {
+            "type": "string",
+            "defaultValue": "C",
+            "metadata": {
+              "description": "The family for the sku."
+            }
+        },
+        "redisCacheCapacity": {
+            "type": "int",
+            "allowedValues": [
+                1,
+                2,
+                3,
+                4
+            ],
+            "defaultValue": 1,
+            "metadata": {
+                "description": "The size of the new Azure Redis Cache instance. Valid family and capacity combinations are (C0..C6, P1..P4)."
+            }
+        },
+        "diagnosticsStatus": {
+          "type": "string",
+          "defaultValue": "ON",
+          "allowedValues": [
+              "ON",
+              "OFF"
+          ],
+          "metadata": {
+            "description": "A value that indicates whether diagnostics is enabled. Use ON or OFF."
+          }
+        },
+        "diagnosticsStorageAccountName": {
+          "type": "string",
+          "defaultValue": "phmediagnostics",
+          "metadata": {
+            "description": "Storage account name for diagnostics."
+          }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2015-08-01",
+            "name": "[parameters('redisCacheName')]",
+            "type": "Microsoft.Cache/Redis",
+            "location": "[parameters('redisCacheLocation')]",
+            "properties": {
+                "redisVersion": "3.0",
+                "enableNonSslPort": "false",
+                "sku": {
+                    "capacity": "[parameters('redisCacheCapacity')]",
+                    "family": "[parameters('redisCacheFamily')]",
+                    "name": "[parameters('redisCacheSKU')]"
+                }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2014-04-01",
+                    "type": "diagnosticSettings",
+                    "name": "service",
+                    "location": "[parameters('redisCacheLocation')]",
+                    "dependsOn": [
+                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheName'))]"
+                    ],
+                    "properties": {
+                      "status": "[parameters('diagnosticsStatus')]",
+                      "storageAccountName": "[parameters('diagnosticsStorageAccountName')]"
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2015-08-01",
+            "name": "[parameters('redisCacheCeleryName')]",
+            "type": "Microsoft.Cache/Redis",
+            "location": "[parameters('redisCacheLocation')]",
+            "properties": {
+                "redisVersion": "3.0",
+                "enableNonSslPort": "true",
+                "sku": {
+                    "capacity": "[parameters('redisCacheCapacity')]",
+                    "family": "[parameters('redisCacheFamily')]",
+                    "name": "[parameters('redisCacheSKU')]"
+                }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2014-04-01",
+                    "type": "diagnosticSettings",
+                    "name": "service",
+                    "location": "[parameters('redisCacheLocation')]",
+                    "dependsOn": [
+                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheCeleryName'))]"
+                    ],
+                    "properties": {
+                      "status": "[parameters('diagnosticsStatus')]",
+                      "storageAccountName": "[parameters('diagnosticsStorageAccountName')]"
+                    }
+                }
+            ]
+        }
+    ]
+}

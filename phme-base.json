@@ -812,6 +812,47 @@
 
       }
 
+    },
+    {
+      "name": "redis",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('masterTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "redisCacheName": {
+            "value": "redis-cache"
+          },
+          "redisCacheCeleryName": {
+            "value": "redis-celery"
+          },
+          "redisCacheLocation": {
+            "value": "[variables('location')]"
+          },
+          "redisCacheSKU": {
+            "value": "Standard"
+          },
+          "redisCacheFamily": {
+            "value": "C"
+          },
+          "redisCacheCapacity": {
+            "value": 1
+          },
+          "diagnosticsStatus": {
+            "value": "ON"
+          },
+          "diagnosticsStorageAccountName": {
+            "value": "phmediagnostics"
+          }
+        }
+      }
     }
   ]
 }
