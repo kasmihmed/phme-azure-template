@@ -504,7 +504,7 @@
       "properties":{
         "mode":"Incremental",
         "templateLink":{
-         "uri":"[variables('sharedTemplateUri')]" ,
+         "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
         }
       }
