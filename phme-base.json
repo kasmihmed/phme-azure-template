@@ -228,6 +228,7 @@
     },
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
+    "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"
@@ -823,7 +824,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('masterTemplateUrl')]",
+          "uri": "[variables('redisTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
