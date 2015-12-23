@@ -21,6 +21,7 @@
 	"Australia East",
 	"Australia Southeast"
       ],
+    "default": "North Europe",
       "metadata":{
         "description":"Azure region where all resources will be deployed. This is distinct from resource group location."
       }
