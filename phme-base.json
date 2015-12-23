@@ -513,6 +513,9 @@
           },
           "networksettings": {
             "value": "[variables('networksettings')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountNameShared')]"
           }
         }
       }
