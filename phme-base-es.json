@@ -226,7 +226,8 @@
       "discoveryHosts": "[concat(variables('masterNodesIpPrefix'), '-3')]",
       "blobStorageKey": "[parameters('elasticBlobStorageKey')]"
     },
-    "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
+    "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
+    "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
     "clientTemplates": [
@@ -498,7 +499,8 @@
     "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'data-nodes-', string(variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks), 'disk-resources.json')]"
   },
   "resources": [
-      {"name":"shared",
+    {
+      "name":"shared",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
       "properties":{
@@ -524,11 +526,40 @@
       }
     },
     {
+      "name":"shared-es",
+      "type":"Microsoft.Resources/deployments",
+      "apiVersion":"2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties":{
+        "mode":"Incremental",
+        "templateLink":{
+         "uri":"[variables('sharedESTemplateUrl')]" ,
+          "contentVersion":"1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networksettings": {
+            "value": "[variables('networksettings')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountNameShared')]"
+          },
+          "ilbIpAddress": {
+            "value": "10.0.1.100"
+          }
+        }
+      }
+    },
+    {
       "name": "master-nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -570,7 +601,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]",
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]",
         "[concat('Microsoft.Resources/deployments/', 'master-nodes')]"
       ],
       "properties": {
@@ -615,7 +646,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -662,7 +693,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
