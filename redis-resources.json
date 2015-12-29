@@ -157,7 +157,7 @@
              "type": "Microsoft.Storage/storageAccounts",
              "name": "[parameters('diagnosticsStorageAccountName')]",
              "apiVersion": "2015-06-15",
-             "location": "[parameters('location')]",
+             "location": "[parameters('redisCacheLocation')]",
              "properties": {
                  "accountType": "Standard_GRS"
              }
