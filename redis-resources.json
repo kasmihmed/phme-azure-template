@@ -4,14 +4,14 @@
     "parameters": {
         "redisCacheName": {
             "type": "string",
-            "default": "redis-cache",
+            "defaultValue": "redis-cache",
             "metadata": {
               "description": "The name of the Azure Redis Cache to create."
             }
         },
         "redisCacheCeleryName": {
             "type": "string",
-            "default": "redis-celery",
+            "defaultValue": "redis-celery",
             "metadata": {
               "description": "The name of the Azure Redis Cache to create."
             }
