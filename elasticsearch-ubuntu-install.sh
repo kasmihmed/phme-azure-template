@@ -80,7 +80,7 @@ MASTER_ONLY_NODE=0
 BLOB_STORAGE_KEY=""
 
 #Loop through options passed
-while getopts :k:n:d:v:mxyzsh optname; do
+while getopts :n:d:v:m:kxyzsh optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
     n) #set cluster name
@@ -110,7 +110,7 @@ while getopts :k:n:d:v:mxyzsh optname; do
     d) #place data on local resource disk
       NON_DURABLE=1
       ;;
-    k)
+    k) #blob storage key
       BLOB_STORAGE_KEY=${OPTARG}
       ;;
     h) #show help
