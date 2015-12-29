@@ -80,7 +80,7 @@ MASTER_ONLY_NODE=0
 BLOB_STORAGE_KEY=""
 
 #Loop through options passed
-while getopts :n:d:v:k:mxyzsh optname; do
+while getopts :k:n:d:v:mxyzsh optname; do
     log "Option $optname set with value ${OPTARG}"
   case $optname in
     n) #set cluster name
