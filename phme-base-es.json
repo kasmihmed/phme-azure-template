@@ -227,7 +227,7 @@
       "blobStorageKey": "[parameters('elasticBlobStorageKey')]"
     },
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
-    "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
+    "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
     "clientTemplates": [
@@ -508,20 +508,6 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "networksettings": {
-            "value": "[variables('networksettings')]"
-          },
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "ilbIpAddress": {
-            "value": "10.0.1.100"
-          }
         }
       }
     },
@@ -542,7 +528,7 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "networksettings": {
+          "networkSettings": {
             "value": "[variables('networksettings')]"
           },
           "storageAccountName": {
