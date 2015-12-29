@@ -112,7 +112,8 @@
                     "name": "service",
                     "location": "[parameters('redisCacheLocation')]",
                     "dependsOn": [
-                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheName'))]"
+                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheName'))]",
+                      "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
                     ],
                     "properties": {
                       "status": "[parameters('diagnosticsStatus')]",
@@ -142,7 +143,8 @@
                     "name": "service",
                     "location": "[parameters('redisCacheLocation')]",
                     "dependsOn": [
-                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheCeleryName'))]"
+                      "[concat('Microsoft.Cache/Redis/', parameters('redisCacheCeleryName'))]",
+                      "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName'))]"
                     ],
                     "properties": {
                       "status": "[parameters('diagnosticsStatus')]",
@@ -150,6 +152,15 @@
                     }
                 }
             ]
+        },
+        {
+             "type": "Microsoft.Storage/storageAccounts",
+             "name": "[parameters('diagnosticsStorageAccountName')]",
+             "apiVersion": "2015-06-15",
+             "location": "[parameters('location')]",
+             "properties": {
+                 "accountType": "Standard_GRS"
+             }
         }
     ]
 }

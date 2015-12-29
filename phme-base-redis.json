@@ -510,10 +510,10 @@
         },
         "parameters": {
           "redisCacheName": {
-            "value": "redis-cache"
+            "value": "pk-redis-cache"
           },
           "redisCacheCeleryName": {
-            "value": "redis-celery"
+            "value": "pk-redis-celery"
           },
           "redisCacheLocation": {
             "value": "[parameters('location')]"
