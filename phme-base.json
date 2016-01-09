@@ -298,7 +298,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -xn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -xn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "client": {
@@ -307,7 +307,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -yn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -yn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "data": {
@@ -316,7 +316,7 @@
           "typeHandlerVersion": "1.2",
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -zn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+            "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -zn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
           }
         },
         "kibana": {
@@ -498,7 +498,8 @@
     "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'data-nodes-', string(variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks), 'disk-resources.json')]"
   },
   "resources": [
-      {"name":"shared",
+    {
+      "name":"shared",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
       "properties":{
@@ -506,12 +507,27 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
+        }
+      }
+    },
+    {
+      "name":"shared-es",
+      "type":"Microsoft.Resources/deployments",
+      "apiVersion":"2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties":{
+        "mode":"Incremental",
+        "templateLink":{
+         "uri":"[variables('sharedESTemplateUrl')]" ,
+          "contentVersion":"1.0.0.0"
         },
         "parameters": {
           "location": {
             "value": "[parameters('location')]"
           },
-          "networksettings": {
+          "networkSettings": {
             "value": "[variables('networksettings')]"
           },
           "storageAccountName": {
@@ -528,7 +544,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -564,13 +580,12 @@
         }
       }
     },
-
     {
       "name": "client-nodes",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]",
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]",
         "[concat('Microsoft.Resources/deployments/', 'master-nodes')]"
       ],
       "properties": {
@@ -615,7 +630,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -662,7 +677,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -727,11 +742,12 @@
         }
       }
     },
-
     {"name":"webs",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
-      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "dependsOn":[
+        "Microsoft.Resources/deployments/shared"
+      ],
       "properties":{
         "mode":"Incremental",
         "templateLink":{
@@ -760,7 +776,9 @@
     {"name":"dbs",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
-      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "dependsOn":[
+        "Microsoft.Resources/deployments/shared"
+      ],
       "properties":{
         "mode":"Incremental",
         "templateLink": {
@@ -800,7 +818,9 @@
       "name":"workers",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
-      "dependsOn":["Microsoft.Resources/deployments/shared"],
+      "dependsOn":[
+        "Microsoft.Resources/deployments/shared"
+      ],
       "properties":{
         "mode":"Incremental",
         "templateLink": {
@@ -820,11 +840,8 @@
           "adminPassword":{
             "value":"[parameters('adminpassword')]"
           }
-
         }
-
       }
-
     },
    {
       "name": "redis",
