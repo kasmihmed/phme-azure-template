@@ -203,19 +203,19 @@
     "location":"[variables('locationMap')[parameters('location')]]",
     "storageAccountPrefix": "pivhdssrh",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
-    "masterNodesIpPrefix": "10.1.1.1",
+    "masterNodesIpPrefix": "10.0.1.1",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
-      "addressPrefix": "10.1.0.0/16",
+      "addressPrefix": "10.0.0.0/16",
       "subnet": {
         "master": {
           "name": "searchmaster",
-          "prefix": "10.1.1.0/24",
+          "prefix": "10.0.1.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         },
         "data": {
           "name": "searchdata",
-          "prefix": "10.1.2.0/24",
+          "prefix": "10.0.2.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         }
       }
