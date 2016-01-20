@@ -228,6 +228,7 @@
     },
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
+    "sharedDbTemplateUrl": "[concat(variables('templateBaseUrl'), 'db-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
     "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
