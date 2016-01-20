@@ -193,32 +193,6 @@
   },
   "resources": [
     {
-      "name": "shared",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('sharedTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageSettings": {
-            "value": "[variables('tshirtSize').storage]"
-          },
-          "region": {
-            "value": "[parameters('region')]"
-          },
-          "networkSettings": {
-            "value": "[variables('networkSettings')]"
-          },
-          "availabilitySetSettings": {
-            "value": "[variables('availabilitySetSettings')]"
-          }
-        }
-      }
-    },
-    {
       "name": "master-node",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -320,47 +294,6 @@
           },
           "dbType": {
             "value": "SLAVE"
-          }
-        }
-      }
-    },
-    {
-      "name": "jumpbox",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('jumpboxTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageSettings": {
-            "value": {
-              "name": "[concat(parameters('storageAccountNamePrefix'), variables('tshirtSize').storage.jumpbox)]"
-            }
-          },
-          "dnsName": {
-            "value": "[parameters('domainName')]"
-          },
-          "commonSettings": {
-            "value": {
-              "region": "[parameters('region')]",
-              "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "jumpbox"
-            }
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnets.dbdmz]"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
           }
         }
       }
