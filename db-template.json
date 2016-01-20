@@ -199,7 +199,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[variables('sharedDbTemplateUrl')]",
+          "uri": "[variables('sharedTemplateUrl')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
