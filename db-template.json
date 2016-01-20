@@ -193,7 +193,7 @@
   },
   "resources": [
     {
-      "name": "shared",
+      "name": "shared-db",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "properties": {
