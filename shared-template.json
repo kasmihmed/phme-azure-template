@@ -33,6 +33,10 @@
     "storageBackupAccountName": {
       "type": "string",
       "defaultValue": "phmebackup"
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "pickitvn"
     }
   },
   "variables": {
@@ -60,7 +64,7 @@
           "apiVersion": "2015-05-01-preview",
           "dependsOn": [ ],
           "tags": {
-              "displayName": "pickitvn"
+              "displayName": "[parameters('virtualNetworkName')]"
           },
           "properties": {
               "addressSpace": {

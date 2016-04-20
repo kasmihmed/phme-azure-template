@@ -554,6 +554,9 @@
           },
           "storageBackupAccountName": {
             "value": "[parameters('storageBackupAccountName')]"
+          },
+          "vnName": {
+            "value": "[parameters('virtualNetworkName')]"
           }
         }
       }
