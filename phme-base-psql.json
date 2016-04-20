@@ -178,6 +178,38 @@
       "metadata": {
         "description": "Blob Storage key to make backups in ElasticSearch"
       }
+    },
+    "dbAdminUsername": {
+      "type": "string",
+      "defaultValue": "phme",
+      "metadata": {
+        "description": "Virtual machine administrator username"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Virtual machine administrator password"
+      }
+    },
+    "tshirtSize": {
+      "type": "string",
+      "defaultValue": "Small",
+      "allowedValues": [
+        "Small",
+        "Medium",
+        "Large",
+        "XLarge"
+      ],
+      "metadata": {
+        "description": "T-shirt size of the PostgreSQL deployment"
+      }
+    },
+    "replicatorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The replication password used for PostgreSQL streaming replication"
+      }
     }
   },
   "variables": {
