@@ -41,8 +41,8 @@
       "pickitvnSubnet5Prefix": "10.0.4.0/24",
       "pickitvnSubnet6Name": "dbdmz",
       "pickitvnSubnet6Prefix": "10.0.5.0/24",
-      "storagephotoAccountName":"testphoto",
-      "storagebackupAccountName":"phmebackuptest"
+      "storagephotoAccountName":"phmephoto",
+      "storagebackupAccountName":"phmebackup"
   },
   "resources": [
       {
