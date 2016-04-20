@@ -210,6 +210,12 @@
       "metadata": {
         "description": "The replication password used for PostgreSQL streaming replication"
       }
+    },
+    "storagePhotoAccountName": {
+      "type": "string"
+    },
+    "storageBackupAccountName": {
+      "type": "string"
     }
   },
   "variables": {
