@@ -547,6 +547,14 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
+        },
+        "parameters":{
+          "storagePhotoAccountName": {
+            "value": "[parameters('storagePhotoAccountName')]"
+          },
+          "storageBackupAccountName": {
+            "value": "[parameters('storageBackupAccountName')]"
+          }
         }
       }
     },
