@@ -262,6 +262,7 @@
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
+    "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"
