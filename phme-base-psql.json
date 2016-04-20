@@ -597,6 +597,9 @@
           },
           "jumpbox":{
             "value":"Enabled"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
           }
         }
       }
