@@ -97,7 +97,7 @@ install_postgresql_service() {
 	# Install PostgreSQL if it is not yet installed
 	if [ $(dpkg-query -W -f='${Status}' postgresql 2>/dev/null | grep -c "ok installed") -eq 0 ];
 	then
-	  apt-get -y install postgresql=9.3* postgresql-contrib=9.3* postgresql-client=9.3*
+	  apt-get -y install postgresql=9.1* postgresql-contrib=9.1* postgresql-client=9.1*
 	fi
 	
 	logger "Done installing PostgreSQL..."
@@ -132,15 +132,15 @@ configure_streaming_replication() {
 	if [ "$NODETYPE" == "MASTER" ];
 	then
 		logger "Create user replicator..."
-		echo "CREATE USER replicator WITH REPLICATION PASSWORD '$PGPASSWORD';"
-		sudo -u postgres psql -c "CREATE USER replicator WITH REPLICATION PASSWORD '$PGPASSWORD';"
+		echo "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
+		sudo -u postgres psql -c "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
 	fi
 
 	# Stop service
 	service postgresql stop
 
 	# Update configuration files
-	cd /etc/postgresql/9.3/main
+	cd /etc/postgresql/9.1/main
 
 	if grep -Fxq "# install_postgresql.sh" pg_hba.conf
 	then
@@ -172,7 +172,7 @@ configure_streaming_replication() {
 		echo "wal_keep_segments = 500" >> postgresql.conf
 		echo "checkpoint_segments = 8" >> postgresql.conf
 		echo "archive_mode = on" >> postgresql.conf
-		echo "archive_command = 'cd .'" >> postgresql.conf
+		#echo "archive_command = 'cd .'" >> postgresql.conf
 		echo "hot_standby = on" >> postgresql.conf
 		echo "" >> postgresql.conf
 		
@@ -196,7 +196,7 @@ configure_streaming_replication() {
 		cd /var/lib/kafkadir/main/
 		
 		sudo -u postgres echo "standby_mode = 'on'" > recovery.conf
-		sudo -u postgres echo "primary_conninfo = 'host=$MASTERIP port=5432 user=replicator password=$PGPASSWORD'" >> recovery.conf
+		sudo -u postgres echo "primary_conninfo = 'host=$MASTERIP port=5432 user=rep password=$PGPASSWORD'" >> recovery.conf
 		sudo -u postgres echo "trigger_file = '/var/lib/kafkadir/main/failover'" >> recovery.conf
 	fi
 	
