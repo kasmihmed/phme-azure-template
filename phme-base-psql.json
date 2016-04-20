@@ -600,41 +600,6 @@
           }
         }
       }
-    },
-    {
-      "name": "jumpbox-db",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('jumpboxTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.data]"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
-          }
-        }
-      }
     }
   ]
 }

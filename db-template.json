@@ -321,6 +321,47 @@
           }
         }
       }
+    },
+    {
+      "name": "db-jumpbox",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('jumpboxTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageSettings": {
+            "value": {
+              "name": "[concat(parameters('storageAccountNamePrefix'), variables('tshirtSize').storage.jumpbox)]"
+            }
+          },
+          "dnsName": {
+            "value": "[parameters('domainName')]"
+          },
+          "commonSettings": {
+            "value": {
+              "region": "[parameters('region')]",
+              "adminUsername": "[parameters('adminUsername')]",
+              "namespace": "jumpbox"
+            }
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnets.dmz]"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          }
+        }
+      }
     }
   ],
   "outputs": {}
