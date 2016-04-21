@@ -91,13 +91,15 @@ logger "NOW=$now MASTERIP=$MASTERIP SUBNETADDRESS=$SUBNETADDRESS NODETYPE=$NODET
 
 install_postgresql_service() {
 	logger "Start installing PostgreSQL..."
+	wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+	echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" | sudo tee -a /etc/apt/sources.list.d/pgdg.list
 	# Re-synchronize the package index files from their sources. An update should always be performed before an upgrade.
 	apt-get -y update
 
 	# Install PostgreSQL if it is not yet installed
 	if [ $(dpkg-query -W -f='${Status}' postgresql 2>/dev/null | grep -c "ok installed") -eq 0 ];
 	then
-	  apt-get -y install postgresql=9.1* postgresql-contrib=9.1* postgresql-client=9.1*
+	  apt-get -y install postgresql9-1
 	fi
 	
 	logger "Done installing PostgreSQL..."
