@@ -589,10 +589,10 @@
           "adminPassword":{
             "value":"[parameters('adminPassword')]"
           },
-          "adminDbUsername":{
+          "dbAdminUsername":{
             "value":"[parameters('dbAdminUsername')]"
           },
-          "adminDbPassword":{
+          "dbAdminPassword":{
             "value":"[parameters('dbAdminPassword')]"
           },
           "tshirtSize":{

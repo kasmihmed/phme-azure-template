@@ -41,14 +41,14 @@
         "description": "Virtual machine administrator password"
       }
     },
-    "adminDbUsername": {
+    "dbAdminDbUsername": {
       "type": "string",
       "defaultValue": "phme",
       "metadata": {
         "description": "Virtual machine administrator username"
       }
     },
-    "adminDbPassword": {
+    "dbAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Virtual machine administrator password"
