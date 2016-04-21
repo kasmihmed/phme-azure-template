@@ -14,13 +14,13 @@
         "description": "Admin password used when provisioning virtual machines"
       }
     },
-    "adminDbUsername": {
+    "dbAdminUsername": {
       "type": "string",
       "metadata": {
         "description": "Admin username used when provisioning virtual machines"
       }
     },
-    "adminDbPassword": {
+    "dbAdminPassword": {
       "type": "securestring",
       "metadata": {
         "description": "Admin password used when provisioning virtual machines"

@@ -41,7 +41,7 @@
         "description": "Virtual machine administrator password"
       }
     },
-    "dbAdminDbUsername": {
+    "dbAdminUsername": {
       "type": "string",
       "defaultValue": "phme",
       "metadata": {
@@ -249,10 +249,10 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "adminDbUserName": {
+          "dbAdminUserName": {
             "value": "[parameters('adminDbUserName')]"
           },
-          "adminDbPassword": {
+          "dbAdminPassword": {
             "value": "[parameters('adminDbPassword')]"
           },
           "replicatorPassword": {
@@ -311,10 +311,10 @@
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
           },
-          "adminDbUserName": {
+          "dbAdminUserName": {
             "value": "[parameters('adminDbUserName')]"
           },
-          "adminDbPassword": {
+          "dbAdminPassword": {
             "value": "[parameters('adminDbPassword')]"
           },
           "replicatorPassword": {
