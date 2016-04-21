@@ -584,9 +584,15 @@
             "value":"phme-jumpbox"
           },
           "adminUsername":{
-            "value":"[parameters('dbAdminUsername')]"
+            "value":"[parameters('adminUsername')]"
           },
           "adminPassword":{
+            "value":"[parameters('adminPassword')]"
+          },
+          "adminDbUsername":{
+            "value":"[parameters('dbAdminUsername')]"
+          },
+          "adminDbPassword":{
             "value":"[parameters('dbAdminPassword')]"
           },
           "tshirtSize":{

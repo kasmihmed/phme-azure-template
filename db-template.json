@@ -41,6 +41,19 @@
         "description": "Virtual machine administrator password"
       }
     },
+    "adminDbUsername": {
+      "type": "string",
+      "defaultValue": "phme",
+      "metadata": {
+        "description": "Virtual machine administrator username"
+      }
+    },
+    "adminDbPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Virtual machine administrator password"
+      }
+    },
     "tshirtSize": {
       "type": "string",
       "defaultValue": "Small",
@@ -230,8 +243,17 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "adminUserName": {
+            "value": "[parameters('adminUserName')]"
+          },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "adminDbUserName": {
+            "value": "[parameters('adminDbUserName')]"
+          },
+          "adminDbPassword": {
+            "value": "[parameters('adminDbPassword')]"
           },
           "replicatorPassword": {
             "value": "[parameters('replicatorPassword')]"
@@ -283,8 +305,17 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "adminUserName": {
+            "value": "[parameters('adminUserName')]"
+          },
           "adminPassword": {
             "value": "[parameters('adminPassword')]"
+          },
+          "adminDbUserName": {
+            "value": "[parameters('adminDbUserName')]"
+          },
+          "adminDbPassword": {
+            "value": "[parameters('adminDbPassword')]"
           },
           "replicatorPassword": {
             "value": "[parameters('replicatorPassword')]"
@@ -348,7 +379,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "jumpbox"
+              "namespace": "db-jumpbox"
             }
           },
           "adminPassword": {
