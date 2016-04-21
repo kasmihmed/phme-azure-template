@@ -250,10 +250,10 @@
             "value": "[parameters('adminPassword')]"
           },
           "dbAdminUserName": {
-            "value": "[parameters('adminDbUserName')]"
+            "value": "[parameters('dbAdminUserName')]"
           },
           "dbAdminPassword": {
-            "value": "[parameters('adminDbPassword')]"
+            "value": "[parameters('dbAdminPassword')]"
           },
           "replicatorPassword": {
             "value": "[parameters('replicatorPassword')]"
@@ -312,10 +312,10 @@
             "value": "[parameters('adminPassword')]"
           },
           "dbAdminUserName": {
-            "value": "[parameters('adminDbUserName')]"
+            "value": "[parameters('dbAdminUserName')]"
           },
           "dbAdminPassword": {
-            "value": "[parameters('adminDbPassword')]"
+            "value": "[parameters('dbAdminPassword')]"
           },
           "replicatorPassword": {
             "value": "[parameters('replicatorPassword')]"
