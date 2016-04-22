@@ -26,7 +26,7 @@
 #
 
 # This is temporary - we will change this to use a local client node on this kibana instance
-ELASTICSEARCH_URL="http://10.0.1.4:9200"
+ELASTICSEARCH_URL="http://10.0.2.10:9200"
 
 # Install Oracle Java
 add-apt-repository -y ppa:webupd8team/java
@@ -46,10 +46,11 @@ sudo chown -R kibana: /opt/kibana
 
 # set the elasticsearch URL
 mv /opt/kibana/config/kibana.yml /opt/kibana/config/kibana.yml.bak
-echo "elasticsearch.url: \"$ELASTICSEARCH_URL\"" >> /opt/kibana/config/kibana.yml
+# echo "elasticsearch.url: \"$ELASTICSEARCH_URL\"" >> /opt/kibana/config/kibana.yml
+cat /opt/kibana/config/kibana.yml.bak | sed "s|http://localhost:9200|${ELASTICSEARCH_URL}|" >> /opt/kibana/config/kibana.yml
 
-# install the marvel plugin
-/opt/kibana/bin/kibana plugin --install elasticsearch/marvel/latest
+# install the marvel plugin: no marvel at kibana for 1.5
+# /opt/kibana/bin/kibana plugin -e http://10.02.2.10:9200 --install elasticsearch/marvel/latest
 
 # Add upstart task and start kibana service
 cat << EOF > /etc/init/kibana.conf
