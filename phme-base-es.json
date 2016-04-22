@@ -178,6 +178,44 @@
       "metadata": {
         "description": "Blob Storage key to make backups in ElasticSearch"
       }
+    },
+    "dbAdminUsername": {
+      "type": "string",
+      "defaultValue": "phme",
+      "metadata": {
+        "description": "Virtual machine administrator username"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Virtual machine administrator password"
+      }
+    },
+    "tshirtSize": {
+      "type": "string",
+      "defaultValue": "Small",
+      "allowedValues": [
+        "Small",
+        "Medium",
+        "Large",
+        "XLarge"
+      ],
+      "metadata": {
+        "description": "T-shirt size of the PostgreSQL deployment"
+      }
+    },
+    "replicatorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The replication password used for PostgreSQL streaming replication"
+      }
+    },
+    "storagePhotoAccountName": {
+      "type": "string"
+    },
+    "storageBackupAccountName": {
+      "type": "string"
     }
   },
   "variables": {
@@ -230,6 +268,7 @@
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
+    "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"
@@ -508,6 +547,17 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
+        },
+        "parameters":{
+          "storagePhotoAccountName": {
+            "value": "[parameters('storagePhotoAccountName')]"
+          },
+          "storageBackupAccountName": {
+            "value": "[parameters('storageBackupAccountName')]"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          }
         }
       }
     },
@@ -581,7 +631,6 @@
         }
       }
     },
-
     {
       "name": "client-nodes",
       "type": "Microsoft.Resources/deployments",
@@ -675,7 +724,7 @@
       }
     },
     {
-      "name": "jumpbox",
+      "name": "es-jumpbox",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
