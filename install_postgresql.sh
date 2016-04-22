@@ -99,7 +99,7 @@ install_postgresql_service() {
 	# Install PostgreSQL if it is not yet installed
 	if [ $(dpkg-query -W -f='${Status}' postgresql 2>/dev/null | grep -c "ok installed") -eq 0 ];
 	then
-	  apt-get -y install postgresql9-1
+	  apt-get -y install postgresql-9.1
 	fi
 	
 	logger "Done installing PostgreSQL..."
