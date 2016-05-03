@@ -178,6 +178,56 @@
       "metadata": {
         "description": "Blob Storage key to make backups in ElasticSearch"
       }
+    },
+    "dbAdminUsername": {
+      "type": "string",
+      "defaultValue": "phme",
+      "metadata": {
+        "description": "Virtual machine administrator username"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Virtual machine administrator password"
+      }
+    },
+    "tshirtSize": {
+      "type": "string",
+      "defaultValue": "Small",
+      "allowedValues": [
+        "Small",
+        "Medium",
+        "Large",
+        "XLarge"
+      ],
+      "metadata": {
+        "description": "T-shirt size of the PostgreSQL deployment"
+      }
+    },
+    "replicatorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The replication password used for PostgreSQL streaming replication"
+      }
+    },
+    "storagePhotoAccountName": {
+      "type": "string"
+    },
+    "storageBackupAccountName": {
+      "type": "string"
+    },
+    "web_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Image for web instances, captured at portal"
+      }
+    },
+    "worker_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Image for worker instances, captured at portal"
+      }
     }
   },
   "variables": {
@@ -228,11 +278,8 @@
     },
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
-    "sharedDbTemplateUrl": "[concat(variables('templateBaseUrl'), 'db-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
-    "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
-    "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
     "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "clientTemplates": [
       "empty-resources.json",
@@ -512,6 +559,17 @@
         "templateLink":{
          "uri":"[variables('sharedTemplateUrl')]" ,
           "contentVersion":"1.0.0.0"
+        },
+        "parameters":{
+          "storagePhotoAccountName": {
+            "value": "[parameters('storagePhotoAccountName')]"
+          },
+          "storageBackupAccountName": {
+            "value": "[parameters('storageBackupAccountName')]"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          }
         }
       }
     },
@@ -678,7 +736,7 @@
       }
     },
     {
-      "name": "jumpbox",
+      "name": "es-jumpbox",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
@@ -774,10 +832,13 @@
           },
           "adminPassword":{
             "value":"[parameters('adminpassword')]"
+          },
+          "web_image_uri": {
+            "value":"[parameters('web_image_uri')]"
           }
-          }
-         }
-      },
+        }
+      }
+    },
     {"name":"dbs",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
@@ -801,24 +862,32 @@
             "value":"phme-jumpbox"
           },
           "adminUsername":{
-            "value":"[parameters('adminusername')]"
+            "value":"[parameters('adminUsername')]"
           },
           "adminPassword":{
-            "value":"[parameters('adminpassword')]"
+            "value":"[parameters('adminPassword')]"
+          },
+          "dbAdminUsername":{
+            "value":"[parameters('dbAdminUsername')]"
+          },
+          "dbAdminPassword":{
+            "value":"[parameters('dbAdminPassword')]"
           },
           "tshirtSize":{
             "value":"[parameters('tshirtSize')]"
           },
           "replicatorPassword":{
-            "value":"[parameters('adminpassword')]"
+            "value":"[parameters('replicatorPassword')]"
           },
           "jumpbox":{
             "value":"Enabled"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
           }
-
         }
-        }
-      },
+      }
+    },
     {
       "name":"workers",
       "type":"Microsoft.Resources/deployments",
@@ -844,6 +913,9 @@
           },
           "adminPassword":{
             "value":"[parameters('adminpassword')]"
+          },
+          "worker_image_uri": {
+            "value":"[parameters('worker_image_uri')]"
           }
         }
       }

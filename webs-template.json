@@ -68,6 +68,12 @@
       "metadata":{
         "description":"Admin password on all VMs."
       }
+    },
+    "web_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Image for web instances, captured at portal"
+      }
     }
   },
   "variables":{
@@ -235,8 +241,8 @@
               "createOption":"FromImage",
               "osType": "Linux",
               "image": {
-								"uri": "https://phmestorage.blob.core.windows.net/images/phme-web-01-2052-153432-os-2015-11-26.vhd"
-							}
+                "uri": "[parameters('web_image_uri')]"
+              }
             }
           },
           "osProfile":{
