@@ -10,16 +10,16 @@
         "West US",
         "Central US",
         "South Central US",
-	"North Central US",
+	    "North Central US",
         "North Europe",
         "West Europe",
         "Southeast Asia",
         "East Asia",
         "Japan West",
         "Japan East",
-	"Brazil South",
-	"Australia East",
-	"Australia Southeast"
+	    "Brazil South",
+	    "Australia East",
+	    "Australia Southeast"
       ],
       "metadata":{
         "description":"Azure region where all resources will be deployed. This is distinct from resource group location."
@@ -82,11 +82,11 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "testpivhdsweb01",
-      "testpivhdsweb02",
-      "testpivhdsweb03",
-      "testpivhdsweb04",
-      "testpivhdsweb05"
+      "pivhdsweb01",
+      "pivhdsweb02",
+      "pivhdsweb03",
+      "pivhdsweb04",
+      "pivhdsweb05"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",

@@ -228,6 +228,18 @@
       "metadata": {
         "description": "Image for worker instances, captured at portal"
       }
+    },
+    "number_webs": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of web instances"
+      }
+    },
+    "number_workers": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of worker instances"
+      }
     }
   },
   "variables": {
@@ -805,7 +817,8 @@
         }
       }
     },
-    {"name":"webs",
+    {
+      "name":"webs",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
       "dependsOn":[
@@ -825,7 +838,7 @@
             "value":"webss"
           },
           "instanceCount":{
-            "value":2
+            "value":"[parameters('number_webs')]"
           },
           "adminUsername":{
             "value":"[parameters('adminusername')]"
@@ -839,7 +852,8 @@
         }
       }
     },
-    {"name":"dbs",
+    {
+      "name":"dbs",
       "type":"Microsoft.Resources/deployments",
       "apiVersion":"2015-01-01",
       "dependsOn":[
@@ -906,7 +920,7 @@
             "value":"[parameters('location')]"
           },
           "instanceCount":{
-            "value":1
+            "value":"[parameters('number_workers')]"
           },
           "adminUsername":{
             "value":"[parameters('adminusername')]"
