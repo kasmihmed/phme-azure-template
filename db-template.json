@@ -115,7 +115,7 @@
     "tshirtSizeMedium": {
       "vmSize": "Standard_D3",
       "diskSize": 1023,
-      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-8disk-resources.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources.json')]",
       "vmCount": 2,
       "slaveCount": 1,
       "storage": {
