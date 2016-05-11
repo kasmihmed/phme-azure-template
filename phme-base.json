@@ -240,6 +240,18 @@
       "metadata": {
         "description": "Number of worker instances"
       }
+    },
+    "web_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Web host name"
+      }
+    },
+    "worker_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Worker host name"
+      }
     }
   },
   "variables": {
@@ -837,7 +849,7 @@
             "value":"[parameters('location')]"
           },
           "vmssName":{
-            "value":"webss"
+            "value":"[parameters('web_name')]"
           },
           "instanceCount":{
             "value":"[parameters('number_webs')]"
@@ -932,6 +944,9 @@
           },
           "worker_image_uri": {
             "value":"[parameters('worker_image_uri')]"
+          },
+          "vmssName": {
+            "value":"[parameters('worker_name')]"
           }
         }
       }
