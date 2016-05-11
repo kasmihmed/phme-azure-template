@@ -252,6 +252,18 @@
       "metadata": {
         "description": "Worker host name"
       }
+    },
+    "vmSizeWebs": {
+      "type": "string",
+      "metadata": {
+        "description": "Webs instance type: D1, D3, etc..."
+      }
+    },
+    "vmSizeWorkers": {
+      "type": "string",
+      "metadata": {
+        "description": "Workers instance type: D1, D3, etc..."
+      }
     }
   },
   "variables": {
@@ -862,6 +874,9 @@
           },
           "web_image_uri": {
             "value":"[parameters('web_image_uri')]"
+          },
+          "vmSku": {
+            "value": "[parameters('vmSizeWebs')]"
           }
         }
       }
@@ -947,6 +962,9 @@
           },
           "vmssName": {
             "value":"[parameters('worker_name')]"
+          },
+          "vmSku": {
+            "value": "[parameters('vmSizeWorkers')]"
           }
         }
       }
