@@ -999,7 +999,7 @@
             "value": "[concat('pk-redis-cache', parameters('env'))]"
           },
           "redisCacheCeleryName": {
-            "value": "[concat('pk-redis-cache', parameters('env'))]"
+            "value": "[concat('pk-redis-celery', parameters('env'))]"
           },
           "redisCacheLocation": {
             "value": "[parameters('location')]"
