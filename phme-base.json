@@ -293,7 +293,7 @@
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },
     "location":"[variables('locationMap')[parameters('location')]]",
-    "storageAccountPrefix": "[concat('pivhdssrh', parameters('env'))]",
+    "storageAccountPrefix": "[concat('pivhdss', parameters('env'))]",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
     "masterNodesIpPrefix": "10.0.1.1",
     "networkSettings": {
