@@ -996,10 +996,10 @@
         },
         "parameters": {
           "redisCacheName": {
-            "value": "pk-redis-cache"
+            "value": "[concat('pk-redis-cache', parameters('env'))]"
           },
           "redisCacheCeleryName": {
-            "value": "pk-redis-celery"
+            "value": "[concat('pk-redis-cache', parameters('env'))]"
           },
           "redisCacheLocation": {
             "value": "[parameters('location')]"
