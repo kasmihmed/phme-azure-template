@@ -178,6 +178,98 @@
       "metadata": {
         "description": "Blob Storage key to make backups in ElasticSearch"
       }
+    },
+    "dbAdminUsername": {
+      "type": "string",
+      "defaultValue": "phme",
+      "metadata": {
+        "description": "Virtual machine administrator username"
+      }
+    },
+    "dbAdminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Virtual machine administrator password"
+      }
+    },
+    "tshirtSize": {
+      "type": "string",
+      "defaultValue": "Small",
+      "allowedValues": [
+        "Small",
+        "Medium",
+        "Large",
+        "XLarge"
+      ],
+      "metadata": {
+        "description": "T-shirt size of the PostgreSQL deployment"
+      }
+    },
+    "replicatorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The replication password used for PostgreSQL streaming replication"
+      }
+    },
+    "storagePhotoAccountName": {
+      "type": "string"
+    },
+    "storageBackupAccountName": {
+      "type": "string"
+    },
+    "web_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Image for web instances, captured at portal"
+      }
+    },
+    "worker_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Image for worker instances, captured at portal"
+      }
+    },
+    "number_webs": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of web instances"
+      }
+    },
+    "number_workers": {
+      "type": "int",
+      "metadata": {
+        "description": "Number of worker instances"
+      }
+    },
+    "web_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Web host name"
+      }
+    },
+    "worker_name": {
+      "type": "string",
+      "metadata": {
+        "description": "Worker host name"
+      }
+    },
+    "vmSizeWebs": {
+      "type": "string",
+      "metadata": {
+        "description": "Webs instance type: D1, D3, etc..."
+      }
+    },
+    "vmSizeWorkers": {
+      "type": "string",
+      "metadata": {
+        "description": "Workers instance type: D1, D3, etc..."
+      }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {
@@ -201,21 +293,21 @@
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },
     "location":"[variables('locationMap')[parameters('location')]]",
-    "storageAccountPrefix": "pivhdssrh",
+    "storageAccountPrefix": "[concat('pivhdss', parameters('env'))]",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
-    "masterNodesIpPrefix": "10.1.1.1",
+    "masterNodesIpPrefix": "10.0.1.1",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
-      "addressPrefix": "10.1.0.0/16",
+      "addressPrefix": "10.0.0.0/16",
       "subnet": {
         "master": {
           "name": "searchmaster",
-          "prefix": "10.1.1.0/24",
+          "prefix": "10.0.1.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         },
         "data": {
           "name": "searchdata",
-          "prefix": "10.1.2.0/24",
+          "prefix": "10.0.2.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         }
       }
@@ -226,9 +318,13 @@
       "discoveryHosts": "[concat(variables('masterNodesIpPrefix'), '-3')]",
       "blobStorageKey": "[parameters('elasticBlobStorageKey')]"
     },
-    "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-resources.json')]",
+    "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
+    "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
+    "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
+    "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
+    "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"
@@ -298,7 +394,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -xn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -xn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "client": {
@@ -307,7 +403,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -yn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -yn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "data": {
@@ -316,7 +412,7 @@
           "typeHandlerVersion": "1.2",
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -zn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, ' -k ', variables('esSettings').blobStorageKey, variables('marvelParamValue'))]"
+            "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -zn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
           }
         },
         "kibana": {
@@ -498,7 +594,7 @@
     "dataTemplateUrl": "[concat(variables('templateBaseUrl'), 'data-nodes-', string(variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks), 'disk-resources.json')]"
   },
   "resources": [
-   {
+    {
       "name": "redis",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -510,10 +606,10 @@
         },
         "parameters": {
           "redisCacheName": {
-            "value": "pk-redis-cache"
+            "value": "[concat('pk-redis-cache', parameters('env'))]"
           },
           "redisCacheCeleryName": {
-            "value": "pk-redis-celery"
+            "value": "[concat('pk-redis-celery', parameters('env'))]"
           },
           "redisCacheLocation": {
             "value": "[parameters('location')]"
@@ -531,7 +627,7 @@
             "value": "ON"
           },
           "diagnosticsStorageAccountName": {
-            "value": "phmediagnostics"
+            "value": "[concat('pired', parameters('env'))]"
           }
         }
       }
