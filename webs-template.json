@@ -74,6 +74,12 @@
       "metadata": {
         "description": "Image for web instances, captured at portal"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables":{
@@ -82,11 +88,11 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "pivhdsweb01",
-      "pivhdsweb02",
-      "pivhdsweb03",
-      "pivhdsweb04",
-      "pivhdsweb05"
+      "[concat('pivhdsweb01', parameters('env'))]",
+      "[concat('pivhdsweb02', parameters('env'))]",
+      "[concat('pivhdsweb03', parameters('env'))]",
+      "[concat('pivhdsweb04', parameters('env'))]",
+      "[concat('pivhdsweb05', parameters('env'))]",
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",

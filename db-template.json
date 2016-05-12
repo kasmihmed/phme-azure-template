@@ -90,6 +90,12 @@
       "metadata": {
         "description": "Virtual network name"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {

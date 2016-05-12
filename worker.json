@@ -77,6 +77,12 @@
       "metadata": {
         "description": "Image for worker instances, captured at portal"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables":{
@@ -85,7 +91,11 @@
     "saCount":1,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "pivhdsworker01"
+      "[concat('pivhdsworker01', parameters('env'))]",
+      "[concat('pivhdsworker02', parameters('env'))]",
+      "[concat('pivhdsworker03', parameters('env'))]",
+      "[concat('pivhdsworker04', parameters('env'))]",
+      "[concat('pivhdsworker05', parameters('env'))]"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhds')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",

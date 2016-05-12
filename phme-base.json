@@ -264,6 +264,12 @@
       "metadata": {
         "description": "Workers instance type: D1, D3, etc..."
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {
@@ -287,7 +293,7 @@
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },
     "location":"[variables('locationMap')[parameters('location')]]",
-    "storageAccountPrefix": "pivhdssrh",
+    "storageAccountPrefix": "[concat('pivhdssrh', parameters('env'))]",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
     "masterNodesIpPrefix": "10.0.1.1",
     "networkSettings": {
@@ -877,6 +883,9 @@
           },
           "vmSku": {
             "value": "[parameters('vmSizeWebs')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -899,7 +908,7 @@
             "value":"[parameters('location')]"
           },
           "storageAccountNamePrefix":{
-            "value":"dbstorageaccount"
+            "value":"[concat('pipsqldbsa', parameters('env'))]"
           },
           "domainName":{
             "value":"phme-jumpbox"
@@ -927,6 +936,9 @@
           },
           "virtualNetworkName": {
             "value": "[parameters('virtualNetworkName')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -965,6 +977,9 @@
           },
           "vmSku": {
             "value": "[parameters('vmSizeWorkers')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -1002,7 +1017,7 @@
             "value": "ON"
           },
           "diagnosticsStorageAccountName": {
-            "value": "phmediagnostics"
+            "value": "[concat('pired', parameters('env'))]"
           }
         }
       }
