@@ -92,7 +92,7 @@
       "[concat('pivhdsweb02', parameters('env'))]",
       "[concat('pivhdsweb03', parameters('env'))]",
       "[concat('pivhdsweb04', parameters('env'))]",
-      "[concat('pivhdsweb05', parameters('env'))]",
+      "[concat('pivhdsweb05', parameters('env'))]"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
