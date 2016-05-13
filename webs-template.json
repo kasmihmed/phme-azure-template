@@ -137,27 +137,6 @@
   },
   "resources":[
     {
-      "type":"Microsoft.Network/virtualNetworks",
-      "name":"[variables('virtualNetworkName')]",
-      "location":"[parameters('resourceLocation')]",
-      "apiVersion":"[variables('apiVersion')]",
-      "properties":{
-        "addressSpace":{
-          "addressPrefixes":[
-            "[variables('addressPrefix')]"
-          ]
-        },
-        "subnets":[
-          {
-            "name":"[variables('subnetName')]",
-            "properties":{
-              "addressPrefix":"[variables('subnetPrefix')]"
-            }
-          }
-        ]
-      }
-    },
-    {
       "type":"Microsoft.Storage/storageAccounts",
       "name":"[variables('uniqueStringArray')[copyIndex()]]",
       "location":"[parameters('resourceLocation')]",
