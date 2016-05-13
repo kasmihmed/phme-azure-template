@@ -54,8 +54,7 @@
       "type":"string",
       "metadata":{
         "description":"Virtual network name"
-      },
-      "maxLength":9
+      }
     },
     "instanceCount":{
       "type":"int",
