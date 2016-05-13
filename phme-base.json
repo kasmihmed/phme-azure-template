@@ -964,7 +964,7 @@
             "value":"[parameters('worker_image_uri')]"
           },
           "vmssName":{
-            "value":"[concat('web', parameters('env'))]"
+            "value":"[concat('worker', parameters('env'))]"
           },
           "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
