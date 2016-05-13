@@ -50,6 +50,13 @@
       },
       "maxLength":9
     },
+    "virtualNetworkName":{
+      "type":"string",
+      "metadata":{
+        "description":"Virtual network name"
+      },
+      "maxLength":9
+    },
     "instanceCount":{
       "type":"int",
       "metadata":{
@@ -98,9 +105,9 @@
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
     "addressPrefix":"10.0.0.0/16",
     "subnetPrefix":"10.0.0.0/24",
-    "virtualNetworkName":"[concat(parameters('vmssName'), 'vnet')]",
+    "virtualNetworkName":"[parameters('virtualNetworkName')]",
     "publicIPAddressName":"[concat(parameters('vmssName'), 'pip')]",
-    "subnetName":"[concat(parameters('vmssName'), 'subnet')]",
+    "subnetName":"web",
     "loadBalancerName":"[concat(parameters('vmssName'), 'lb')]",
     "publicIPAddressID":"[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
     "lbID":"[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
