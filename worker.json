@@ -211,8 +211,7 @@
       "apiVersion":"[variables('apiVersion')]",
       "dependsOn":[
         "[concat('Microsoft.Storage/storageAccounts/', variables('uniqueStringArray')[0])]",
-        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalancerName'))]"
       ],
       "sku":{
         "name":"[parameters('vmSku')]",
