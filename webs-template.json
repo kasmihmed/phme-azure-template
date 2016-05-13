@@ -254,7 +254,18 @@
           "osProfile":{
             "computerNamePrefix":"[parameters('vmssName')]",
             "adminUsername":"[parameters('adminUsername')]",
-            "adminPassword":"[parameters('adminPassword')]"
+            "adminPassword":"[parameters('adminPassword')]",
+            "linuxConfiguration": {
+              "disablePasswordAuthentication": true,
+              "ssh": {
+                "publicKeys": [
+                  {
+                    "path": "/home/phme/.ssh/authorized_keys",
+                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAt1GEBM54EZVdteukZDjBqgcBdEhd7nNp10Tcdw9Siq2PTccf4JZqGerfGKmedwlhqsBVmO7Gv0aZb3prlQW2ZqEoI2nX7pQc+4Qwgi9dOUUP516vgJWjzw2qaZC6AyRSGP4PRed06JWvyTj/8XkI6aZ+6lTVl+yReT868jat0/DX6if9N6SZTCWvlr2P1tjeTF/E1WzQU/DTHFrCrvUkk7/6mNkrfUse7aQk3XwbCyXlPq0rWx1LiXwHxN0jB6xiNftIF6T724ZdWrkljR3Iun2VwAmX9pbMsN0uicB+4lY9IC9CAKUgpgFh23fzVSCWqCIoM2XnswxxAlxwk9Ux"
+                  }
+                ]
+              }
+            }
           },
           "networkProfile":{
             "networkInterfaceConfigurations":[
