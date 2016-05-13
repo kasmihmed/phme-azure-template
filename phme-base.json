@@ -855,6 +855,9 @@
             "value":"[parameters('location')]"
           },
           "vmssName":{
+            "value":"[concat('web', parameters('env'))]"
+          },
+          "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
           },
           "instanceCount":{
@@ -960,7 +963,10 @@
           "worker_image_uri": {
             "value":"[parameters('worker_image_uri')]"
           },
-          "vmssName": {
+          "vmssName":{
+            "value":"[concat('web', parameters('env'))]"
+          },
+          "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
           },
           "vmSku": {
