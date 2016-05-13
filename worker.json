@@ -106,7 +106,7 @@
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhds')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
     "addressPrefix":"10.0.0.0/16",
-    "subnetPrefix":"10.0.0.0/24",
+    "subnetPrefix":"10.0.3.0/24",
     "virtualNetworkName":"[parameters('virtualNetworkName')]",
     "publicIPAddressName":"[concat(parameters('vmssName'), 'pip')]",
     "subnetName":"worker",
