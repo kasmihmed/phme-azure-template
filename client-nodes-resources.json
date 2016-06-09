@@ -56,6 +56,12 @@
       "metadata": {
         "description": "loadBalancerBackendAddressPools config object"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {
@@ -100,7 +106,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('clientVm', copyindex())]",
+      "name": "[concat('clientVm', copyindex(), parameters('env'))]",
       "tags": {
         "resource_type": "elasticsearch"
       },

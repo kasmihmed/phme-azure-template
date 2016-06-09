@@ -671,6 +671,9 @@
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -716,6 +719,9 @@
           },
           "lbBackendPools": {
             "value": "[variables('lbBackEndPoolsAdded')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -763,6 +769,9 @@
           },
           "lbBackendPools": {
             "value": "[variables('dataLBSettings')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
