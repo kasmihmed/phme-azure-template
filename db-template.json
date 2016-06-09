@@ -295,6 +295,9 @@
           },
           "dbType": {
             "value": "MASTER"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -357,6 +360,9 @@
           },
           "dbType": {
             "value": "SLAVE"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
