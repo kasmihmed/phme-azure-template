@@ -626,7 +626,7 @@
         },
         "parameters": {
           "storageAccountName": {
-            "value": "[concat('graylog-', parameters('env'))]"
+            "value": "[concat('graylog', parameters('env'))]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
