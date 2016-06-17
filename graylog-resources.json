@@ -190,7 +190,7 @@
         },
         "storageProfile":{
           "osDisk":{
-            "name":"[variables('osDiskName')]",
+            "name":"[parameters('namespace'), '-osdisk')]",
             "caching":"ReadOnly",
             "createOption":"FromImage",
             "osType": "Linux",
