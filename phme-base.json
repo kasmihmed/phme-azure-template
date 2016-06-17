@@ -313,6 +313,7 @@
     "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
     "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
+    "graylogTemplateUrl": "[concat(variables('templateBaseUrl'), 'graylog-resources.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"

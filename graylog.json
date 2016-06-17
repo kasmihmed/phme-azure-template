@@ -312,6 +312,7 @@
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
     "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
+    "graylogTemplateUrl": "[concat(variables('templateBaseUrl'), 'graylog-resources.json')]",
     "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
     "clientTemplates": [
       "empty-resources.json",
