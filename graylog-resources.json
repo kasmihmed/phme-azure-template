@@ -191,6 +191,9 @@
         "storageProfile":{
           "osDisk":{
             "name":"[concat(parameters('namespace'), '-osdisk')]",
+            "vhd": {
+              "uri": "[concat('http://', parameters('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), '-osdisk.vhd')]"
+            },
             "caching":"ReadOnly",
             "createOption":"FromImage",
             "osType": "Linux",
