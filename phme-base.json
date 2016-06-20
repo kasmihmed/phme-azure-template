@@ -867,7 +867,7 @@
         },
         "parameters": {
           "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
+            "value": "[concat('graylog', parameters('env'))]"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
