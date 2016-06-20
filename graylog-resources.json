@@ -44,6 +44,12 @@
       "metadata": {
         "description": "Platform and OS settings"
       }
+    },
+    "instance_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Instance image_uri"
+      }
     }
   },
   "variables": {
@@ -205,10 +211,10 @@
             "createOption":"FromImage",
             "osType": "Linux",
             "vhd": {
-              "uri": "[concat('https://pivhdslogde.blob.core.windows.net/vhds/', parameters('storageAccountName'), '.vhd')]"
+              "uri": "[concat('https://' + parameters('storageAccountName') + '.blob.core.windows.net/vhds/', parameters('storageAccountName'), '.vhd')]"
             },
             "image": {
-              "uri": "https://pivhdslogde.blob.core.windows.net/system/Microsoft.Compute/Images/templates/pickitinstanceimages-osDisk.6e62d49d-a639-4b4a-bdf8-634851d8a87b.vhd"
+              "uri": "[parameters('instance_image_uri')]"
             }
           }
         },
