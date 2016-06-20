@@ -258,6 +258,12 @@
       "metadata": {
         "description": "Two letters for environment: de, li, etc..."
       }
+    },
+    "instance_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Instance image_uri"
+      }
     }
   },
   "variables": {
