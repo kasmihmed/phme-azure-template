@@ -50,12 +50,6 @@
       "metadata": {
         "description": "Instance image_uri"
       }
-    },
-    "graylog_storage_account": {
-      "type": "string",
-      "metadata": {
-        "description": "GrayLog storage account"
-      }
     }
   },
   "variables": {
