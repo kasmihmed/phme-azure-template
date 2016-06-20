@@ -630,7 +630,7 @@
           },
           "instance_image_uri": {
             "value": "[parameters('graylog_image_uri')]"
-          }
+          },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
           },
