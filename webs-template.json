@@ -155,7 +155,7 @@
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "properties":{
-        "publicIPAllocationMethod":"Dynamic",
+        "publicIPAllocationMethod":"Static",
         "dnsSettings":{
           "domainNameLabel":"[parameters('vmssName')]"
         }
