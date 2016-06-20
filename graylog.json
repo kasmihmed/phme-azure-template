@@ -640,7 +640,7 @@
           "storageAccountName": {
             "value": "[parameters('graylog_storage_account')]"
           },
-          "instance_image_uri": {
+          "graylog_image_uri": {
             "value": "[parameters('graylog_image_uri')]"
           },
           "adminUsername": {
