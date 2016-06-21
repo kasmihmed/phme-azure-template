@@ -258,6 +258,18 @@
       "metadata": {
         "description": "Two letters for environment: de, li, etc..."
       }
+    },
+    "graylog_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Instance image_uri"
+      }
+    },
+    "graylog_storage_account": {
+      "type": "string",
+      "metadata": {
+        "description": "GrayLog storage account"
+      }
     }
   },
   "variables": {
