@@ -241,18 +241,6 @@
         "description": "Number of worker instances"
       }
     },
-    "web_name": {
-      "type": "string",
-      "metadata": {
-        "description": "Web host name"
-      }
-    },
-    "worker_name": {
-      "type": "string",
-      "metadata": {
-        "description": "Worker host name"
-      }
-    },
     "vmSizeWebs": {
       "type": "string",
       "metadata": {
