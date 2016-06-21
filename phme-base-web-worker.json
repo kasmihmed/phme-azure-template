@@ -264,6 +264,12 @@
       "metadata": {
         "description": "Workers instance type: D1, D3, etc..."
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {
@@ -629,7 +635,10 @@
             "value":"[parameters('location')]"
           },
           "vmssName":{
-            "value":"[parameters('web_name')]"
+            "value":"[concat('web', parameters('env'))]"
+          },
+          "virtualNetworkName":{
+            "value":"[parameters('virtualNetworkName')]"
           },
           "instanceCount":{
             "value":"[parameters('number_webs')]"
@@ -645,6 +654,9 @@
           },
           "vmSku": {
             "value": "[parameters('vmSizeWebs')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -678,11 +690,17 @@
           "worker_image_uri": {
             "value":"[parameters('worker_image_uri')]"
           },
-          "vmssName": {
-            "value":"[parameters('worker_name')]"
+          "vmssName":{
+            "value":"[concat('worker', parameters('env'))]"
+          },
+          "virtualNetworkName":{
+            "value":"[parameters('virtualNetworkName')]"
           },
           "vmSku": {
             "value": "[parameters('vmSizeWorkers')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
