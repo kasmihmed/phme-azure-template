@@ -307,7 +307,7 @@
                 "diskSizeGB": "[parameters('dataDiskSize')]",
                 "lun": 0,
                 "vhd": { 
-                  "Uri": "[concat('http://', 'portalvhdsctqhxxq53f3s1', '.blob.core.windows.net/vhds/', parameters('vmssName'), '-dataDisk1' ,'.vhd')]" 
+                  "Uri": "[concat('https://', 'portalvhdsctqhxxq53f3s1', '.blob.core.windows.net/vhds/', parameters('vmssName'), '-dataDisk1' ,'.vhd')]" 
                 },
                 "caching": "None",
                 "createOption": "Empty"
