@@ -306,13 +306,9 @@
                 "name": "datadisk1",
                 "diskSizeGB": "[parameters('dataDiskSize')]",
                 "lun": 0,
-                "vhdContainers": [
-                  "[concat('http://', variables('uniqueStringArray')[0], '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
-                  "[concat('http://', variables('uniqueStringArray')[1], '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
-                  "[concat('http://', variables('uniqueStringArray')[2], '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
-                  "[concat('http://', variables('uniqueStringArray')[3], '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
-                  "[concat('http://', variables('uniqueStringArray')[4], '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
-                ],
+                "vhd": { 
+                  "Uri": "[concat('http://', 'portalvhdsctqhxxq53f3s1', '.blob.core.windows.net/vhds/', parameters('vmssName'), '-dataDisk1' ,'.vhd')]" 
+                },
                 "caching": "None",
                 "createOption": "Empty"
               }
