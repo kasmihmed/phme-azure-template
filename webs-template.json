@@ -145,7 +145,7 @@
   "resources":[
     {
       "type":"Microsoft.Storage/storageAccounts",
-      "name":"[variables('uniqueStringArray')[copyIndex()]]",
+      "name":"[variables('uniqueStringArray')[copyindex()]]",
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "copy":{
