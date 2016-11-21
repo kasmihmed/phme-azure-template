@@ -273,10 +273,6 @@
       "name":"[parameters('vmssName')]",
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
-      "copy":{
-        "name":"storageLoop",
-        "count":"[variables('saCount')]"
-      },
       "dependsOn":[
         "[concat('Microsoft.Storage/storageAccounts/', variables('uniqueStringArray')[0])]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('uniqueStringArray')[1])]",
@@ -310,9 +306,13 @@
                 "name": "datadisk1",
                 "diskSizeGB": "[parameters('dataDiskSize')]",
                 "lun": 0,
-                "vhd": {
-                  "Uri": "[concat('http://', variables('uniqueStringArray')[copyindex()], '.blob.core.windows.net/vhds/', parameters('vmssName'), copyindex(),'-dataDisk1' ,'.vhd')]"
-                },
+                "vhdContainers": [
+                  "[concat('http://', variables('uniqueStringArray')[0]), '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
+                  "[concat('http://', variables('uniqueStringArray')[1]), '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
+                  "[concat('http://', variables('uniqueStringArray')[2]), '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
+                  "[concat('http://', variables('uniqueStringArray')[3]), '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
+                  "[concat('http://', variables('uniqueStringArray')[4]), '.blob.core.windows.net/vhds/', parameters('vmssName'),'-dataDisk1' ,'.vhd')]",
+                ],
                 "caching": "None",
                 "createOption": "Empty"
               }
