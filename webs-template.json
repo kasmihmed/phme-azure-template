@@ -86,6 +86,13 @@
       "metadata": {
         "description": "Two letters for environment: de, li, etc..."
       }
+    },
+    "dataDiskSize": {
+      "type": "int",
+      "defaultValue": 200,
+      "metadata": {
+        "description": "Size of each data disk attached to web nodes in (Gb)"
+      }
     }
   },
   "variables":{
@@ -198,6 +205,71 @@
               "backendPort":"[variables('natBackendPort')]"
             }
           }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "web",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/LBBE')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 80,
+              "backendPort": 80,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web')]"
+              }
+            }
+          },
+          {
+            "name": "web-ssl",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/LBBE')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 9300,
+              "backendPort": 9300,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web-ssl')]"
+              }
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "web",
+            "properties": {
+              "protocol": "tcp",
+              "port": 80,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2
+            }
+          },
+          {
+            "name": "web-ssl",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 443,
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2,
+              "loadBalancingRules": [
+                {
+                  "id": "/subscriptions/515bf97e-f264-4127-9de0-edab94d2bb6c/resourceGroups/live/providers/Microsoft.Network/loadBalancers/weblilb/loadBalancingRules/web-ssl"
+                }
+              ]
+            }
+          }
         ]
       }
     },
@@ -233,7 +305,19 @@
               "image": {
                 "uri": "[parameters('web_image_uri')]"
               }
-            }
+            },
+            "dataDisks": [
+              {
+                "name": "datadisk1",
+                "diskSizeGB": "[parameters('dataDiskSize')]",
+                "lun": 0,
+                "vhd": {
+                  "Uri": "[concat('http://', variables('uniqueStringArray')[copyIndex()]], '.blob.core.windows.net/vhds/', parameters('vmssName'), copyindex(),'-dataDisk1' ,'.vhd')]"
+                },
+                "caching": "None",
+                "createOption": "Empty"
+              }
+            ]
           },
           "osProfile":{
             "computerNamePrefix":"[parameters('vmssName')]",
