@@ -300,19 +300,7 @@
               "image": {
                 "uri": "[parameters('web_image_uri')]"
               }
-            },
-            "dataDisks": [
-              {
-                "name": "datadisk1",
-                "diskSizeGB": "[parameters('dataDiskSize')]",
-                "lun": 0,
-                "vhd": { 
-                  "Uri": "[concat('https://', 'portalvhdsctqhxxq53f3s1', '.blob.core.windows.net/vhds/', parameters('vmssName'), '-dataDisk1' ,'.vhd')]" 
-                },
-                "caching": "None",
-                "createOption": "Empty"
-              }
-            ]
+            }
           },
           "osProfile":{
             "computerNamePrefix":"[parameters('vmssName')]",
