@@ -211,10 +211,10 @@
             "name": "web",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LoadBalancerFrontEnd')]"
               },
               "backendAddressPool": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/LBBE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/', variables('bePoolName'))]"
               },
               "protocol": "tcp",
               "frontendPort": 80,
@@ -222,7 +222,7 @@
               "enableFloatingIP": false,
               "idleTimeoutInMinutes": 5,
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web-probe')]"
               }
             }
           },
@@ -230,25 +230,25 @@
             "name": "web-ssl",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/frontendIPConfigurations/LoadBalancerFrontEnd')]"
               },
               "backendAddressPool": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/LBBE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/backendAddressPools/', variables('bePoolName'))]"
               },
               "protocol": "tcp",
-              "frontendPort": 9300,
-              "backendPort": 9300,
+              "frontendPort": 443,
+              "backendPort": 443,
               "enableFloatingIP": false,
               "idleTimeoutInMinutes": 5,
               "probe": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web-ssl')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName')),'/probes/web-ssl-probe')]"
               }
             }
           }
         ],
         "probes": [
           {
-            "name": "web",
+            "name": "web-probe",
             "properties": {
               "protocol": "tcp",
               "port": 80,
@@ -257,17 +257,12 @@
             }
           },
           {
-            "name": "web-ssl",
+            "name": "web-ssl-probe",
             "properties": {
-              "protocol": "Tcp",
+              "protocol": "tcp",
               "port": 443,
               "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "loadBalancingRules": [
-                {
-                  "id": "/subscriptions/515bf97e-f264-4127-9de0-edab94d2bb6c/resourceGroups/live/providers/Microsoft.Network/loadBalancers/weblilb/loadBalancingRules/web-ssl"
-                }
-              ]
+              "numberOfProbes": 2
             }
           }
         ]
