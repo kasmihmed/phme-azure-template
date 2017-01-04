@@ -638,7 +638,7 @@
         },
         "parameters": {
           "storageAccountName": {
-            "value": "[concat('graylog', parameters('env'))]"
+            "value": "portalvhdsctqhxxq53f3s1"
           },
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
