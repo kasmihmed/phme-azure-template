@@ -201,7 +201,7 @@
             "createOption":"FromImage",
             "osType": "Linux",
             "vhd": {
-              "uri": "[concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/vhds/developnewubuntu.vhd')]"
+              "uri": "[concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/vhds/' + parameters('storageAccountName') + '.vhd')]"
             },
             "image": {
               "uri": "[parameters('ubuntu_image_uri')]"
