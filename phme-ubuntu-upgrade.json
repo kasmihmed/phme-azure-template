@@ -657,6 +657,9 @@
           },
           "namespace": {
             "value": "[concat('ubun-', parameters('env'))]"
+          },
+          "ubuntu_image_uri": {
+            "value": "[parameters('ubuntu_image_uri')]"
           }
         }
       }
