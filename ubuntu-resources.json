@@ -63,6 +63,15 @@
   },
   "resources": [
     {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('storageAccountName')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('securityGroupName')]",
