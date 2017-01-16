@@ -662,7 +662,7 @@
             "value":"[parameters('worker_image_uri')]"
           },
           "vmssName":{
-            "value":"[concat('worker-ubuntu-1604-', parameters('env'))]"
+            "value":"[concat('work16', parameters('env'))]"
           },
           "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
