@@ -89,6 +89,12 @@
       "metadata": {
         "description": "Two letters for environment: de, li, etc..."
       }
+    },
+    "vhd_storage_account": {
+      "type": "string",
+      "metadata": {
+        "description": "VHD storage account for instance disks"
+      }
     }
   },
   "variables":{
