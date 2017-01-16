@@ -291,7 +291,7 @@
             "rules": [
               {
                 "metricTrigger": {
-                  "metricName": "\\Processor\\PercentProcessorTime",
+                  "metricName": "\\Processor(_Total)\\% Processor Time",
                   "metricNamespace": "",
                   "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
                   "timeGrain": "PT1M",
