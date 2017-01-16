@@ -669,6 +669,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "vhd_storage_account": {
+            "value": "[parameters('vhd_storage_account')]"
           }
         }
       }
