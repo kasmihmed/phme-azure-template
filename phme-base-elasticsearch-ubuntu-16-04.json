@@ -657,7 +657,10 @@
           },
           "ilbIpAddress": {
             "value": "10.0.1.100"
-          }
+          },
+          "namespace": {
+            "value": "jumpbox-16-04"
+          },
         }
       }
     },
