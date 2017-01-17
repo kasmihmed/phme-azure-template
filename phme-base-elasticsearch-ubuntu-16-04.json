@@ -662,7 +662,7 @@
       }
     },
     {
-      "name": "master-nodes-02",
+      "name": "master-nodes-03",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
