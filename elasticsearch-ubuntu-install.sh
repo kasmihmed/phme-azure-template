@@ -184,6 +184,7 @@ install_es()
 	log "Download location - $DOWNLOAD_URL"
     sudo wget -q "$DOWNLOAD_URL" -O elasticsearch.deb
     sudo dpkg -i elasticsearch.deb
+    sudo systemctl enable elasticsearch.service
 }
 
 # Primary Install Tasks
