@@ -142,7 +142,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('masterNodeNic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(masterNodeNic-16-04-', parameters('env'), '-', copyindex()))]"
             }
           ]
         }
