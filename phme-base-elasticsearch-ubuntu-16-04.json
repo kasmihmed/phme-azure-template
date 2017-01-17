@@ -745,6 +745,94 @@
           }
         }
       }
+    },
+    {
+      "name": "client-nodes",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]",
+        "[concat('Microsoft.Resources/deployments/', 'master-nodes')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('clientTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "storageAccountName": {
+            "value": "[variables('storageAccountNameShared')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.data]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSizeClientNodes')]"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          },
+          "vmCount": {
+            "value": "[parameters('vmClientNodeCount')]"
+          },
+          "lbBackendPools": {
+            "value": "[variables('lbBackEndPoolsAdded')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "kibana",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('kibanaTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[variables('storageAccountNameShared')]"
+          },
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.data]"
+          },
+          "osSettings": {
+            "value": "[variables('ubuntuSettings')]"
+          },
+          "namespace": {
+            "value": "kibana-16-04"
+          },
+          "env": {
+            "value": "[parameters('env')]"
+          }
+        }
+      }
     }
   ]
 }
