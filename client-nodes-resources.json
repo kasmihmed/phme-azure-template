@@ -106,7 +106,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('clientVm', copyindex(), parameters('env'))]",
+      "name": "[concat('esClient-16-04-', parameters('env'), '-', copyindex())]",
       "tags": {
         "resource_type": "elasticsearch"
       },
@@ -127,7 +127,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('esClient', copyIndex())]",
+          "computerName": "[concat('esClient-16-04-', parameters('env'), '-', copyindex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },

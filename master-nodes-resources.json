@@ -103,7 +103,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('masterVm', copyindex(), parameters('env'))]",
+      "name": "[concat('esMaster-16-04-', parameters('env'), '-', copyindex())]",
       "tags": {
         "resource_type": "elasticsearch"
       },
@@ -124,7 +124,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('esMaster', copyIndex())]",
+          "computerName": "[concat('esMaster-16-04-', parameters('env'), '-', copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
