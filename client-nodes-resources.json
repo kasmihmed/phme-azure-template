@@ -116,7 +116,7 @@
         "count": "[parameters('vmCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '-', copyindex())]",
         "[concat('Microsoft.Compute/availabilitySets/', 'elasticsearchClient')]"
       ],
       "properties": {
