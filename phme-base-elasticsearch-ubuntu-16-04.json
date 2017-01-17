@@ -301,7 +301,7 @@
     "location":"[variables('locationMap')[parameters('location')]]",
     "storageAccountPrefix": "[concat('pivhdss', parameters('env'))]",
     "storageAccountNameShared": "[concat(variables('storageAccountPrefix'), 's', uniqueString(resourceGroup().id, deployment().name))]",
-    "masterNodesIpPrefix": "10.0.1.1",
+    "masterNodesIpPrefix": "10.0.1.2",
     "networkSettings": {
       "virtualNetworkName": "[parameters('virtualNetworkName')]",
       "addressPrefix": "10.0.0.0/16",
