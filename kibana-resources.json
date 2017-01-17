@@ -44,6 +44,12 @@
       "metadata": {
         "description": "Platform and OS settings"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {

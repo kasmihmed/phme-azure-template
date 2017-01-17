@@ -784,6 +784,9 @@
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
@@ -821,6 +824,9 @@
           },
           "namespace": {
             "value": "kibana-16-04"
+          },
+          "env": {
+            "value": "[parameters('env')]"
           }
         }
       }
