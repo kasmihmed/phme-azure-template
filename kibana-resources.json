@@ -171,11 +171,11 @@
       "resources": [
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('vmName'), '/installkibana')]",
+        "name": "[concat(variables('vmName'), '-' + parameters('env'), '/installkibana')]",
         "apiVersion": "2015-06-15",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), '-' + parameters('env'))]"
         ],
         "properties": "[parameters('osSettings').extentionSettings.kibana]"
       }

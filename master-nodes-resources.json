@@ -150,11 +150,11 @@
       "resources": [
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat('masterVm', copyindex(), '/installelasticsearch')]",
+          "name": "[concat('esMaster-16-04-', parameters('env'), '-', copyindex(), '/installelasticsearch')]",
           "apiVersion": "2015-06-15",
           "location": "[parameters('location')]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', 'masterVm', copyindex())]"
+            "[concat('Microsoft.Compute/virtualMachines/', 'esMaster-16-04-', parameters('env'), '-', copyindex())]"
           ],
           "properties": "[parameters('osSettings').extentionSettings.master]"
         }

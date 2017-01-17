@@ -153,11 +153,11 @@
       "resources": [
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat('clientVm', copyindex(), '/installelasticsearch')]",
+          "name": "[concat('esClient-16-04-', parameters('env'), '-', copyindex(), '/installelasticsearch')]",
           "apiVersion": "2015-06-15",
           "location": "[parameters('location')]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', 'clientVm', copyindex())]"
+            "[concat('Microsoft.Compute/virtualMachines/', 'esClient-16-04-', parameters('env'), '-', copyindex())]"
           ],
           "properties": "[parameters('osSettings').extentionSettings.client]"
         }   
