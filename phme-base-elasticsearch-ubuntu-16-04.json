@@ -657,9 +657,6 @@
           },
           "ilbIpAddress": {
             "value": "10.0.1.100"
-          },
-          "namespace": {
-            "value": "jumpbox-16-04"
           }
         }
       }
@@ -790,6 +787,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "namespace": {
+            "value": "jumpbox-16-04"
           }
         }
       }
