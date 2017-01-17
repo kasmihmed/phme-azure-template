@@ -660,7 +660,7 @@
           },
           "namespace": {
             "value": "jumpbox-16-04"
-          },
+          }
         }
       }
     },
