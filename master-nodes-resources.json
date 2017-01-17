@@ -79,7 +79,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('masterNodeNic', copyindex())]",
+      "name": "[concat('masterNodeNic-16-04-', parameters('env'), '-', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "masterNodesNicLoop",
