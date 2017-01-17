@@ -138,10 +138,11 @@ expand_ip_range() {
     #Get the IP Addresses on this machine
     declare -a MY_IPS=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
     declare -a EXPAND_STATICIP_RANGE_RESULTS=()
-    for (( n=0 ; n<"${HOST_IPS[1]}"+0 ; n++))
+    declare -a ips_number=$((${HOST_IPS[1]}))
+    for (( n=0 ; n<$ips_number ; n++))
     do
-        HOST="${HOST_IPS[0]}${n}"
-        if ! [[ "${MY_IPS[@]}" =~ "${HOST}" ]]; then
+        declare -a HOST="${HOST_IPS[0]}${n}"
+        if ! [[ "${MY_IPS[@]}" =~ $HOST ]]; then
             EXPAND_STATICIP_RANGE_RESULTS+=($HOST)
         fi
     done
