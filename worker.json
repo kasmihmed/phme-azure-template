@@ -198,7 +198,7 @@
               "createOption":"FromImage",
               "osType": "Linux",
               "vhdContainers": [
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), copyindex(), '-osdisk.vhd')]"
+                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', copyindex(), '-osdisk.vhd')]"
               ]
             },
             "imageReference": {
