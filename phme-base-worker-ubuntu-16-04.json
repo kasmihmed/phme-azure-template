@@ -680,7 +680,7 @@
             "value": "[parameters('location')]"
           },
           "ubuntuOSVersion": {
-            "value": "[variables('ubuntuSettings/imageReference/sku')]"
+            "value": "[variables('ubuntuSettings').imageReference.sku]"
           }
         }
       }
