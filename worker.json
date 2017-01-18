@@ -166,7 +166,43 @@
   "resources":[
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('vhd_storage_account')]",
+      "name": "[concat(parameters('vhd_storage_account'), '1')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '2')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '3')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '4')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '5')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -179,7 +215,11 @@
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "dependsOn":[
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '1')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '2')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '3')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '4')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '5')]"
       ],
       "sku":{
         "name":"[parameters('vmSku')]",
@@ -198,11 +238,11 @@
               "createOption":"FromImage",
               "osType": "Linux",
               "vhdContainers": [
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', '1', '-osdisk.vhd')]",
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', '2', '-osdisk.vhd')]",
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', '3', '-osdisk.vhd')]",
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', '4', '-osdisk.vhd')]",
-                "[concat('http://',parameters('vhd_storage_account'),'.blob.core.windows.net/vhds/', parameters('vmssName'), '-', '5', '-osdisk.vhd')]"
+                "[concat('http://',parameters('vhd_storage_account'),'1','.blob.core.windows.net/vhds/', parameters('vmssName'), '-osdisk.vhd')]",
+                "[concat('http://',parameters('vhd_storage_account'),'2','.blob.core.windows.net/vhds/', parameters('vmssName'), '-osdisk.vhd')]",
+                "[concat('http://',parameters('vhd_storage_account'),'3','.blob.core.windows.net/vhds/', parameters('vmssName'), '-osdisk.vhd')]",
+                "[concat('http://',parameters('vhd_storage_account'),'4','.blob.core.windows.net/vhds/', parameters('vmssName'), '-osdisk.vhd')]",
+                "[concat('http://',parameters('vhd_storage_account'),'5','.blob.core.windows.net/vhds/', parameters('vmssName'), '-osdisk.vhd')]"
               ]
             },
             "imageReference": {
