@@ -318,6 +318,9 @@ ES_HEAP=${ES_HEAP%.*}
 log "Configure elasticsearch heap size - $ES_HEAP"
 echo "ES_HEAP_SIZE=${ES_HEAP}m" >> /etc/default/elasticsearch
 echo "DATA_DIR=/var/lib/elasticsearch" >> /etc/default/elasticsearch
+echo "LOG_DIR=/var/log/elasticsearch" >> /etc/default/elasticsearch
+echo "CONF_DIR=/etc/elasticsearch" >> /etc/default/elasticsearch
+echo "CONF_FILE=/etc/elasticsearch/elasticsearch.yml" >> /etc/default/elasticsearch
 
 #Optionally Install Marvel
 if [ ${INSTALL_MARVEL} -ne 0 ]; then
