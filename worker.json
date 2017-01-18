@@ -200,7 +200,7 @@
             "osDisk":{
               "name":"[variables('osDiskName')]",
               "caching":"ReadOnly",
-              "createOption":"FromImage",
+              "createOption":"attach",
               "osType": "Linux",
               "image": {
                 "uri": "[parameters('worker_image_uri')]"
