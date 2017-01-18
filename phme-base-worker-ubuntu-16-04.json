@@ -395,7 +395,7 @@
       "imageReference":{
         "publisher": "Canonical",
         "offer": "UbuntuServer",
-        "sku": "14.06-LTS",
+        "sku": "16.04-LTS",
         "version": "latest"
       },
       "managementPort":"22",
