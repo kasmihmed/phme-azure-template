@@ -324,8 +324,8 @@
                 "properties": {
                   "publisher": "Microsoft.Compute",
                   "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "2.1",
-                  "autoUpgradeMinorVersion": false,
+                  "typeHandlerVersion": "1.4",
+                  "autoUpgradeMinorVersion": true,
                   "settings": {
                     "fileUris": [
                       "[concat(parameters('templateBaseUrl'), 'pickit_install.sh')]"
