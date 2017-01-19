@@ -324,12 +324,14 @@
                 "properties": {
                   "publisher": "Microsoft.OSTCExtensions",
                   "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "2.1",
+                  "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": false,
                   "settings": {
                     "fileUris": [
                       "[concat(parameters('templateBaseUrl'), 'pickit_install.sh')]"
-                    ],
+                    ]
+                  },
+                  "protectedSettings": {
                     "commandToExecute": "[concat('bash pickit_install.sh')]"
                   }
                 }
