@@ -322,16 +322,14 @@
               {
                 "name": "PickitInstall",
                 "properties": {
-                  "publisher": "Microsoft.Compute",
+                  "publisher": "Microsoft.OSTCExtensions",
                   "type": "CustomScriptExtension",
                   "typeHandlerVersion": "1.4",
-                  "autoUpgradeMinorVersion": true,
+                  "autoUpgradeMinorVersion": false,
                   "settings": {
                     "fileUris": [
                       "[concat(parameters('templateBaseUrl'), 'pickit_install.sh')]"
-                    ]
-                  },
-                  "protectedSettings": {
+                    ],
                     "commandToExecute": "[concat('bash pickit_install.sh')]"
                   }
                 }
