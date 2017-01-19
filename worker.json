@@ -323,8 +323,8 @@
                 "name": "PickitInstall",
                 "properties": {
                   "publisher": "Microsoft.OSTCExtensions",
-                  "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "1.5",
+                  "type": "CustomScriptForLinux",
+                  "typeHandlerVersion": "2.0",
                   "autoUpgradeMinorVersion": false,
                   "settings": {
                     "fileUris": [
