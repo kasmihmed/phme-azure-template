@@ -316,7 +316,6 @@
                   "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
                 ],
                 "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
-                }
               }
             ]
           }
