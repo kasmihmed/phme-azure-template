@@ -306,6 +306,16 @@
                     "storageAccountEndPoint": "https://core.windows.net"
                   }
                 }
+              },
+              {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "name": "[concat('clientVm', copyindex(), '/installelasticsearch')]",
+                "apiVersion": "2015-06-15",
+                "location": "[parameters('location')]",
+                "dependsOn": [
+                  "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
+                ],
+                "properties": "[parameters('osSettings').extentionSettings.client]"
               }
             ]
           }
