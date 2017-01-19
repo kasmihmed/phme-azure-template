@@ -314,14 +314,21 @@
                 }
               },
               {
-                "type": "Microsoft.Compute/virtualMachines/extensions",
-                "name": "[concat(parameters('vmssName'), '/pickit-install')]",
-                "apiVersion": "2015-06-15",
-                "location": "[parameters('location')]",
-                "dependsOn": [
-                  "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
-                ],
-                "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
+                "name": "PickitInstall",
+                "properties": {
+                  "publisher": "Microsoft.Compute",
+                  "type": "CustomScriptExtension",
+                  "typeHandlerVersion": "2.1",
+                  "autoUpgradeMinorVersion": false,
+                  "settings": {
+                    "fileUris": [
+                      "[concat(parameters('templateBaseUrl'), 'pickit_install.sh')]"
+                    ]
+                  },
+                  "protectedSettings": {
+                    "commandToExecute": "[concat('bash pickit_install.sh')]"
+                  }
+                }
               }
             ]
           }

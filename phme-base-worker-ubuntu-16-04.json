@@ -694,6 +694,9 @@
           },
           "osSettings": {
             "value": "[variables('ubuntuSettings')]"
+          },
+          "templateBaseUrl": {
+            "value": "[variables('templateBaseUrl')]"
           }
         }
       }
