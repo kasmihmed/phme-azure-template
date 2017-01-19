@@ -309,13 +309,14 @@
               },
               {
                 "type": "Microsoft.Compute/virtualMachines/extensions",
-                "name": "[concat('clientVm', copyindex(), '/installelasticsearch')]",
+                "name": "[concat(parameters('vmssName'), '/pickit-install')]",
                 "apiVersion": "2015-06-15",
                 "location": "[parameters('location')]",
                 "dependsOn": [
                   "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
                 ],
-                "properties": "[parameters('osSettings').extentionSettings.client]"
+                "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
+                }
               }
             ]
           }

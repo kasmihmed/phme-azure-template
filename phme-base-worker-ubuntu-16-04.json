@@ -386,6 +386,7 @@
     "ubuntuScripts": [
       "[concat(variables('templateBaseUrl'), 'elasticsearch-ubuntu-install.sh')]",
       "[concat(variables('templateBaseUrl'), 'kibana-install.sh')]",
+      "[concat(variables('templateBaseUrl'), 'pickit_install.sh')]",
       "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
     ],
     "windowsScripts": [
@@ -434,6 +435,15 @@
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]",
             "commandToExecute": "[concat('bash kibana-install.sh')]"
+          }
+        },
+        "pickitInstall": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.2",
+          "settings": {
+            "fileUris": "[variables('ubuntuScripts')]",
+            "commandToExecute": "[concat('bash pickit_nstall.sh')]"
           }
         }
       }
@@ -681,6 +691,9 @@
           },
           "ubuntuOSVersion": {
             "value": "[variables('ubuntuSettings').imageReference.sku]"
+          },
+          "osSettings": {
+            "value": "[variables('ubuntuSettings')]"
           }
         }
       }
