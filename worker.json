@@ -324,7 +324,7 @@
                 "properties": {
                   "publisher": "Microsoft.OSTCExtensions",
                   "type": "CustomScriptExtension",
-                  "typeHandlerVersion": "1.4",
+                  "typeHandlerVersion": "2.1",
                   "autoUpgradeMinorVersion": false,
                   "settings": {
                     "fileUris": [
