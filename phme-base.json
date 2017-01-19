@@ -429,6 +429,20 @@
             "fileUris": "[variables('ubuntuScripts')]",
             "commandToExecute": "[concat('bash kibana-install.sh')]"
           }
+        },
+        "pickitInstall": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.5",
+          "autoUpgradeMinorVersion": false,
+          "settings": {
+            "fileUris": [
+              "[concat(variables('templateBaseUrl'), 'pickit_install.sh')]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('bash pickit_install.sh')]"
+          }
         }
       }
     },
