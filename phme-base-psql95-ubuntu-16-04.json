@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "commonSettings": {
+      "type": "object"
+    },
+    "storageSettings": {
+      "type": "object"
+    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -49,7 +55,7 @@
         "windows"
       ],
       "metadata": {
-        "description": "The operating system to deploy PostgreSQL cluster on"
+        "description": "The operating system to deploy Elasticsearch cluster on"
       }
     },
     "loadBalancerType": {
@@ -60,7 +66,7 @@
         "external"
       ],
       "metadata": {
-        "description": "Setup the load balancer internal or external."
+        "description": "Setup the load balancer internal or external.  If you are setting up Elasticsearch on an external endpoint you will need to secure your nodes with a product like Elasticsearch Shield"
       }
     },
     "jumpbox": {
@@ -85,21 +91,21 @@
         4
       ],
       "metadata": {
-        "description": "Number of PostgreSQL client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
+        "description": "Number of Elasticsearch client nodes to provision (Setting this to zero puts the data nodes on the load balancer)"
       }
     },
     "vmSizeClientNodes": {
       "type": "string",
       "defaultValue": "Standard_A1",
       "metadata": {
-        "description": "Size of the PostgreSQL cluster client nodes"
+        "description": "Size of the Elasticsearch cluster client nodes"
       }
     },
     "vmSizeMasterNodes": {
       "type": "string",
       "defaultValue": "Standard_A0",
       "metadata": {
-        "description": "Size of the PostgreSQL master nodes"
+        "description": "Size of the Elasticsearch master nodes"
       }
     },
     "vmSizeDataNodes": {
@@ -121,32 +127,34 @@
         "Standard_DS13"
       ],
       "metadata": {
-        "description": "Size of the PostgreSQL data nodes"
+        "description": "Size of the Elasticsearch data nodes"
       }
     },
     "vmDataNodeCount": {
       "type": "int",
       "defaultValue": 5,
       "metadata": {
-        "description": "Number of PostgreSQL data nodes"
+        "description": "Number of Elasticsearch data nodes"
       }
     },
-    "psqlClusterName": {
+    "esClusterName": {
       "type": "string",
-      "defaultValue": "postgresql",
+      "defaultValue": "elasticsearch",
       "metadata": {
-        "description": "The name of the PostgreSQL cluster"
+        "description": "The name of the Elasticsearch cluster"
       }
     },
-    "psqlVersion": {
+    "esVersion": {
       "type": "string",
-      "defaultValue": "9.5",
+      "defaultValue": "1.5.2",
       "allowedValues": [
-        "9.5",
-        "9.1"
+        "2.1.0",
+        "2.0.1",
+        "1.7.3",
+        "1.5.2"
       ],
       "metadata": {
-        "description": "PostgreSQL version to install"
+        "description": "Elasticsearch version to install"
       }
     },
     "marvel": {
@@ -171,10 +179,10 @@
         "description": "Provision a machine with Kibana on it"
       }
     },
-    "psqlBlobStorageKey": {
+    "elasticBlobStorageKey": {
       "type":"string",
       "metadata": {
-        "description": "Blob Storage key to make backups in PostgreSQL"
+        "description": "Blob Storage key to make backups in ElasticSearch"
       }
     },
     "dbAdminUsername": {
@@ -269,6 +277,24 @@
         "description": "GrayLog storage account"
       }
     }
+    "vhd_storage_account": {
+      "type": "string",
+      "metadata": {
+        "description": "VHD storage account for instance disks"
+      }
+    },
+    "machineSettings": {
+      "type": "object"
+    },
+    "subnet": {
+      "type": "object"
+    },
+    "masterIpAddress": {
+      "type": "string"
+    },
+    "dbType": {
+      "type": "string"
+    }
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
@@ -287,7 +313,7 @@
         "sharedTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/shared-template.json",
         "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
         "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/db-template.json",
-        "psqlTemplateUri":"",
+        "elasticsearchTemplateUri":"",
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },
     "location":"[variables('locationMap')[parameters('location')]]",
@@ -315,11 +341,11 @@
         }
       }
     },
-    "psqlSettings": {
-      "clusterName": "[parameters('psqlClusterName')]",
-      "version": "[parameters('psqlVersion')]",
+    "esSettings": {
+      "clusterName": "[parameters('esClusterName')]",
+      "version": "[parameters('esVersion')]",
       "discoveryHosts": "[concat(variables('masterNodesIpPrefix'), '-3')]",
-      "blobStorageKey": "[parameters('psqlBlobStorageKey')]"
+      "blobStorageKey": "[parameters('elasticBlobStorageKey')]"
     },
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'shared-template.json')]",
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
@@ -369,19 +395,20 @@
     },
     "kibanaTemplateUrl":"[concat(variables('templateBaseUrl'), variables('kibanaTemplates')[parameters('kibana')], '')]",
     "scriptParams": [
-      "[concat('version=', parameters('psqlVersion'), ';')]",
-      "[concat('clusterName=', parameters('psqlClusterName'), ';')]",
+      "[concat('version=', parameters('esVersion'), ';')]",
+      "[concat('clusterName=', parameters('esClusterName'), ';')]",
       "[concat('discoveryHosts=', variables('masterNodesIpPrefix'), '-3', ';')]",
       "[concat('installMarvel=', parameters('marvel'), ';')]"
     ],
     "scriptParamString":"[concat(variables('scriptParams')[0], variables('scriptParams')[1], variables('scriptParams')[2], variables('scriptParams')[3] )]",
     "ubuntuScripts": [
-      "[concat(variables('templateBaseUrl'), 'install_postgresql.sh')]",
+      "[concat(variables('templateBaseUrl'), 'elasticsearch-ubuntu-install.sh')]",
       "[concat(variables('templateBaseUrl'), 'kibana-install.sh')]",
+      "[concat(variables('templateBaseUrl'), 'install-postgresql-95.sh')]",
       "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
     ],
     "windowsScripts": [
-      "[concat(variables('templateBaseUrl'), 'install_postgresql.ps1')]"
+      "[concat(variables('templateBaseUrl'), 'elasticsearch-windows-install.ps1')]"
     ],
     "ubuntuSettings": {
       "imageReference":{
@@ -398,7 +425,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash install_postgresql.sh -xn ', variables('psqlSettings').clusterName, ' -v ', variables('psqlSettings').version, ' -d ', variables('psqlSettings').discoveryHosts, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -xn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "client": {
@@ -407,7 +434,7 @@
             "typeHandlerVersion": "1.2",
             "settings": {
               "fileUris": "[variables('ubuntuScripts')]",
-              "commandToExecute": "[concat('bash install_postgresql.sh -yn ', variables('psqlSettings').clusterName, ' -v ', variables('psqlSettings').version, ' -d ', variables('psqlSettings').discoveryHosts, variables('marvelParamValue'))]"
+              "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -yn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
             }
           },
         "data": {
@@ -416,7 +443,7 @@
           "typeHandlerVersion": "1.2",
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "[concat('bash install_postgresql.sh -zn ', variables('psqlSettings').clusterName, ' -v ', variables('psqlSettings').version, ' -d ', variables('psqlSettings').discoveryHosts, variables('marvelParamValue'))]"
+            "commandToExecute": "[concat('bash elasticsearch-ubuntu-install.sh -zn ', variables('esSettings').clusterName, ' -v ', variables('esSettings').version, ' -d ', variables('esSettings').discoveryHosts, variables('marvelParamValue'))]"
           }
         },
         "kibana": {
@@ -426,6 +453,15 @@
           "settings": {
             "fileUris": "[variables('ubuntuScripts')]",
             "commandToExecute": "[concat('bash kibana-install.sh')]"
+          }
+        },
+        "dbs": {
+          "publisher": "Microsoft.OSTCExtensions",
+          "type": "CustomScriptForLinux",
+          "typeHandlerVersion": "1.2",
+          "settings": {
+            "fileUris": "[variables('ubuntuScripts')]",
+            "commandToExecute": "[concat('install-postgresql-95.sh')]"
           }
         }
       }
@@ -445,7 +481,7 @@
           "typeHandlerVersion": "1.4",
           "settings": {
             "fileUris": "[variables('windowsScripts')]",
-            "commandToExecute": "[concat('powershell.exe -File install_postgresql.ps1 -psqlSearchVersion ', variables('psqlSettings').version,' -psqlClusterName ', variables('psqlSettings').clusterName,' -discoveryEndpoints ', variables('psqlSettings').discoveryHosts, ' -masterOnlyNode -installMarvel')]"
+            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').clusterName,' -discoveryEndpoints ', variables('esSettings').discoveryHosts, ' -masterOnlyNode -installMarvel')]"
           }
         },
         "client": {
@@ -454,7 +490,7 @@
           "typeHandlerVersion": "1.4",
           "settings": {
             "fileUris": "[variables('windowsScripts')]",
-            "commandToExecute": "[concat('powershell.exe -File install_postgresql.ps1 -psqlSearchVersion ', variables('psqlSettings').version,' -psqlClusterName ', variables('psqlSettings').clusterName,' -discoveryEndpoints ', variables('psqlSettings').discoveryHosts, ' -clientOnlyNode -installMarvel')]"
+            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').clusterName,' -discoveryEndpoints ', variables('esSettings').discoveryHosts, ' -clientOnlyNode -installMarvel')]"
           }
         },
         "data": {
@@ -463,7 +499,7 @@
           "typeHandlerVersion": "1.4",
           "settings": {
             "fileUris": "[variables('windowsScripts')]",
-            "commandToExecute": "[concat('powershell.exe -File install_postgresql.ps1 -psqlSearchVersion ', variables('psqlSettings').version,' -psqlClusterName ', variables('psqlSettings').clusterName,' -discoveryEndpoints ', variables('psqlSettings').discoveryHosts, ' -dataOnlyNode -installMarvel')]"
+            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').clusterName,' -discoveryEndpoints ', variables('esSettings').discoveryHosts, ' -dataOnlyNode -installMarvel')]"
           }
         }
       }
@@ -617,329 +653,9 @@
           },
           "virtualNetworkName": {
             "value": "[parameters('virtualNetworkName')]"
-          }
-        }
-      }
-    },
-    {
-      "name":"shared-psql",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared')]"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('databaseTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
           },
-          "networkSettings": {
-            "value": "[variables('networksettings')]"
-          },
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "ilbIpAddress": {
-            "value": "10.0.1.100"
-          }
-        }
-      }
-    },
-    {
-      "name": "master-nodes",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('masterTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "masterNodesIpPrefix": {
-            "value": "[variables('masterNodesIpPrefix')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "vmSize": {
-            "value": "[parameters('vmSizeMasterNodes')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.master]"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
-          },
-          "env": {
-            "value": "[parameters('env')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "client-nodes",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared-psql')]",
-        "[concat('Microsoft.Resources/deployments/', 'master-nodes')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('clientTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.data]"
-          },
-          "vmSize": {
-            "value": "[parameters('vmSizeClientNodes')]"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
-          },
-          "vmCount": {
-            "value": "[parameters('vmClientNodeCount')]"
-          },
-          "lbBackendPools": {
-            "value": "[variables('lbBackEndPoolsAdded')]"
-          },
-          "env": {
-            "value": "[parameters('env')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "data-nodes",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared-psql')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('dataTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "storageSettings": {
-            "value": "[variables('dataNodeStorageSettings')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.data]"
-          },
-          "vmSize": {
-            "value": "[parameters('vmSizeDataNodes')]"
-          },
-          "vmCount": {
-            "value": "[parameters('vmDataNodeCount')]"
-          },
-          "namespace": {
-            "value": "psqldata"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
-          },
-          "lbBackendPools": {
-            "value": "[variables('dataLBSettings')]"
-          },
-          "env": {
-            "value": "[parameters('env')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "psql-jumpbox",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'shared-psql')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('jumpboxTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.data]"
-          },
-          "osSettings": {
-            "value": "[variables('osSettings')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "kibana",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Resources/deployments/', 'data-nodes')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('kibanaTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[variables('storageAccountNameShared')]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.data]"
-          },
-          "osSettings": {
-            "value": "[variables('ubuntuSettings')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "graylog",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('graylogTemplateUrl')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "storageAccountName": {
-            "value": "[concat('graylog', parameters('env'))]"
-          },
-          "adminUsername": {
-            "value": "[parameters('adminUsername')]"
-          },
-          "adminPassword": {
-            "value": "[parameters('adminPassword')]"
-          },
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "subnet": {
-            "value": "[variables('networkSettings').subnet.web]"
-          },
-          "osSettings": {
-            "value": "[variables('ubuntuSettings')]"
-          },
-          "namespace": {
-            "value": "[concat('graylog-', parameters('env'))]"
-          }
-        }
-      }
-    },
-    {
-      "name":"webs",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink":{
-         "uri":"[variables('websTemplateUri')]" ,
-          "contentVersion":"1.0.0.0"
-        },
-        "parameters":{
-          "resourceLocation":{
-            "value":"[parameters('location')]"
-          },
-          "vmssName":{
-            "value":"[concat('web', parameters('env'))]"
-          },
-          "virtualNetworkName":{
-            "value":"[parameters('virtualNetworkName')]"
-          },
-          "instanceCount":{
-            "value":"[parameters('number_webs')]"
-          },
-          "adminUsername":{
-            "value":"[parameters('adminusername')]"
-          },
-          "adminPassword":{
-            "value":"[parameters('adminpassword')]"
-          },
-          "web_image_uri": {
-            "value":"[parameters('web_image_uri')]"
-          },
-          "vmSku": {
-            "value": "[parameters('vmSizeWebs')]"
-          },
-          "env": {
-            "value": "[parameters('env')]"
+          "vhd_storage_account": {
+            "value": "[parameters('vhd_storage_account')]"
           }
         }
       }
@@ -990,50 +706,6 @@
           },
           "virtualNetworkName": {
             "value": "[parameters('virtualNetworkName')]"
-          },
-          "env": {
-            "value": "[parameters('env')]"
-          }
-        }
-      }
-    },
-    {
-      "name":"workers",
-      "type":"Microsoft.Resources/deployments",
-      "apiVersion":"2015-01-01",
-      "dependsOn":[
-        "Microsoft.Resources/deployments/shared"
-      ],
-      "properties":{
-        "mode":"Incremental",
-        "templateLink": {
-          "uri": "[variables('workerTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters":{
-          "resourceLocation":{
-            "value":"[parameters('location')]"
-          },
-          "instanceCount":{
-            "value":"[parameters('number_workers')]"
-          },
-          "adminUsername":{
-            "value":"[parameters('adminusername')]"
-          },
-          "adminPassword":{
-            "value":"[parameters('adminpassword')]"
-          },
-          "worker_image_uri": {
-            "value":"[parameters('worker_image_uri')]"
-          },
-          "vmssName":{
-            "value":"[concat('worker', parameters('env'))]"
-          },
-          "virtualNetworkName":{
-            "value":"[parameters('virtualNetworkName')]"
-          },
-          "vmSku": {
-            "value": "[parameters('vmSizeWorkers')]"
           },
           "env": {
             "value": "[parameters('env')]"
