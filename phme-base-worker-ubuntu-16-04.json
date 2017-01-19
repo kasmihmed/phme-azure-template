@@ -440,10 +440,15 @@
         "pickitInstall": {
           "publisher": "Microsoft.OSTCExtensions",
           "type": "CustomScriptForLinux",
-          "typeHandlerVersion": "1.2",
+          "typeHandlerVersion": "1.5",
+          "autoUpgradeMinorVersion": false,
           "settings": {
-            "fileUris": "[variables('ubuntuScripts')]",
-            "commandToExecute": "[concat('bash pickit_nstall.sh')]"
+            "fileUris": [
+              "[concat(variables('templateBaseUrl'), 'pickit_install.sh')]"
+            ]
+          },
+          "protectedSettings": {
+            "commandToExecute": "[concat('bash pickit_install.sh')]"
           }
         }
       }
@@ -694,9 +699,6 @@
           },
           "osSettings": {
             "value": "[variables('ubuntuSettings')]"
-          },
-          "templateBaseUrl": {
-            "value": "[variables('templateBaseUrl')]"
           }
         }
       }

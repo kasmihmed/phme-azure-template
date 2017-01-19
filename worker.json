@@ -120,12 +120,6 @@
       "metadata": {
         "description": "Elasticsearch deployment platform settings"
       }
-    },
-    "templateBaseUrl": {
-      "type": "string",
-      "metadata": {
-        "description": "Template base url"
-      }
     }
   },
   "variables":{
@@ -321,20 +315,7 @@
               },
               {
                 "name": "PickitInstall",
-                "properties": {
-                  "publisher": "Microsoft.OSTCExtensions",
-                  "type": "CustomScriptForLinux",
-                  "typeHandlerVersion": "1.5",
-                  "autoUpgradeMinorVersion": false,
-                  "settings": {
-                    "fileUris": [
-                      "[concat(parameters('templateBaseUrl'), 'pickit_install.sh')]"
-                    ]
-                  },
-                  "protectedSettings": {
-                    "commandToExecute": "[concat('bash pickit_install.sh')]"
-                  }
-                }
+                "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
               }
             ]
           }
