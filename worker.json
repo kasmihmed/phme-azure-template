@@ -114,6 +114,12 @@
       "metadata": {
         "description": "VHD storage account for instance disks"
       }
+    },
+    "osSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Elasticsearch deployment platform settings"
+      }
     }
   },
   "variables":{
