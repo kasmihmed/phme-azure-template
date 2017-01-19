@@ -120,6 +120,12 @@
       "metadata": {
         "description": "Elasticsearch deployment platform settings"
       }
+    },
+    "templateBaseUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Template base url"
+      }
     }
   },
   "variables":{
