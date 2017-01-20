@@ -160,14 +160,4 @@ ssh-add /home/phme/.ssh/id_rsa
 
 log '** GIT keyscan and credentials **'
 
-# get GIT keys
-#cd /home/phme/.ssh
-#wget "https://phmecloud.blob.core.windows.net/system/deployment-keys/development/id_rsa?st=2017-01-19T23%3A33%3A00Z&se=2017-01-20T23%3A33%3A00Z&sp=rl&sv=2015-04-05&sr=b&sig=4punGhK0mjBGnccIEL9ze%2BheR1LIFd1Eqo60RQ74ECI%3D" -O id_rsa
-#wget "https://phmecloud.blob.core.windows.net/system/deployment-keys/development/id_rsa.pub?st=2017-01-19T23%3A33%3A00Z&se=2017-01-20T23%3A33%3A00Z&sp=rl&sv=2015-04-05&sr=b&sig=R3rfeyROcjASpu8OaPNPm0JnmBKfnWVltHbSrvPOh9Q%3D" -O id_rsa.pub
-#chmod 600 id_rsa
-#chmod 644 id_rsa.pub
-
-#ssh-agent /bin/bash
-#ssh-add /home/phme/.ssh/id_rsa
-
 exit 0
