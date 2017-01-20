@@ -41,7 +41,11 @@ log()
     echo "$1"
 }
 
-ENV = ""
+ENV=""
+DJANGO_SETTINGS_MODULE=""
+CLARIFAI_APP_ID=""
+CLARIFAI_APP_SECRET=""
+
 
 #Loop through options passed
 while getopts :h optname; do
@@ -168,14 +172,13 @@ cat >/home/phme/config/crontab <<EOL
 #
 # m h  dom mon dow   command
 
-DJANGO_SETTINGS_MODULE=settings.development
-CLARIFAI_APP_ID=c49aGFGUQxeb7Nc8-YTCMQIu_RPrFxbQKBPD4NzY
-CLARIFAI_APP_SECRET=cGmH3_TdBRbDrQcGUH9Kcj_Qju-poqjn_NYThp8I
+DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+CLARIFAI_APP_ID=${CLARIFAI_APP_ID}
+CLARIFAI_APP_SECRET=${CLARIFAI_APP_SECRET}
 
 PYTHONPATH=/home/phme/pichit.me/phme_faraday
-# MAILTO="jalegre39@gmail.com"
 
-#0 10 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/manage.py upload_crowdflower --contribution_limit 1000 -v 0 --settings settings.live.worker
+#0 10 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/manage.py upload_crowdflower --contribution_limit 1000 -v 0 --settings ${DJANGO_SETTINGS_MODULE}
 
 0 1 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/do_search_cam
 #0 7 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/daily_analytics
@@ -185,5 +188,7 @@ EOL
 crontab -u phme /home/phme/config/crontab
 
 # supervisor configs building for different processes running
+
+# /etc/supervisor/supervisord.conf -> We need update with environment variables
 
 exit 0
