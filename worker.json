@@ -312,10 +312,6 @@
                     "storageAccountEndPoint": "https://core.windows.net"
                   }
                 }
-              },
-              {
-                "name": "PickitInstall",
-                "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
               }
             ]
           }
