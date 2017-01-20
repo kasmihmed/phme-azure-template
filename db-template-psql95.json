@@ -104,7 +104,7 @@
     "tshirtSizeSmall": {
       "vmSize": "Standard_D1",
       "diskSize": 1023,
-      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources-psql95.json')]",
       "vmCount": 2,
       "slaveCount": 1,
       "storage": {
