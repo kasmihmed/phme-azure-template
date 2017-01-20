@@ -99,7 +99,6 @@
     }
   },
   "variables": {
-    #"templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
     "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'db-shared-resources.json')]",
     "tshirtSizeSmall": {
