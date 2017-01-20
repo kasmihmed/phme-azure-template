@@ -116,7 +116,7 @@ echo deb http://apt.newrelic.com/debian/ newrelic non-free >> /etc/apt/sources.l
 wget -O- https://download.newrelic.com/548C16BF.gpg | sudo apt-key add -
 apt-get update
 apt-get install newrelic-sysmond -y > /dev/null
-nrsysmond-config --set license_key=$(NEWRELIC_LICENSE_KEY)
+nrsysmond-config --set license_key=${NEWRELIC_LICENSE_KEY}
 log '** newrelic **'
 
 apt-get install traceroute -y > /dev/null
