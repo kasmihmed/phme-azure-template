@@ -321,7 +321,7 @@
     "sharedESTemplateUrl": "[concat(variables('templateBaseUrl'), 'es-shared-resources.json')]",
     "masterTemplateUrl": "[concat(variables('templateBaseUrl'), 'master-nodes-resources.json')]",
     "redisTemplateUrl": "[concat(variables('templateBaseUrl'), 'redis-resources.json')]",
-    "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
+    "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template-psql95.json')]",
     "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
     "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
     "clientTemplates": [
