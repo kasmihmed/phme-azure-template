@@ -267,7 +267,8 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
+    #"templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
     "locationMap": {
         "ResourceGroup":"[resourceGroup().location]",
         "West US":"[parameters('location')]",
@@ -282,7 +283,7 @@
         "North Europe":"[parameters('location')]",
         "sharedTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/shared-template.json",
         "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
-        "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql95/db-template.json",
+        "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/db-template.json",
         "elasticsearchTemplateUri":"",
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },

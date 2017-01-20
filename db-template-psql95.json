@@ -99,7 +99,8 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
+    #"templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'db-shared-resources.json')]",
     "tshirtSizeSmall": {
       "vmSize": "Standard_D1",
@@ -121,7 +122,7 @@
     "tshirtSizeMedium": {
       "vmSize": "Standard_D3",
       "diskSize": 1023,
-      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources-psql95.json')]",
       "vmCount": 2,
       "slaveCount": 1,
       "storage": {
