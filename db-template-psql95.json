@@ -247,6 +247,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
+          "uri": "[variables('tshirtSize').vmTemplate]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
@@ -311,6 +312,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
+          "uri": "[variables('tshirtSize').vmTemplate]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
