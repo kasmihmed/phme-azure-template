@@ -74,12 +74,6 @@
     "worker_image_uri": {
       "value": "https://portalvhdsctqhxxq53f3s1.blob.core.windows.net/vhds/dev-ubuntu-upgrade-20170104-185270-os-2017-01-04-10F4E57A.vhd"
     },
-    "ubuntu_image_uri": {
-      "value": "https://pivhdsubunde.blob.core.windows.net/vhds/dev-ubuntu-upgrade-20170104-185270-os-2017-01-04-10F4E57A.vhd"
-    },
-    "ubuntu_storage_account": {
-      "value": "pivhdsubunde"
-    },
     "number_webs": {
       "value": 2
     },
@@ -94,6 +88,9 @@
     },
     "env": {
       "value": "de"
+    },
+	"vhd_storage_account": {
+      "value": "pivhdsubunde"
     }
   }
 }

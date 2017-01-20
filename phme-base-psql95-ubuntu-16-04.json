@@ -2,12 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "commonSettings": {
-      "type": "object"
-    },
-    "storageSettings": {
-      "type": "object"
-    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -265,35 +259,11 @@
         "description": "Two letters for environment: de, li, etc..."
       }
     },
-    "graylog_image_uri": {
-      "type": "string",
-      "metadata": {
-        "description": "Instance image_uri"
-      }
-    },
-    "graylog_storage_account": {
-      "type": "string",
-      "metadata": {
-        "description": "GrayLog storage account"
-      }
-    }
     "vhd_storage_account": {
       "type": "string",
       "metadata": {
         "description": "VHD storage account for instance disks"
       }
-    },
-    "machineSettings": {
-      "type": "object"
-    },
-    "subnet": {
-      "type": "object"
-    },
-    "masterIpAddress": {
-      "type": "string"
-    },
-    "dbType": {
-      "type": "string"
     }
   },
   "variables": {
@@ -312,7 +282,7 @@
         "North Europe":"[parameters('location')]",
         "sharedTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/shared-template.json",
         "websTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/webs-template.json",
-        "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/db-template.json",
+        "databaseTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql95/db-template.json",
         "elasticsearchTemplateUri":"",
         "workerTemplateUri":"https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/worker.json"
     },
@@ -354,7 +324,6 @@
     "databaseTemplateUri": "[concat(variables('templateBaseUrl'), 'db-template.json')]",
     "websTemplateUri": "[concat(variables('templateBaseUrl'), 'webs-template.json')]",
     "workerTemplateUri": "[concat(variables('templateBaseUrl'), 'worker.json')]",
-    "graylogTemplateUrl": "[concat(variables('templateBaseUrl'), 'graylog-resources.json')]",
     "clientTemplates": [
       "empty-resources.json",
       "client-nodes-resources.json"
