@@ -99,10 +99,18 @@ install_postgresql_service() {
 	# Install PostgreSQL if it is not yet installed
 	if [ $(dpkg-query -W -f='${Status}' postgresql 2>/dev/null | grep -c "ok installed") -eq 0 ];
 	then
-	  apt-get -y install postgresql-9.1
+	  apt-get -y install postgresql-9.5
 	fi
 	
 	logger "Done installing PostgreSQL..."
+
+	# Create the custom user and DBs
+	sudo su postgres
+	createuser -h 10.0.4.4 --pwprompt pickit
+	createdb phme_db
+	createdb phme_cms_db
+	grant all privileges on all tables in schema public to pickit;
+	grant all privileges on all sequences in schema public to pickit;
 }
 
 setup_datadisks() {
