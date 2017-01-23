@@ -315,7 +315,21 @@
               },
               {
                 "name": "PickitInstall",
-                "properties": "[parameters('osSettings').extentionSettings.pickitInstall]"
+                "properties": {
+                  "publisher": "Microsoft.OSTCExtensions",
+                  "type": "CustomScriptForLinux",
+                  "typeHandlerVersion": "1.5",
+                  "autoUpgradeMinorVersion": false,
+                  "settings": {
+                    "fileUris": [
+                      "[concat(variables('templateBaseUrl'), 'pickit_install.sh')]"
+                    ]
+                  },
+                  "protectedSettings": {
+                    "commandToExecute":
+                    "[concat('bash pickit_install.sh ', '--newrelic_license_key', parameters('NEWRELIC_LICENSE_KEY'), '')]"
+                  }
+                }
               }
             ]
           }

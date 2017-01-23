@@ -175,7 +175,10 @@ PICKIT_CMS_POSTGRESQL_REPLICA_HOST=""
 PICKIT_CMS_POSTGRESQL_REPLICA_PORT=""
 PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD=""
 
-OPTS=`getopt -o vhns: --long newrelic_license_key:,help -n 'pickit_install' -- "$@"`
+OPTS=`getopt -o h --long "newrelic_license_key::,git_private_key::,git_public_key::,pickit_postgresql_user::,pickit_postgresql_database::,pickit_postgresql_host::,pickit_postgresql_port::,pickit_postgresql_password::,pickit_postgresql_replica_user::,pickit_postgresql_replica_database::,pickit_postgresql_replica_host::,pickit_postgresql_replica_port::,pickit_postgresql_replica_password::,pickit_azure_account_name::,pickit_azure_account_key::,pickit_azure_public_container::,pickit_azure_private_container::,pickit_email_host_user::,pickit_email_host_password::,pickit_email_port::,pickit_twitter_consumer_key::,pickit_twitter_consumer_secret::,pickit_facebook_app_id::,pickit_facebook_api_secret::,pickit_linkedin_consumer_key::,pickit_linkedin_consumer_secret::,pickit_google_oauth2_client_id::,pickit_google_oauth2_client_secret::,pickit_paypal_application_id::,pickit_paypal_userid::,pickit_paypal_password::,pickit_paypal_signature::,pickit_payex_encryption_key::,pickit_payex_merchant_account::,pickit_celery_broker_url::,pickit_crowd_flower_api_key_local::,pickit_crowd_flower_api_key::,pickit_redis_url::,pickit_mixpanel_token::,pickit_powerpoint_user::,pickit_orbeus_api_key::,pickit_orbeus_api_secret::,pickit_shutterstock_api_client::,pickit_shutterstock_api_secret::,pickit_stripe_public_key_sandbox::,pickit_stripe_secret_key_sandbox::,pickit_stripe_public_key::,pickit_stripe_secret_key::,pickit_mobile_service_token::,pickit_bing_translate_client_id::,pickit_bing_translate_client_secret::,pickit_new_relic_account_id::,pickit_new_relic_insights_key::,pickit_azure_moderation_subscription_id::,pickit_vatlayer_access_key::,pickit_vatlayer_access_dev_key::,pickit_vision_api_key::,pickit_cms_postgresql_user::,pickit_cms_postgresql_database::,pickit_cms_postgresql_host::,pickit_cms_postgresql_port::,pickit_cms_postgresql_password::,pickit_cms_postgresql_replica_user::,pickit_cms_postgresql_replica_database::,pickit_cms_postgresql_replica_host::,pickit_cms_postgresql_replica_port::,pickit_cms_postgresql_replica_password::,help::" -n 'pickit_install' -- "$@"`
+
+# OPTS=`getopt --long newrelic_license_key:,git_private_key::,git_public_key::,help:: -n 'pickit_install' -- "$@"`
+
 echo "$OPTS"
 eval set -- "$OPTS"
 
@@ -183,74 +186,74 @@ if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
 
 while true ; do
     case "$1" in
-        --newrelic_license_key ) NEWRELIC_LICENSE_KEY=$2; shift ;;
-        --git_private_key ) GIT_PRIVATE_KEY=$2; shift ;;
-        --git_public_key ) GIT_PUBLIC_KEY=$2; shift ;;
-        --pickit_postgresql_user ) PICKIT_POSTGRESQL_USER=$2; shift ;;
-        --pickit_postgresql_database ) PICKIT_POSTGRESQL_DATABASE=$2; shift ;;
-        --pickit_postgresql_host ) PICKIT_POSTGRESQL_HOST=$2; shift ;;
-        --pickit_postgresql_port ) PICKIT_POSTGRESQL_PORT=$2; shift ;;
-        --pickit_postgresql_password ) PICKIT_POSTGRESQL_PASSWORD=$2; shift ;;
-        --pickit_postgresql_replica_user ) PICKIT_POSTGRESQL_REPLICA_USER=$2; shift ;;
-        --pickit_postgresql_replica_database ) PICKIT_POSTGRESQL_REPLICA_DATABASE=$2; shift ;;
-        --pickit_postgresql_replica_host ) PICKIT_POSTGRESQL_REPLICA_HOST=$2; shift ;;
-        --pickit_postgresql_replica_port ) PICKIT_POSTGRESQL_REPLICA_PORT=$2; shift ;;
-        --pickit_postgresql_replica_password ) PICKIT_POSTGRESQL_REPLICA_PASSWORD=$2; shift ;;
-        --pickit_azure_account_name ) PICKIT_AZURE_ACCOUNT_NAME=$2; shift ;;
-        --pickit_azure_account_key ) PICKIT_AZURE_ACCOUNT_KEY=$2; shift ;;
-        --pickit_azure_public_container ) PICKIT_AZURE_PUBLIC_CONTAINER=$2; shift ;;
-        --pickit_azure_private_container ) PICKIT_AZURE_PRIVATE_CONTAINER=$2; shift ;;
-        --pickit_email_host_user ) PICKIT_EMAIL_HOST_USER=$2; shift ;;
-        --pickit_email_host_password ) PICKIT_EMAIL_HOST_PASSWORD=$2; shift ;;
-        --pickit_email_port ) PICKIT_EMAIL_PORT=$2; shift ;;
-        --pickit_twitter_consumer_key ) PICKIT_TWITTER_CONSUMER_KEY=$2; shift ;;
-        --pickit_twitter_consumer_secret ) PICKIT_TWITTER_CONSUMER_SECRET=$2; shift ;;
-        --pickit_facebook_app_id ) PICKIT_FACEBOOK_APP_ID=$2; shift ;;
-        --pickit_facebook_api_secret ) PICKIT_FACEBOOK_API_SECRET=$2; shift ;;
-        --pickit_linkedin_consumer_key ) PICKIT_LINKEDIN_CONSUMER_KEY=$2; shift ;;
-        --pickit_linkedin_consumer_secret ) PICKIT_LINKEDIN_CONSUMER_SECRET=$2; shift ;;
-        --pickit_google_oauth2_client_id ) PICKIT_GOOGLE_OAUTH2_CLIENT_ID=$2; shift ;;
-        --pickit_google_oauth2_client_secret ) PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET=$2; shift ;;
-        --pickit_paypal_application_id ) PICKIT_PAYPAL_APPLICATION_ID=$2; shift ;;
-        --pickit_paypal_user_id ) PICKIT_PAYPAL_USERID=$2; shift ;;
-        --pickit_paypal_password ) PICKIT_PAYPAL_PASSWORD=$2; shift ;;
-        --pickit_paypal_signature ) PICKIT_PAYPAL_SIGNATURE=$2; shift ;;
-        --pickit_payex_encryption_key ) PICKIT_PAYEX_ENCRYPTION_KEY=$2; shift ;;
-        --pickit_payex_merchant_account ) PICKIT_PAYEX_MERCHANT_ACCOUNT=$2; shift ;;
-        --pickit_celery_broker_url ) PICKIT_CELERY_BROKER_URL=$2; shift ;;
-        --pickit_crowd_flower_api_key_local ) PICKIT_CROWD_FLOWER_API_KEY_LOCAL=$2; shift ;;
-        --pickit_crowd_flower_api_key ) PICKIT_CROWD_FLOWER_API_KEY=$2; shift ;;
-        --pickit_redis_url ) PICKIT_REDIS_URL=$2; shift ;;
-        --pickit_mixpanel_token ) PICKIT_MIXPANEL_TOKEN=$2; shift ;;
-        --pickit_powerpoint_user ) PICKIT_POWERPOINT_USER=$2; shift ;;
-        --pickit_orbeus_api_key ) PICKIT_ORBEUS_API_KEY=$2; shift ;;
-        --pickit_orbeus_api_secret ) PICKIT_ORBEUS_API_SECRET=$2; shift ;;
-        --pickit_shutterstock_api_client ) PICKIT_SHUTTERSTOCK_API_CLIENT=$2; shift ;;
-        --pickit_shutterstock_api_secret ) PICKIT_SHUTTERSTOCK_API_SECRET=$2; shift ;;
-        --pickit_stripe_public_ley_sandbox ) PICKIT_STRIPE_PUBLIC_KEY_SANDBOX=$2; shift ;;
-        --pickit_stripe_secret_key_sandbox ) PICKIT_STRIPE_SECRET_KEY_SANDBOX=$2; shift ;;
-        --pickit_stripe_public_key ) PICKIT_STRIPE_PUBLIC_KEY=$2; shift ;;
-        --pickit_stripe_secret_key ) PICKIT_STRIPE_SECRET_KEY=$2; shift ;;
-        --pickit_mobile_service_token ) PICKIT_MOBILE_SERVICE_TOKEN=$2; shift ;;
-        --pickit_bing_translate_client_id ) PICKIT_BING_TRANSLATE_CLIENT_ID=$2; shift ;;
-        --pickit_bing_translate_client_secret ) PICKIT_BING_TRANSLATE_CLIENT_SECRET=$2; shift ;;
-        --pickit_new_relic_account_id ) PICKIT_NEW_RELIC_ACCOUNT_ID=$2; shift ;;
-        --pickit_new_relic_insights_key ) PICKIT_NEW_RELIC_INSIGHTS_KEY=$2; shift ;;
-        --pickit_azure_moderation_subscription_id ) PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID=$2; shift ;;
-        --pickit_vatlayer_access_key ) PICKIT_VATLAYER_ACCESS_KEY=$2; shift ;;
-        --pickit_vatlayer_access_dev_key ) PICKIT_VATLAYER_ACCESS_DEV_KEY=$2; shift ;;
-        --pickit_vision_api_key ) PICKIT_VISION_API_KEY=$2; shift ;;
-        --pickit_cms_postgresql_user ) PICKIT_CMS_POSTGRESQL_USER=$2; shift ;;
-        --pickit_cms_postgresql_database ) PICKIT_CMS_POSTGRESQL_DATABASE=$2; shift ;;
-        --pickit_cms_postgresql_host ) PICKIT_CMS_POSTGRESQL_HOST=$2; shift ;;
-        --pickit_cms_postgresql_port ) PICKIT_CMS_POSTGRESQL_PORT=$2; shift ;;
-        --pickit_cms_postgresql_password ) PICKIT_CMS_POSTGRESQL_PASSWORD=$2; shift ;;
-        --pickit_cms_postgresql_replica_user ) PICKIT_CMS_POSTGRESQL_REPLICA_USER=$2; shift ;;
-        --pickit_cms_postgresql_replica_database ) PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE=$2; shift ;;
-        --pickit_cms_postgresql_replica_host ) PICKIT_CMS_POSTGRESQL_REPLICA_HOST=$2; shift ;;
-        --pickit_cms_postgresql_replica_port ) PICKIT_CMS_POSTGRESQL_REPLICA_PORT=$2; shift ;;
-        --pickit_cms_postgresql_replica_password ) PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD=$2; shift ;;
-        -h | --help )    HELP=$2; shift ;;
+        --newrelic_license_key ) NEWRELIC_LICENSE_KEY=$2; shift; shift ;;
+        --git_private_key ) GIT_PRIVATE_KEY=$2; shift; shift ;;
+        --git_public_key ) GIT_PUBLIC_KEY=$2; shift; shift ;;
+        --pickit_postgresql_user ) PICKIT_POSTGRESQL_USER=$2; shift; shift ;;
+        --pickit_postgresql_database ) PICKIT_POSTGRESQL_DATABASE=$2; shift; shift ;;
+        --pickit_postgresql_host ) PICKIT_POSTGRESQL_HOST=$2; shift; shift ;;
+        --pickit_postgresql_port ) PICKIT_POSTGRESQL_PORT=$2; shift; shift ;;
+        --pickit_postgresql_password ) PICKIT_POSTGRESQL_PASSWORD=$2; shift; shift ;;
+        --pickit_postgresql_replica_user ) PICKIT_POSTGRESQL_REPLICA_USER=$2; shift; shift ;;
+        --pickit_postgresql_replica_database ) PICKIT_POSTGRESQL_REPLICA_DATABASE=$2; shift; shift ;;
+        --pickit_postgresql_replica_host ) PICKIT_POSTGRESQL_REPLICA_HOST=$2; shift; shift ;;
+        --pickit_postgresql_replica_port ) PICKIT_POSTGRESQL_REPLICA_PORT=$2; shift; shift ;;
+        --pickit_postgresql_replica_password ) PICKIT_POSTGRESQL_REPLICA_PASSWORD=$2; shift; shift ;;
+        --pickit_azure_account_name ) PICKIT_AZURE_ACCOUNT_NAME=$2; shift; shift ;;
+        --pickit_azure_account_key ) PICKIT_AZURE_ACCOUNT_KEY=$2; shift; shift ;;
+        --pickit_azure_public_container ) PICKIT_AZURE_PUBLIC_CONTAINER=$2; shift; shift ;;
+        --pickit_azure_private_container ) PICKIT_AZURE_PRIVATE_CONTAINER=$2; shift; shift ;;
+        --pickit_email_host_user ) PICKIT_EMAIL_HOST_USER=$2; shift; shift ;;
+        --pickit_email_host_password ) PICKIT_EMAIL_HOST_PASSWORD=$2; shift; shift ;;
+        --pickit_email_port ) PICKIT_EMAIL_PORT=$2; shift; shift ;;
+        --pickit_twitter_consumer_key ) PICKIT_TWITTER_CONSUMER_KEY=$2; shift; shift ;;
+        --pickit_twitter_consumer_secret ) PICKIT_TWITTER_CONSUMER_SECRET=$2; shift; shift ;;
+        --pickit_facebook_app_id ) PICKIT_FACEBOOK_APP_ID=$2; shift; shift ;;
+        --pickit_facebook_api_secret ) PICKIT_FACEBOOK_API_SECRET=$2; shift; shift ;;
+        --pickit_linkedin_consumer_key ) PICKIT_LINKEDIN_CONSUMER_KEY=$2; shift; shift ;;
+        --pickit_linkedin_consumer_secret ) PICKIT_LINKEDIN_CONSUMER_SECRET=$2; shift; shift ;;
+        --pickit_google_oauth2_client_id ) PICKIT_GOOGLE_OAUTH2_CLIENT_ID=$2; shift; shift ;;
+        --pickit_google_oauth2_client_secret ) PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET=$2; shift; shift ;;
+        --pickit_paypal_application_id ) PICKIT_PAYPAL_APPLICATION_ID=$2; shift; shift ;;
+        --pickit_paypal_userid ) PICKIT_PAYPAL_USERID=$2; shift; shift ;;
+        --pickit_paypal_password ) PICKIT_PAYPAL_PASSWORD=$2; shift; shift ;;
+        --pickit_paypal_signature ) PICKIT_PAYPAL_SIGNATURE=$2; shift; shift ;;
+        --pickit_payex_encryption_key ) PICKIT_PAYEX_ENCRYPTION_KEY=$2; shift; shift ;;
+        --pickit_payex_merchant_account ) PICKIT_PAYEX_MERCHANT_ACCOUNT=$2; shift; shift ;;
+        --pickit_celery_broker_url ) PICKIT_CELERY_BROKER_URL=$2; shift; shift ;;
+        --pickit_crowd_flower_api_key_local ) PICKIT_CROWD_FLOWER_API_KEY_LOCAL=$2; shift; shift ;;
+        --pickit_crowd_flower_api_key ) PICKIT_CROWD_FLOWER_API_KEY=$2; shift; shift ;;
+        --pickit_redis_url ) PICKIT_REDIS_URL=$2; shift; shift ;;
+        --pickit_mixpanel_token ) PICKIT_MIXPANEL_TOKEN=$2; shift; shift ;;
+        --pickit_powerpoint_user ) PICKIT_POWERPOINT_USER=$2; shift; shift ;;
+        --pickit_orbeus_api_key ) PICKIT_ORBEUS_API_KEY=$2; shift; shift ;;
+        --pickit_orbeus_api_secret ) PICKIT_ORBEUS_API_SECRET=$2; shift; shift ;;
+        --pickit_shutterstock_api_client ) PICKIT_SHUTTERSTOCK_API_CLIENT=$2; shift; shift ;;
+        --pickit_shutterstock_api_secret ) PICKIT_SHUTTERSTOCK_API_SECRET=$2; shift; shift ;;
+        --pickit_stripe_public_key_sandbox ) PICKIT_STRIPE_PUBLIC_KEY_SANDBOX=$2; shift; shift ;;
+        --pickit_stripe_secret_key_sandbox ) PICKIT_STRIPE_SECRET_KEY_SANDBOX=$2; shift; shift ;;
+        --pickit_stripe_public_key ) PICKIT_STRIPE_PUBLIC_KEY=$2; shift; shift ;;
+        --pickit_stripe_secret_key ) PICKIT_STRIPE_SECRET_KEY=$2; shift; shift ;;
+        --pickit_mobile_service_token ) PICKIT_MOBILE_SERVICE_TOKEN=$2; shift; shift ;;
+        --pickit_bing_translate_client_id ) PICKIT_BING_TRANSLATE_CLIENT_ID=$2; shift; shift ;;
+        --pickit_bing_translate_client_secret ) PICKIT_BING_TRANSLATE_CLIENT_SECRET=$2; shift; shift ;;
+        --pickit_new_relic_account_id ) PICKIT_NEW_RELIC_ACCOUNT_ID=$2; shift; shift ;;
+        --pickit_new_relic_insights_key ) PICKIT_NEW_RELIC_INSIGHTS_KEY=$2; shift; shift ;;
+        --pickit_azure_moderation_subscription_id ) PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID=$2; shift; shift ;;
+        --pickit_vatlayer_access_key ) PICKIT_VATLAYER_ACCESS_KEY=$2; shift; shift ;;
+        --pickit_vatlayer_access_dev_key ) PICKIT_VATLAYER_ACCESS_DEV_KEY=$2; shift; shift ;;
+        --pickit_vision_api_key ) PICKIT_VISION_API_KEY=$2; shift; shift ;;
+        --pickit_cms_postgresql_user ) PICKIT_CMS_POSTGRESQL_USER=$2; shift; shift ;;
+        --pickit_cms_postgresql_database ) PICKIT_CMS_POSTGRESQL_DATABASE=$2; shift; shift ;;
+        --pickit_cms_postgresql_host ) PICKIT_CMS_POSTGRESQL_HOST=$2; shift; shift ;;
+        --pickit_cms_postgresql_port ) PICKIT_CMS_POSTGRESQL_PORT=$2; shift; shift ;;
+        --pickit_cms_postgresql_password ) PICKIT_CMS_POSTGRESQL_PASSWORD=$2; shift; shift ;;
+        --pickit_cms_postgresql_replica_user ) PICKIT_CMS_POSTGRESQL_REPLICA_USER=$2; shift; shift ;;
+        --pickit_cms_postgresql_replica_database ) PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE=$2; shift; shift ;;
+        --pickit_cms_postgresql_replica_host ) PICKIT_CMS_POSTGRESQL_REPLICA_HOST=$2; shift; shift ;;
+        --pickit_cms_postgresql_replica_port ) PICKIT_CMS_POSTGRESQL_REPLICA_PORT=$2; shift; shift ;;
+        --pickit_cms_postgresql_replica_password ) PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD=$2; shift; shift ;;
+        --help )    HELP=$2; shift ;;
         -- ) shift; break ;;
         * ) break ;;
     esac
@@ -259,7 +262,76 @@ done
 if [ $HELP ]
 then
 help
+exit 0
 fi
+
+echo "NEWRELIC_LICENSE_KEY: $NEWRELIC_LICENSE_KEY";
+echo "GIT_PRIVATE_KEY: ${GIT_PRIVATE_KEY}";
+echo "GIT_PUBLIC_KEY: ${GIT_PUBLIC_KEY}";
+echo "PICKIT_POSTGRESQL_USER: ${PICKIT_POSTGRESQL_USER}";
+echo "PICKIT_POSTGRESQL_DATABASE: ${PICKIT_POSTGRESQL_DATABASE}";
+echo "PICKIT_POSTGRESQL_HOST: ${PICKIT_POSTGRESQL_HOST}";
+echo "PICKIT_POSTGRESQL_PORT: ${PICKIT_POSTGRESQL_PORT}";
+echo "PICKIT_POSTGRESQL_PASSWORD: ${PICKIT_POSTGRESQL_PASSWORD}";
+echo "PICKIT_POSTGRESQL_REPLICA_USER: ${PICKIT_POSTGRESQL_REPLICA_USER}";
+echo "PICKIT_POSTGRESQL_REPLICA_DATABASE: ${PICKIT_POSTGRESQL_REPLICA_DATABASE}";
+echo "PICKIT_POSTGRESQL_REPLICA_HOST: ${PICKIT_POSTGRESQL_REPLICA_HOST}";
+echo "PICKIT_POSTGRESQL_REPLICA_PORT: ${PICKIT_POSTGRESQL_REPLICA_PORT}";
+echo "PICKIT_POSTGRESQL_REPLICA_PASSWORD: ${PICKIT_POSTGRESQL_REPLICA_PASSWORD}";
+echo "PICKIT_AZURE_ACCOUNT_NAME: ${PICKIT_AZURE_ACCOUNT_NAME}";
+echo "PICKIT_AZURE_ACCOUNT_KEY: ${PICKIT_AZURE_ACCOUNT_KEY}";
+echo "PICKIT_AZURE_PUBLIC_CONTAINER: ${PICKIT_AZURE_PUBLIC_CONTAINER}";
+echo "PICKIT_AZURE_PRIVATE_CONTAINER: ${PICKIT_AZURE_PRIVATE_CONTAINER}";
+echo "PICKIT_EMAIL_HOST_USER: ${PICKIT_EMAIL_HOST_USER}";
+echo "PICKIT_EMAIL_HOST_PASSWORD: ${PICKIT_EMAIL_HOST_PASSWORD}";
+echo "PICKIT_EMAIL_PORT: ${PICKIT_EMAIL_PORT}";
+echo "PICKIT_TWITTER_CONSUMER_KEY: ${PICKIT_TWITTER_CONSUMER_KEY}";
+echo "PICKIT_TWITTER_CONSUMER_SECRET: ${PICKIT_TWITTER_CONSUMER_SECRET}";
+echo "PICKIT_FACEBOOK_APP_ID: ${PICKIT_FACEBOOK_APP_ID}";
+echo "PICKIT_FACEBOOK_API_SECRET: ${PICKIT_FACEBOOK_API_SECRET}";
+echo "PICKIT_LINKEDIN_CONSUMER_KEY: ${PICKIT_LINKEDIN_CONSUMER_KEY}";
+echo "PICKIT_LINKEDIN_CONSUMER_SECRET: ${PICKIT_LINKEDIN_CONSUMER_SECRET}";
+echo "PICKIT_GOOGLE_OAUTH2_CLIENT_ID: ${PICKIT_GOOGLE_OAUTH2_CLIENT_ID}";
+echo "PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET: ${PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET}";
+echo "PICKIT_PAYPAL_APPLICATION_ID: ${PICKIT_PAYPAL_APPLICATION_ID}";
+echo "PICKIT_PAYPAL_USERID: ${PICKIT_PAYPAL_USERID}";
+echo "PICKIT_PAYPAL_PASSWORD: ${PICKIT_PAYPAL_PASSWORD}";
+echo "PICKIT_PAYPAL_SIGNATURE: ${PICKIT_PAYPAL_SIGNATURE}";
+echo "PICKIT_PAYEX_ENCRYPTION_KEY: ${PICKIT_PAYEX_ENCRYPTION_KEY}";
+echo "PICKIT_PAYEX_MERCHANT_ACCOUNT: ${PICKIT_PAYEX_MERCHANT_ACCOUNT}";
+echo "PICKIT_CELERY_BROKER_URL: ${PICKIT_CELERY_BROKER_URL}";
+echo "PICKIT_CROWD_FLOWER_API_KEY_LOCAL: ${PICKIT_CROWD_FLOWER_API_KEY_LOCAL}";
+echo "PICKIT_CROWD_FLOWER_API_KEY: ${PICKIT_CROWD_FLOWER_API_KEY}";
+echo "PICKIT_REDIS_URL: ${PICKIT_REDIS_URL}";
+echo "PICKIT_MIXPANEL_TOKEN: ${PICKIT_MIXPANEL_TOKEN}";
+echo "PICKIT_POWERPOINT_USER: ${PICKIT_POWERPOINT_USER}";
+echo "PICKIT_ORBEUS_API_KEY: ${PICKIT_ORBEUS_API_KEY}";
+echo "PICKIT_ORBEUS_API_SECRET: ${PICKIT_ORBEUS_API_SECRET}";
+echo "PICKIT_SHUTTERSTOCK_API_CLIENT: ${PICKIT_SHUTTERSTOCK_API_CLIENT}";
+echo "PICKIT_SHUTTERSTOCK_API_SECRET: ${PICKIT_SHUTTERSTOCK_API_SECRET}";
+echo "PICKIT_STRIPE_PUBLIC_KEY_SANDBOX: ${PICKIT_STRIPE_PUBLIC_KEY_SANDBOX}";
+echo "PICKIT_STRIPE_SECRET_KEY_SANDBOX: ${PICKIT_STRIPE_SECRET_KEY_SANDBOX}";
+echo "PICKIT_STRIPE_PUBLIC_KEY: ${PICKIT_STRIPE_PUBLIC_KEY}";
+echo "PICKIT_STRIPE_SECRET_KEY: ${PICKIT_STRIPE_SECRET_KEY}";
+echo "PICKIT_MOBILE_SERVICE_TOKEN: ${PICKIT_MOBILE_SERVICE_TOKEN}";
+echo "PICKIT_BING_TRANSLATE_CLIENT_ID: ${PICKIT_BING_TRANSLATE_CLIENT_ID}";
+echo "PICKIT_BING_TRANSLATE_CLIENT_SECRET: ${PICKIT_BING_TRANSLATE_CLIENT_SECRET}";
+echo "PICKIT_NEW_RELIC_ACCOUNT_ID: ${PICKIT_NEW_RELIC_ACCOUNT_ID}";
+echo "PICKIT_NEW_RELIC_INSIGHTS_KEY: ${PICKIT_NEW_RELIC_INSIGHTS_KEY}";
+echo "PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID: ${PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID}";
+echo "PICKIT_VATLAYER_ACCESS_KEY: ${PICKIT_VATLAYER_ACCESS_KEY}";
+echo "PICKIT_VATLAYER_ACCESS_DEV_KEY: ${PICKIT_VATLAYER_ACCESS_DEV_KEY}";
+echo "PICKIT_VISION_API_KEY: ${PICKIT_VISION_API_KEY}";
+echo "PICKIT_CMS_POSTGRESQL_USER: ${PICKIT_CMS_POSTGRESQL_USER}";
+echo "PICKIT_CMS_POSTGRESQL_DATABASE: ${PICKIT_CMS_POSTGRESQL_DATABASE}";
+echo "PICKIT_CMS_POSTGRESQL_HOST: ${PICKIT_CMS_POSTGRESQL_HOST}";
+echo "PICKIT_CMS_POSTGRESQL_PORT: ${PICKIT_CMS_POSTGRESQL_PORT}";
+echo "PICKIT_CMS_POSTGRESQL_PASSWORD: ${PICKIT_CMS_POSTGRESQL_PASSWORD}";
+echo "PICKIT_CMS_POSTGRESQL_REPLICA_USER: ${PICKIT_CMS_POSTGRESQL_REPLICA_USER}";
+echo "PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE: ${PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE}";
+echo "PICKIT_CMS_POSTGRESQL_REPLICA_HOST: ${PICKIT_CMS_POSTGRESQL_REPLICA_HOST}";
+echo "PICKIT_CMS_POSTGRESQL_REPLICA_PORT: ${PICKIT_CMS_POSTGRESQL_REPLICA_PORT}";
+echo "PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD: ${PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD}";
 
 if [ "${UID}" -ne 0 ];
 then
@@ -344,8 +416,8 @@ curl -O http://github-media-downloads.s3.amazonaws.com/osx/git-credential-osxkey
 mv git-credential-osxkeychain /usr/local/bin/
 chmod u+x /usr/local/bin/git-credential-osxkeychain
 git config --global credential.helper osxkeychain
-runuser -l phme -c "wget ${GIT_PRIVATE_KEY} -O /home/phme/.ssh/id_rsa"
-runuser -l phme -c "wget ${GIT_PUBLIC_KEY} -O /home/phme/.ssh/id_rsa.pub"
+runuser -l phme -c "wget \"${GIT_PRIVATE_KEY}\" -O /home/phme/.ssh/id_rsa"
+runuser -l phme -c "wget \"${GIT_PUBLIC_KEY}\" -O /home/phme/.ssh/id_rsa.pub"
 runuser -l phme -c "chmod 600 /home/phme/.ssh/id_rsa"
 runuser -l phme -c "chmod 644 /home/phme/.ssh/id_rsa.pub"
 sudo ssh-agent /bin/bash
@@ -356,8 +428,8 @@ log "** GIT keyscan and credentials **"
 ## environment variables. /etc/environment
 
 echo "NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY" >> /etc/environment
-echo "GIT_PRIVATE_KEY=$GIT_PRIVATE_KEY" >> /etc/environment
-echo "GIT_PUBLIC_KEY=$GIT_PUBLIC_KEY" >> /etc/environment
+echo "GIT_PRIVATE_KEY=\"$GIT_PRIVATE_KEY\"" >> /etc/environment
+echo "GIT_PUBLIC_KEY=\"$GIT_PUBLIC_KEY\"" >> /etc/environment
 echo "PICKIT_POSTGRESQL_USER=$PICKIT_POSTGRESQL_USER" >> /etc/environment
 echo "PICKIT_POSTGRESQL_DATABASE=$PICKIT_POSTGRESQL_DATABASE" >> /etc/environment
 echo "PICKIT_POSTGRESQL_HOST=$PICKIT_POSTGRESQL_HOST" >> /etc/environment
