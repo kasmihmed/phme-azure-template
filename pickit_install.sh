@@ -265,9 +265,10 @@ help
 exit 0
 fi
 
+git_public_key=${GIT_PUBLIC_KEY//"++++"/" "};
+git_private_key=${GIT_PRIVATE_KEY//"++++"/" "};
+
 echo "NEWRELIC_LICENSE_KEY: $NEWRELIC_LICENSE_KEY";
-echo "GIT_PRIVATE_KEY: ${GIT_PRIVATE_KEY}";
-echo "GIT_PUBLIC_KEY: ${GIT_PUBLIC_KEY}";
 echo "PICKIT_POSTGRESQL_USER: ${PICKIT_POSTGRESQL_USER}";
 echo "PICKIT_POSTGRESQL_DATABASE: ${PICKIT_POSTGRESQL_DATABASE}";
 echo "PICKIT_POSTGRESQL_HOST: ${PICKIT_POSTGRESQL_HOST}";
@@ -416,8 +417,10 @@ curl -O http://github-media-downloads.s3.amazonaws.com/osx/git-credential-osxkey
 mv git-credential-osxkeychain /usr/local/bin/
 chmod u+x /usr/local/bin/git-credential-osxkeychain
 git config --global credential.helper osxkeychain
-runuser -l phme -c "wget \"${GIT_PRIVATE_KEY}\" -O /home/phme/.ssh/id_rsa"
-runuser -l phme -c "wget \"${GIT_PUBLIC_KEY}\" -O /home/phme/.ssh/id_rsa.pub"
+echo ${git_private_key} >> /home/phme/.ssh/id_rsa
+echo ${git_public_key} >> /home/phme/.ssh/id_rsa.pub
+chown phme /home/phme/.ssh/id_rsa
+chown phme /home/phme/.ssh/id_rsa.pub
 runuser -l phme -c "chmod 600 /home/phme/.ssh/id_rsa"
 runuser -l phme -c "chmod 644 /home/phme/.ssh/id_rsa.pub"
 sudo ssh-agent /bin/bash
@@ -428,8 +431,6 @@ log "** GIT keyscan and credentials **"
 ## environment variables. /etc/environment
 
 echo "NEWRELIC_LICENSE_KEY=$NEWRELIC_LICENSE_KEY" >> /etc/environment
-echo "GIT_PRIVATE_KEY=\"$GIT_PRIVATE_KEY\"" >> /etc/environment
-echo "GIT_PUBLIC_KEY=\"$GIT_PUBLIC_KEY\"" >> /etc/environment
 echo "PICKIT_POSTGRESQL_USER=$PICKIT_POSTGRESQL_USER" >> /etc/environment
 echo "PICKIT_POSTGRESQL_DATABASE=$PICKIT_POSTGRESQL_DATABASE" >> /etc/environment
 echo "PICKIT_POSTGRESQL_HOST=$PICKIT_POSTGRESQL_HOST" >> /etc/environment
