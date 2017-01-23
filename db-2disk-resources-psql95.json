@@ -114,7 +114,7 @@
           "vmSize": "[parameters('machineSettings').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'), copyindex())]",
+          "computerName": "[concat(variables('vmName'), copyindex(), parameters('env'))]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
