@@ -66,7 +66,7 @@
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').name, variables('namespace'))]",
     "vmName": "[concat(variables('namespace'), 'psql95vm')]",
-    "nicName": "[concat(variables('namespace'), 'nic')]",
+    "nicName": "[concat(variables('namespace'), '-psql95-', 'nic')]",
     "adminUsername": "[parameters('commonSettings').adminUsername]",
     "vmCount": "[parameters('machineSettings').vmCount]"
   },
