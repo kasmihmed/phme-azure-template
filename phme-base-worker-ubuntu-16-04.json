@@ -534,8 +534,7 @@
             ]
           },
           "protectedSettings": {
-            "commandToExecute":
-            "bash pickit_install.sh"
+            "commandToExecute": "bash pickit_worker.sh"
           }
         }
       }
