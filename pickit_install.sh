@@ -417,7 +417,7 @@ curl -O http://github-media-downloads.s3.amazonaws.com/osx/git-credential-osxkey
 mv git-credential-osxkeychain /usr/local/bin/
 chmod u+x /usr/local/bin/git-credential-osxkeychain
 git config --global credential.helper osxkeychain
-echo ${git_private_key} >> /home/phme/.ssh/id_rsa
+echo -e ${git_private_key} >> /home/phme/.ssh/id_rsa
 echo ${git_public_key} >> /home/phme/.ssh/id_rsa.pub
 chown phme.phme /home/phme/.ssh/id_rsa
 chown phme.phme /home/phme/.ssh/id_rsa.pub
