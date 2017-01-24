@@ -344,6 +344,7 @@
     "PICKIT_CMS_POSTGRESQL_REPLICA_HOST":  {"type": "securestring"},
     "PICKIT_CMS_POSTGRESQL_REPLICA_PORT":  {"type": "securestring"},
     "PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD":  {"type": "securestring"},
+    "PICKIT_ENV":  {"type": "securestring"},
     "DJANGO_SETTINGS_MODULE": {"type": "securestring"},
     "CLARIFAI_APP_ID": {"type": "securestring"},
     "CLARIFAI_APP_SECRET": {"type": "securestring"}
