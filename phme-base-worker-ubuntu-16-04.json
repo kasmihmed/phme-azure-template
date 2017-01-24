@@ -663,7 +663,7 @@
             "value":"[parameters('worker_image_uri')]"
           },
           "vmssName":{
-            "value":"[concat('worker-16-04-', parameters('env'))]"
+            "value":"[concat('worker-v2-', parameters('env'))]"
           },
           "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
