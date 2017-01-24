@@ -316,6 +316,10 @@
               {
                 "name": "PickitInstall",
                 "properties": "[parameters('osSettings').extentionSettings.pickit_install]"
+              },
+              {
+                "name": "PickitWorker",
+                "properties": "[parameters('osSettings').extentionSettings.pickit_worker]"
               }
             ]
           }

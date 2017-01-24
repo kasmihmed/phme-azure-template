@@ -403,6 +403,15 @@ log "** redis-tools **"
 apt-get install python-pip -y > /dev/null
 log "** python-pip **"
 
+log "** postgresql libpq-dev python-dev **"
+sudo apt-get install libpq-dev python-dev -y  /dev/null
+
+log "** GEO spatial **"
+sudo apt-get install binutils libproj-dev gdal-bin -y  /dev/null
+
+log "** enchant **"
+sudo apt-get install enchant -y  /dev/null
+
 pip install graypy
 log "** graypy **"
 pip install --upgrade pip

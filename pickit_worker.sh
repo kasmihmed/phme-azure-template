@@ -28,11 +28,6 @@
 
 # apt-get -y update  > /dev/null
 
-help()
-{
-    echo ""
-}
-
 # Log method to control/redirect log output
 log()
 {
@@ -40,28 +35,6 @@ log()
     #curl -X POST -H "content-type:text/plain" --data-binary "${HOSTNAME} - $1" https://logs-01.loggly.com/inputs/<key>/tag/es-extension,${HOSTNAME}
     echo "$1"
 }
-
-ENV=""
-DJANGO_SETTINGS_MODULE=""
-CLARIFAI_APP_ID=""
-CLARIFAI_APP_SECRET=""
-
-
-#Loop through options passed
-while getopts :h optname; do
-    log "Option $optname set with value ${OPTARG}"
-  case $optname in
-    h) #show help
-      help
-      exit 2
-      ;;
-    \?) #unrecognized option - show help
-      echo -e \\n"Option -${BOLD}$OPTARG${NORM} not allowed."
-      help
-      exit 2
-      ;;
-  esac
-done
 
 if [ "${UID}" -ne 0 ];
 then
@@ -84,10 +57,15 @@ else
 fi
 
 # install packages
+log "** supervisor package **"
 apt-get install supervisor -y > /dev/null
 systemctl enable supervisor
 update-rc.d supervisor defaults
-service supervisor start
+# service supervisor start
+
+# /etc/hosts mappings
+echo "10.0.2.15  phme-dev-data" >> /etc/hosts
+echo "10.0.2.16  phme-dev-data" >> /etc/hosts
 
 #drwxrwxr-x  2 phme phme  4096 Mar 31  2015 bin
 #drwxrwxr-x  2 phme phme  4096 Mar 31  2015 celery
@@ -106,6 +84,7 @@ service supervisor start
 #drwxrwxr-x  3 phme phme  4096 Jan 18 13:43 tmp
 
 # directory structure
+log "** directory structure **"
 mkdir -m 755 /home/phme/bin
 mkdir -m 755 /home/phme/celery
 mkdir -m 755 /home/phme/config
@@ -121,33 +100,36 @@ mkdir -m 755 /home/phme/tmp
 chown -R phme.phme /home/phme/*
 chown root.root /home/phme/run
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! office_add_in is a bit tricky to install
+# TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! office_add_in is a bit tricky to install
 
 # virtualenv pichit.me
-cd /home/phme
-sudo su -c virtualenv pichit.me phme
+log "** virtualenv pichit.me **"
+# cd /home/phme
+runuser -l phme -c "virtualenv /home/phme/pichit.me"
 
 # fetch pickit code
+log "** pull phme_faraday **"
 cd /home/phme/pichit.me
-git clone git@bitbucket.org:clasperson/phme_faraday.git
+runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
 cd /home/phme
-ln -s pichit.me/phme_faraday
+runuser -l phme -c "ln -s pichit.me/phme_faraday"
+chown -R phme.phme /home/phme/*
 
-# worker1-3 phme_faraday directories
+# install requirements
+log "** install requirements **"
+runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/dev/dev_requirements.txt"
+
+# worker phme_faraday directories
+log "** pull worker directory for phme_faraday **"
 cd /home/phme/pichit.me
-mkdir -m 755 /home/phme/pichit.me/worker1
-cd /home/phme/pichit.me/worker1
-git clone git@bitbucket.org:clasperson/phme_faraday.git
-if [ ${ENV} -ne "dev" ]; then
-    mkdir -m 755 /home/phme/pichit.me/worker2
-    cd /home/phme/pichit.me/worker2
-    git clone git@bitbucket.org:clasperson/phme_faraday.git
-    mkdir -m 755 /home/phme/pichit.me/worker3
-    cd /home/phme/pichit.me/worker2
-    git clone git@bitbucket.org:clasperson/phme_faraday.git
-fi
+mkdir -m 755 /home/phme/pichit.me/worker
+cd /home/phme/pichit.me/worker
+chown -R phme.phme /home/phme/*
+runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/worker/phme_faraday"
+chown -R phme.phme /home/phme/*
 
 # crontab update
+log "** crontab update **"
 cat >/home/phme/config/crontab <<EOL
 # Edit this file to introduce tasks to be run by cron.
 #
@@ -187,8 +169,132 @@ PYTHONPATH=/home/phme/pichit.me/phme_faraday
 EOL
 crontab -u phme /home/phme/config/crontab
 
-# supervisor configs building for different processes running
-
 # /etc/supervisor/supervisord.conf -> We need update with environment variables
+log "** supervisord.conf **"
+cat >/etc/supervisor/supervisord.conf <<EOL
+; supervisor config file
+
+[unix_http_server]
+file=/var/run/supervisor.sock   ; (the path to the socket file)
+chmod=0700                       ; sockef file mode (default 0700)
+
+[supervisord]
+logfile=/var/log/supervisor/supervisord.log ; (main log file;default $CWD/supervisord.log)
+pidfile=/var/run/supervisord.pid ; (supervisord pidfile;default supervisord.pid)
+childlogdir=/var/log/supervisor            ; ('AUTO' child log dir, default $TEMP)
+
+environment=PICKIT_POSTGRESQL_USER="${PICKIT_POSTGRESQL_USER}",PICKIT_POSTGRESQL_DATABASE="${PICKIT_POSTGRESQL_DATABASE}",PICKIT_POSTGRESQL_HOST="${PICKIT_POSTGRESQL_HOST}",PICKIT_POSTGRESQL_PORT="${PICKIT_POSTGRESQL_PORT}",PICKIT_POSTGRESQL_PASSWORD="${PICKIT_POSTGRESQL_PASSWORD}",PICKIT_POSTGRESQL_REPLICA_USER="${PICKIT_POSTGRESQL_REPLICA_USER}",PICKIT_POSTGRESQL_REPLICA_DATABASE="${PICKIT_POSTGRESQL_REPLICA_DATABASE}",PICKIT_POSTGRESQL_REPLICA_HOST="${PICKIT_POSTGRESQL_REPLICA_HOST}",PICKIT_POSTGRESQL_REPLICA_PORT="${PICKIT_POSTGRESQL_REPLICA_PORT}",PICKIT_POSTGRESQL_REPLICA_PASSWORD="${PICKIT_POSTGRESQL_REPLICA_PASSWORD}",PICKIT_AZURE_ACCOUNT_NAME="${PICKIT_AZURE_ACCOUNT_NAME}",PICKIT_AZURE_ACCOUNT_KEY="${PICKIT_AZURE_ACCOUNT_KEY}",PICKIT_AZURE_PUBLIC_CONTAINER="${PICKIT_AZURE_PUBLIC_CONTAINER}",PICKIT_AZURE_PRIVATE_CONTAINER="${PICKIT_AZURE_PRIVATE_CONTAINER}",PICKIT_EMAIL_HOST_USER="${PICKIT_EMAIL_HOST_USER}",PICKIT_EMAIL_HOST_PASSWORD="${PICKIT_EMAIL_HOST_PASSWORD}",PICKIT_EMAIL_PORT="${PICKIT_EMAIL_PORT}",PICKIT_TWITTER_CONSUMER_KEY="${PICKIT_TWITTER_CONSUMER_KEY}",PICKIT_TWITTER_CONSUMER_SECRET="${PICKIT_TWITTER_CONSUMER_SECRET}",PICKIT_FACEBOOK_APP_ID="${PICKIT_FACEBOOK_APP_ID}",PICKIT_FACEBOOK_API_SECRET="${PICKIT_FACEBOOK_API_SECRET}",PICKIT_LINKEDIN_CONSUMER_KEY="${PICKIT_LINKEDIN_CONSUMER_KEY}",PICKIT_LINKEDIN_CONSUMER_SECRET="${PICKIT_LINKEDIN_CONSUMER_SECRET}",PICKIT_GOOGLE_OAUTH2_CLIENT_ID="${PICKIT_GOOGLE_OAUTH2_CLIENT_ID}",PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET="${PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET}",PICKIT_PAYPAL_APPLICATION_ID="${PICKIT_PAYPAL_APPLICATION_ID}",PICKIT_PAYPAL_USERID="${PICKIT_PAYPAL_USERID}",PICKIT_PAYPAL_PASSWORD="${PICKIT_PAYPAL_PASSWORD}",PICKIT_PAYPAL_SIGNATURE="${PICKIT_PAYPAL_SIGNATURE}",PICKIT_PAYEX_ENCRYPTION_KEY="${PICKIT_PAYEX_ENCRYPTION_KEY}",PICKIT_PAYEX_MERCHANT_ACCOUNT="${PICKIT_PAYEX_MERCHANT_ACCOUNT}",PICKIT_CELERY_BROKER_URL="${PICKIT_CELERY_BROKER_URL}",PICKIT_CROWD_FLOWER_API_KEY_LOCAL="${PICKIT_CROWD_FLOWER_API_KEY_LOCAL}",PICKIT_CROWD_FLOWER_API_KEY="${PICKIT_CROWD_FLOWER_API_KEY}",PICKIT_REDIS_URL="${PICKIT_REDIS_URL}",PICKIT_MIXPANEL_TOKEN="${PICKIT_MIXPANEL_TOKEN}",PICKIT_POWERPOINT_USER="${PICKIT_POWERPOINT_USER}",PICKIT_ORBEUS_API_KEY="${PICKIT_ORBEUS_API_KEY}",PICKIT_ORBEUS_API_SECRET="${PICKIT_ORBEUS_API_SECRET}",PICKIT_SHUTTERSTOCK_API_CLIENT="${PICKIT_SHUTTERSTOCK_API_CLIENT}",PICKIT_SHUTTERSTOCK_API_SECRET="${PICKIT_SHUTTERSTOCK_API_SECRET}",PICKIT_STRIPE_PUBLIC_KEY_SANDBOX="${PICKIT_STRIPE_PUBLIC_KEY_SANDBOX}",PICKIT_STRIPE_SECRET_KEY_SANDBOX="${PICKIT_STRIPE_SECRET_KEY_SANDBOX}",PICKIT_STRIPE_PUBLIC_KEY="${PICKIT_STRIPE_PUBLIC_KEY}",PICKIT_STRIPE_SECRET_KEY="${PICKIT_STRIPE_SECRET_KEY}",PICKIT_MOBILE_SERVICE_TOKEN="${PICKIT_MOBILE_SERVICE_TOKEN}",PICKIT_BING_TRANSLATE_CLIENT_ID="${PICKIT_BING_TRANSLATE_CLIENT_ID}",PICKIT_BING_TRANSLATE_CLIENT_SECRET="${PICKIT_BING_TRANSLATE_CLIENT_SECRET}",PICKIT_NEW_RELIC_ACCOUNT_ID="${PICKIT_NEW_RELIC_ACCOUNT_ID}",PICKIT_NEW_RELIC_INSIGHTS_KEY="${PICKIT_NEW_RELIC_INSIGHTS_KEY}",PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID="${PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID}",PICKIT_VATLAYER_ACCESS_KEY="${PICKIT_VATLAYER_ACCESS_KEY}",PICKIT_VATLAYER_ACCESS_DEV_KEY="${PICKIT_VATLAYER_ACCESS_DEV_KEY}",PICKIT_VISION_API_KEY="${PICKIT_VISION_API_KEY}",PICKIT_CMS_POSTGRESQL_USER="${PICKIT_CMS_POSTGRESQL_USER}",PICKIT_CMS_POSTGRESQL_DATABASE="${PICKIT_CMS_POSTGRESQL_DATABASE}",PICKIT_CMS_POSTGRESQL_HOST="${PICKIT_CMS_POSTGRESQL_HOST}",PICKIT_CMS_POSTGRESQL_PORT="${PICKIT_CMS_POSTGRESQL_PORT}",PICKIT_CMS_POSTGRESQL_PASSWORD="${PICKIT_CMS_POSTGRESQL_PASSWORD}",PICKIT_CMS_POSTGRESQL_REPLICA_USER="${PICKIT_CMS_POSTGRESQL_REPLICA_USER}",PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE="${PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE}",PICKIT_CMS_POSTGRESQL_REPLICA_HOST="${PICKIT_CMS_POSTGRESQL_REPLICA_HOST}",PICKIT_CMS_POSTGRESQL_REPLICA_PORT="${PICKIT_CMS_POSTGRESQL_REPLICA_PORT}",PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD="${PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD}"
+
+; the below section must remain in the config file for RPC
+; (supervisorctl/web interface) to work, additional interfaces may be
+; added by defining them in separate rpcinterface: sections
+[rpcinterface:supervisor]
+supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
+
+[supervisorctl]
+serverurl=unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket
+
+; The [include] section can just contain the "files" setting.  This
+; setting can list multiple files (separated by whitespace or
+; newlines).  It can also contain wildcards.  The filenames are
+; interpreted as relative to this file.  Included files *cannot*
+; include files themselves.
+
+[include]
+files = /etc/supervisor/conf.d/*.conf
+...
+EOL
+
+# supervisor configs building for different processes running
+log "** phme_celerybeat.conf **"
+cat > /etc/supervisor/conf.d/phme_celerybeat.conf <<EOL
+; =======================================
+;  celerybeat for phme
+; =======================================
+
+[program:phme_celerybeat]
+command=/home/phme/pichit.me/bin/python manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -v 2 -l INFO --settings ${DJANGO_SETTINGS_MODULE} --pythonpath .
+
+directory=/home/phme/pichit.me/phme_faraday
+user=phme
+numprocs=1
+stdout_logfile=/home/phme/log/phme_celerybeat.log
+logfile_maxbytes = 50MB
+logfile_backups=10
+redirect_stderr=true
+autostart=true
+autorestart=true
+startsecs=10
+
+; Need to wait for currently executing tasks to finish at shutdown.
+; Increase this if you have very long running tasks.
+stopwaitsecs = 120
+
+; if rabbitmq is supervised, set its priority higher
+; so it starts first
+priority=997
+...
+EOL
+
+log "** phme_celerycam.conf **"
+cat > /etc/supervisor/conf.d/phme_celerycam.conf <<EOL
+; =======================================
+;  celerycam for phme
+; =======================================
+
+[program:phme_celerycam]
+command=/home/phme/pichit.me/bin/python manage.py celerycam -v 2 -l INFO --settings ${DJANGO_SETTINGS_MODULE} --pythonpath .
+
+directory=/home/phme/pichit.me/phme_faraday
+user=phme
+numprocs=1
+stdout_logfile=/home/phme/log/phme_celerycam.log
+logfile_maxbytes = 50MB
+logfile_backups=10
+redirect_stderr=true
+autostart=true
+autorestart=true
+startsecs=10
+
+; Need to wait for currently executing tasks to finish at shutdown.
+; Increase this if you have very long running tasks.
+stopwaitsecs = 120
+
+; if rabbitmq is supervised, set its priority higher
+; so it starts first
+priority=997
+...
+EOL
+
+log "** phme_celeryd_worker.conf **"
+cat > /etc/supervisor/conf.d/phme_celeryd_worker.conf <<EOL
+; =======================================
+;  celeryd worker for phme
+; =======================================
+
+[program:phme_celeryd_worker]
+command=/home/phme/pichit.me/bin/python manage.py celeryd -v 2 -E -l INFO --settings ${DJANGO_SETTINGS_MODULE} --pythonpath .
+
+directory=/home/phme/pichit.me/worker/phme_faraday
+user=phme
+numprocs=3
+stdout_logfile=/home/phme/log/phme_celeryd_worker.log
+logfile_maxbytes = 50MB
+logfile_backups=10
+redirect_stderr=true
+autostart=true
+autorestart=true
+startsecs=10
+
+; Need to wait for currently executing tasks to finish at shutdown.
+; Increase this if you have very long running tasks.
+stopwaitsecs = 120
+
+; if rabbitmq is supervised, set its priority higher
+; so it starts first
+priority=997
+...
+EOL
+
 
 exit 0
