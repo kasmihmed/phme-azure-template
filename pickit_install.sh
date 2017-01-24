@@ -419,8 +419,8 @@ chmod u+x /usr/local/bin/git-credential-osxkeychain
 git config --global credential.helper osxkeychain
 echo ${git_private_key} >> /home/phme/.ssh/id_rsa
 echo ${git_public_key} >> /home/phme/.ssh/id_rsa.pub
-chown phme /home/phme/.ssh/id_rsa
-chown phme /home/phme/.ssh/id_rsa.pub
+chown phme.phme /home/phme/.ssh/id_rsa
+chown phme.phme /home/phme/.ssh/id_rsa.pub
 runuser -l phme -c "chmod 600 /home/phme/.ssh/id_rsa"
 runuser -l phme -c "chmod 644 /home/phme/.ssh/id_rsa.pub"
 sudo ssh-agent /bin/bash
