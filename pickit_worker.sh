@@ -674,7 +674,7 @@ PYTHONPATH=/home/phme/pichit.me/phme_faraday
 0 1 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/do_search_cam
 #0 7 * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/daily_analytics
 */1 * * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/process_events
-*/1 * * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/process_actions_users...
+*/1 * * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/process_actions_users
 EOL
 crontab -u phme /home/phme/config/crontab
 
@@ -711,7 +711,6 @@ serverurl=unix:///var/run/supervisor.sock ; use a unix:// URL  for a unix socket
 
 [include]
 files = /etc/supervisor/conf.d/*.conf
-...
 EOL
 
 # supervisor configs building for different processes running
@@ -742,7 +741,6 @@ stopwaitsecs = 120
 ; if rabbitmq is supervised, set its priority higher
 ; so it starts first
 priority=997
-...
 EOL
 
 log "** phme_celerycam.conf **"
@@ -772,7 +770,6 @@ stopwaitsecs = 120
 ; if rabbitmq is supervised, set its priority higher
 ; so it starts first
 priority=997
-...
 EOL
 
 log "** phme_celeryd_worker.conf **"
@@ -802,7 +799,6 @@ stopwaitsecs = 120
 ; if rabbitmq is supervised, set its priority higher
 ; so it starts first
 priority=997
-...
 EOL
 
 
