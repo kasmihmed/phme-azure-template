@@ -571,7 +571,7 @@ log "** supervisor package **"
 apt-get install supervisor -y > /dev/null
 systemctl enable supervisor
 update-rc.d supervisor defaults
-# service supervisor start
+service supervisor start
 
 # /etc/hosts mappings
 echo "10.0.2.15  phme-dev-data" >> /etc/hosts
