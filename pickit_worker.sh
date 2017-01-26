@@ -641,7 +641,8 @@ runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/
 chown -R phme.phme /home/phme/*
 
 # crontab update
-log "** crontab update **"
+log "** crontab update when first worker, worker-v{version}-{de/li}-0"
+if [[ $(hostname -s) = worker-v*-*-0 ]]; then
 cat >/home/phme/config/crontab <<EOL
 # Edit this file to introduce tasks to be run by cron.
 #
@@ -680,6 +681,7 @@ PYTHONPATH=/home/phme/pichit.me/phme_faraday
 */1 * * * * /home/phme/pichit.me/bin/python /home/phme/pichit.me/phme_faraday/scripts/analytics/process_actions_users
 EOL
 crontab -u phme /home/phme/config/crontab
+fi
 
 # /etc/supervisor/supervisord.conf -> We need update with environment variables
 log "** supervisord.conf **"
