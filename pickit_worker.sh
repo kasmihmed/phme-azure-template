@@ -815,5 +815,6 @@ stopwaitsecs = 120
 priority=997
 EOL
 
+supervisorctl reload
 
 exit 0
