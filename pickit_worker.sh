@@ -782,11 +782,10 @@ cat > /etc/supervisor/conf.d/phme_celeryd_worker.conf <<EOL
 ; =======================================
 
 [program:phme_celeryd_worker]
-command=/home/phme/pichit.me/bin/python manage.py celeryd -v 2 -E -l INFO --settings ${DJANGO_SETTINGS_MODULE} --pythonpath .
+command=/home/phme/pichit.me/bin/python manage.py celeryd -v 2 -E -l INFO --settings ${DJANGO_SETTINGS_MODULE} --pythonpath . -n worker-%(process_num)02d.%%h
 
 directory=/home/phme/pichit.me/worker/phme_faraday
 user=phme
-numprocs=3
 stdout_logfile=/home/phme/log/phme_celeryd_worker.log
 logfile_maxbytes = 50MB
 logfile_backups=10
@@ -794,6 +793,9 @@ redirect_stderr=true
 autostart=true
 autorestart=true
 startsecs=10
+
+numprocs=5
+process_name=%(program_name)s_%(process_num)02d
 
 ; Need to wait for currently executing tasks to finish at shutdown.
 ; Increase this if you have very long running tasks.
