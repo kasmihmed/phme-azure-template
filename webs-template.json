@@ -34,10 +34,11 @@
     },
     "ubuntuOSVersion":{
       "type":"string",
-      "defaultValue":"15.04",
+      "defaultValue":"16.04.0-LTS",
       "allowedValues":[
         "15.04",
-        "14.04.2-LTS"
+        "14.04.2-LTS",
+        "16.04.0-LTS"
       ],
       "metadata":{
         "description":"The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 15.04, 14.04.2-LTS."
@@ -49,6 +50,12 @@
         "description":"String used as a base for naming resources (9 characters or less). A hash is prepended to this string for some resources, and resource-specific information is appended."
       },
       "maxLength":9
+    },
+    "vhd_storage_account":{
+      "type":"string",
+      "metadata":{
+        "description":"String used as a base for naming vhd storage account"
+      }
     },
     "virtualNetworkName":{
       "type":"string",
@@ -296,10 +303,19 @@
               "name":"[variables('osDiskName')]",
               "caching":"ReadOnly",
               "createOption":"FromImage",
-              "osType": "Linux",
-              "image": {
-                "uri": "[parameters('web_image_uri')]"
-              }
+              "vhdContainers": [
+                "[concat('http://',parameters('vhd_storage_account'),'1',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'2',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'3',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'4',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'5',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+              ]
+            },
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "[parameters('ubuntuOSVersion')]",
+              "version": "latest"
             }
           },
           "osProfile":{
@@ -376,13 +392,13 @@
     {
       "type": "Microsoft.Insights/autoscaleSettings",
       "apiVersion": "2015-04-01",
-      "name": "autoscalewad",
+      "name": "autoscalewadtest",
       "location":"[parameters('resourceLocation')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
       ],
       "properties": {
-        "name": "autoscalewad",
+        "name": "autoscalewadstest",
         "targetResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
         "enabled": true,
         "profiles": [
@@ -394,27 +410,72 @@
               "default": "1"
             },
             "rules": [
-              {
-                "metricTrigger": {
-                  "metricName": "\\Processor\\PercentProcessorTime",
-                  "metricNamespace": "",
-                  "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
-                  "timeGrain": "PT1M",
-                  "statistic": "Average",
-                  "timeWindow": "PT5M",
-                  "timeAggregation": "Average",
-                  "operator": "GreaterThan",
-                  "threshold": 50.0
-                },
-                "scaleAction": {
-                  "direction": "Increase",
-                  "type": "ChangeCount",
-                  "value": "1",
-                  "cooldown": "PT1M"
-                }
-              }
-            ]
-          }
+                  {
+                    "metricTrigger": {
+                      "metricName": "Percentage CPU",
+                      "metricNamespace": "",
+                      "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmssName'))]",
+                      "timeGrain": "PT1M",
+                      "statistic": "Average",
+                      "timeWindow": "PT5M",
+                      "timeAggregation": "Average",
+                      "operator": "GreaterThan",
+                      "threshold": 60.0
+                    },
+                    "scaleAction": {
+                      "direction": "Increase",
+                      "type": "ChangeCount",
+                      "value": "1",
+                      "cooldown": "PT1M"
+                    }
+                  },
+                  {
+                    "metricTrigger": {
+                      "metricName": "Percentage CPU",
+                      "metricNamespace": "",
+                      "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmssName'))]",
+                      "timeGrain": "PT1M",
+                      "statistic": "Average",
+                      "timeWindow": "PT5M",
+                      "timeAggregation": "Average",
+                      "operator": "LessThan",
+                      "threshold": 30.0
+                    },
+                    "scaleAction": {
+                      "direction": "Decrease",
+                      "type": "ChangeCount",
+                      "value": "1",
+                      "cooldown": "PT5M"
+                    }
+                  }
+                ]
+          },
+
+          {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(variables('vmName'),'/', variables('extensionName'))]",
+      "apiVersion": "[variables('apiVersion')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": "[split(parameters('fileUris'), ' ')]",
+          "commandToExecute": "[parameters('commandToExecute')]"
+        },
+        "protectedSettings": {
+          "storageAccountName": "[parameters('customScriptStorageAccountName')]",
+          "storageAccountKey": "[parameters('customScriptStorageAccountKey')]"
+        }
+      }
+    }
+
+
         ]
       }
     }
