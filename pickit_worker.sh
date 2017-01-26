@@ -371,6 +371,9 @@ else
   log "hostname ${HOSTNAME} added to /etchosts"
 fi
 
+timedatectl set-timezone Europe/Stockholm
+log "** Europe/Stockholm timezone **"
+
 apt-get install phantomjs -y > /dev/null
 log "** phantomjs **"
 apt-get install binutils libproj-dev gdal-bin -y > /dev/null
