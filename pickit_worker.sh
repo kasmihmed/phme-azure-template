@@ -607,10 +607,13 @@ mkdir -m 755 /home/phme/office_add_in
 mkdir -m 755 /home/phme/run
 mkdir -m 755 /home/phme/search
 mkdir -m 755 /home/phme/tmp
-chown -R phme.phme /home/phme/*
 chown root.root /home/phme/run
 
-# TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!! office_add_in is a bit tricky to install
+# office_add_in pull
+mkdir -m 755 /home/phme/office_add_in/dev
+mkdir -m 755 /home/phme/office_add_in/live
+chown -R phme.phme /home/phme/*
+
 
 # virtualenv pichit.me
 log "** virtualenv pichit.me **"
@@ -626,6 +629,10 @@ runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/
 cd /home/phme
 runuser -l phme -c "ln -s pichit.me/phme_faraday"
 chown -R phme.phme /home/phme/*
+
+# office_add_in pull
+runuser -l phme -c "git clone -b master git@bitbucket.org:phme_admin/office-add-in.git /home/phme/office_add_in/dev"
+runuser -l phme -c "git clone -b live git@bitbucket.org:phme_admin/office-add-in.git /home/phme/office_add_in/live"
 
 # install requirements
 log "** install requirements **"
