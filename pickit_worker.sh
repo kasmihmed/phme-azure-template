@@ -648,8 +648,8 @@ runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/
 chown -R phme.phme /home/phme/*
 
 # settings_local.py
-if [${PICKIT_ENV} == "dev"]; then
-cat >/home/phme/phme_faraday/settings/development/settings_local <<EOL
+if [ ${PICKIT_ENV} == "dev" ]; then
+cat >/home/phme/phme_faraday/settings/development/settings_local.py <<EOL
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -688,8 +688,8 @@ BROKER_URL = "${PICKIT_CELERY_BROKER_URL}"
 EOL
 fi
 
-if [${PICKIT_ENV} == "live"]; then
-cat >/home/phme/phme_faraday/settings/live/settings_local <<EOL
+if [ ${PICKIT_ENV} == "live" ]; then
+cat >/home/phme/phme_faraday/settings/live/settings_local.py <<EOL
 DATABASES = {
     'default': {
         # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -1017,7 +1017,7 @@ autostart=true
 autorestart=true
 startsecs=10
 
-numprocs=5
+numprocs=1
 process_name=%(program_name)s_%(process_num)02d
 
 ; Need to wait for currently executing tasks to finish at shutdown.
