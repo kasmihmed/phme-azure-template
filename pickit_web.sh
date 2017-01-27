@@ -226,8 +226,10 @@ PICKIT_ENV=""
 DJANGO_SETTINGS_MODULE=""
 CLARIFAI_APP_ID=""
 CLARIFAI_APP_SECRET=""
+SSL_CERTIFICATE_CRT=""
+SSL_CERTIFICATE_KEY=""
 
-OPTS=`getopt -o h --long "newrelic_license_key::,git_private_key::,git_public_key::,pickit_postgresql_user::,pickit_postgresql_database::,pickit_postgresql_host::,pickit_postgresql_port::,pickit_postgresql_password::,pickit_postgresql_replica_user::,pickit_postgresql_replica_database::,pickit_postgresql_replica_host::,pickit_postgresql_replica_port::,pickit_postgresql_replica_password::,pickit_azure_account_name::,pickit_azure_account_key::,pickit_azure_public_container::,pickit_azure_private_container::,pickit_email_host_user::,pickit_email_host_password::,pickit_email_port::,pickit_twitter_consumer_key::,pickit_twitter_consumer_secret::,pickit_facebook_app_id::,pickit_facebook_api_secret::,pickit_linkedin_consumer_key::,pickit_linkedin_consumer_secret::,pickit_google_oauth2_client_id::,pickit_google_oauth2_client_secret::,pickit_paypal_application_id::,pickit_paypal_userid::,pickit_paypal_password::,pickit_paypal_signature::,pickit_payex_encryption_key::,pickit_payex_merchant_account::,pickit_celery_broker_url::,pickit_crowd_flower_api_key_local::,pickit_crowd_flower_api_key::,pickit_redis_url::,pickit_mixpanel_token::,pickit_powerpoint_user::,pickit_orbeus_api_key::,pickit_orbeus_api_secret::,pickit_shutterstock_api_client::,pickit_shutterstock_api_secret::,pickit_stripe_public_key_sandbox::,pickit_stripe_secret_key_sandbox::,pickit_stripe_public_key::,pickit_stripe_secret_key::,pickit_mobile_service_token::,pickit_bing_translate_client_id::,pickit_bing_translate_client_secret::,pickit_new_relic_account_id::,pickit_new_relic_insights_key::,pickit_azure_moderation_subscription_id::,pickit_vatlayer_access_key::,pickit_vatlayer_access_dev_key::,pickit_vision_api_key::,pickit_cms_postgresql_user::,pickit_cms_postgresql_database::,pickit_cms_postgresql_host::,pickit_cms_postgresql_port::,pickit_cms_postgresql_password::,pickit_cms_postgresql_replica_user::,pickit_cms_postgresql_replica_database::,pickit_cms_postgresql_replica_host::,pickit_cms_postgresql_replica_port::,pickit_cms_postgresql_replica_password::,pickit_env::,django_settings_module::,clarifai_app_id::,clarifai_app_secret::,help::" -n 'web' -- "$@"`
+OPTS=`getopt -o h --long "newrelic_license_key::,git_private_key::,git_public_key::,pickit_postgresql_user::,pickit_postgresql_database::,pickit_postgresql_host::,pickit_postgresql_port::,pickit_postgresql_password::,pickit_postgresql_replica_user::,pickit_postgresql_replica_database::,pickit_postgresql_replica_host::,pickit_postgresql_replica_port::,pickit_postgresql_replica_password::,pickit_azure_account_name::,pickit_azure_account_key::,pickit_azure_public_container::,pickit_azure_private_container::,pickit_email_host_user::,pickit_email_host_password::,pickit_email_port::,pickit_twitter_consumer_key::,pickit_twitter_consumer_secret::,pickit_facebook_app_id::,pickit_facebook_api_secret::,pickit_linkedin_consumer_key::,pickit_linkedin_consumer_secret::,pickit_google_oauth2_client_id::,pickit_google_oauth2_client_secret::,pickit_paypal_application_id::,pickit_paypal_userid::,pickit_paypal_password::,pickit_paypal_signature::,pickit_payex_encryption_key::,pickit_payex_merchant_account::,pickit_celery_broker_url::,pickit_crowd_flower_api_key_local::,pickit_crowd_flower_api_key::,pickit_redis_url::,pickit_mixpanel_token::,pickit_powerpoint_user::,pickit_orbeus_api_key::,pickit_orbeus_api_secret::,pickit_shutterstock_api_client::,pickit_shutterstock_api_secret::,pickit_stripe_public_key_sandbox::,pickit_stripe_secret_key_sandbox::,pickit_stripe_public_key::,pickit_stripe_secret_key::,pickit_mobile_service_token::,pickit_bing_translate_client_id::,pickit_bing_translate_client_secret::,pickit_new_relic_account_id::,pickit_new_relic_insights_key::,pickit_azure_moderation_subscription_id::,pickit_vatlayer_access_key::,pickit_vatlayer_access_dev_key::,pickit_vision_api_key::,pickit_cms_postgresql_user::,pickit_cms_postgresql_database::,pickit_cms_postgresql_host::,pickit_cms_postgresql_port::,pickit_cms_postgresql_password::,pickit_cms_postgresql_replica_user::,pickit_cms_postgresql_replica_database::,pickit_cms_postgresql_replica_host::,pickit_cms_postgresql_replica_port::,pickit_cms_postgresql_replica_password::,pickit_env::,django_settings_module::,clarifai_app_id::,clarifai_app_secret::,ssl_certificate_crt::,ssl_certificate_key::,help::" -n 'pickit_web' -- "$@"`
 
 # OPTS=`getopt --long newrelic_license_key:,git_private_key::,git_public_key::,help:: -n 'pickit_install' -- "$@"`
 
@@ -309,6 +311,8 @@ while true ; do
         --django_settings_module ) DJANGO_SETTINGS_MODULE=$2; shift; shift ;;
         --clarifai_app_id ) CLARIFAI_APP_ID=$2; shift; shift ;;
         --clarifai_app_secret ) CLARIFAI_APP_SECRET=$2; shift; shift ;;
+        --ssl_certificate_crt ) SSL_CERTIFICATE_CRT=$2; shift; shift ;;
+        --ssl_certificate_key ) SSL_CERTIFICATE_KEY=$2; shift; shift ;;
         --help )    HELP=$2; shift ;;
         -- ) shift; break ;;
         * ) break ;;
@@ -323,6 +327,8 @@ fi
 
 git_public_key=${GIT_PUBLIC_KEY//"++++"/" "};
 git_private_key=${GIT_PRIVATE_KEY//"++++"/" "};
+ssl_certificate_crt=${SSL_CERTIFICATE_CRT//"++++"/" "};
+ssl_certificate_key=${SSL_CERTIFICATE_KEY//"++++"/" "};
 
 echo "NEWRELIC_LICENSE_KEY: $NEWRELIC_LICENSE_KEY";
 echo "PICKIT_POSTGRESQL_USER: ${PICKIT_POSTGRESQL_USER}";
@@ -393,6 +399,8 @@ echo "PICKIT_ENV: ${PICKIT_ENV}";
 echo "DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE}";
 echo "CLARIFAI_APP_ID: ${CLARIFAI_APP_ID}";
 echo "CLARIFAI_APP_SECRET: ${CLARIFAI_APP_SECRET}";
+echo "SSL_CERTIFICATE_CRT: ${SSL_CERTIFICATE_CRT}";
+echo "SSL_CERTIFICATE_KEY: ${SSL_CERTIFICATE_KEY}";
 
 
 if [ "${UID}" -ne 0 ];
@@ -673,7 +681,539 @@ runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_fara
 # install uwsgi into our environment pichit.me
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install uwsgi"
 
+if [ ${PICKIT_ENV} == "dev" ]; then
+# Copy certificate files
+echo -e ${ssl_certificate_crt} >> /etc/nginx/ssl/pichitmedev.com-wild.crt
+echo -e ${ssl_certificate_key} >> /etc/nginx/ssl/pichitmedev.com-wild.key
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+# Copy certificate files
+echo -e ${ssl_certificate_crt} >> /etc/nginx/ssl/pickit.com.crt
+echo -e ${ssl_certificate_key} >> /etc/nginx/ssl/pickit.com.key
+fi
+
 # nginx config
+if [ ${PICKIT_ENV} == "dev" ]; then
+
+cat >/home/phme/config/nginx.pichitmedev.com <<EOL
+
+    upstream app_server {
+        server unix:/tmp/uwsgi.sock fail_timeout=0;
+        # For a TCP configuration:
+        # server localhost:8000 fail_timeout=0;
+    }
+
+    upstream cms_server {
+        #server cms.pichitmedev.com:80;
+        server unix:/tmp/uwsgi_cms.sock fail_timeout=0;
+    }
+
+    server {
+        server_name  www.pichitmedev.com;
+        return       301 https://pichitmedev.com\$request_uri;
+    }
+
+    server {
+        listen 80 default;
+        client_max_body_size 4G;
+        large_client_header_buffers 4 64k;
+        server_name _;
+        return 301 https://\$host\$request_uri;
+
+	location /robots.txt {
+	    alias /home/phme/html/robots.txt;
+	}
+
+        location /en/robots.txt {
+            alias /home/phme/html/robots.txt;
+        }
+
+        if ($host = 'pichitmedev.com') {
+		rewrite ^/$ https://\$host/en/ redirect;
+	}
+
+        keepalive_timeout 30;
+
+        # path for static files
+        root /home/phme/pichit.me/phme_django/static;
+
+	location /googlea35d4bea688aa54f.html {
+		alias /home/phme/pichit.me/phme_faraday/templates/googlea35d4bea688aa54f.html;
+	}
+
+        # country flags
+        location /static/flags {
+            autoindex off;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django_countries/static/flags;
+            expires max;
+        }
+
+        location /img {
+            autoindex off;
+            alias /home/phme/pichit.me/phme_faraday/static/img;
+        }
+
+        # admin media
+        location /static/admin {
+            autoindex off;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django/contrib/admin/static/admin;
+            expires max;
+        }
+
+        # site static
+        location /static {
+            autoindex off;
+            alias /home/phme/pichit.me/phme_faraday/static;
+        }
+
+        location /static_cms {
+            autoindex off;
+            alias /home/phme/phme_cms/static;
+            #rewrite ^/$ https://phmedevcloud.blob.core.windows.net/cms-static/ redirect;
+        }
+
+        location /media {
+            autoindex off;
+            alias /home/phme/phme_cms/media;
+        }
+
+        location / {
+            # checks for static file, if not found proxy to app
+	   #return 503;
+           try_files \$uri @proxy_to_app;
+        }
+
+        location /admin-cms {
+            # checks for static file, if not found proxy to app
+            try_files \$uri @proxy_to_cms;
+        }
+
+        location /en {
+            try_files \$uri @proxy_to_cms;
+        }
+
+	location /admin {
+    	   return 301 https://\$http_host\$request_uri\$is_args\$query_string;
+	}
+
+        location @proxy_to_app {
+	    proxy_read_timeout 1200;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
+            proxy_redirect off;
+
+            if (\$request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS, DELETE';
+                add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,PicHit-App,PicHit-Node,X-Forwarded-For,SimpleToken-Auth,Authorization';
+                add_header 'Content-Type' 'text/plain charset=UTF-8';
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+
+            uwsgi_pass   app_server;
+	    include     /etc/nginx/uwsgi_params;
+
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS, DELETE';
+            add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,PicHit-App,PicHit-Node,X-Forwarded-For,SimpleToken-Auth,Authorization';
+            add_header PicHit-Node \$hostname;
+            proxy_intercept_errors on;
+            recursive_error_pages on;
+            error_page 404 = @proxy_to_cms;
+            log_not_found  off;
+
+
+        }
+
+        location @proxy_to_cms {
+            proxy_read_timeout 1200;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
+            proxy_redirect off;
+            uwsgi_pass   cms_server;
+            include     /etc/nginx/uwsgi_params;
+        }
+
+        #if (\$remote_addr != "83.227.181.198") {
+        #       return 503;
+        #}
+
+        error_page 500 504 /500.html;
+        location = /500.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 403 /403.html;
+        location = /403.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        #error_page 503 /503.html;
+        #location = /503.html {
+        #    root /home/phme/pichit.me/phme_faraday/templates;
+        #}
+        error_page 502 /503.html;
+        location = /503.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        #error_page 404 /404.html;
+        error_page 404 = @proxy_to_cms;
+        #location = /404.html {
+        #    root /home/phme/pichit.me/phme_faraday/templates;
+        #}
+        #if (\$remote_addr != "83.227.181.198") {
+                #return 503;
+        #}
+	#return 503;
+        error_page 503 @maintenance;
+        location @maintenance {
+                root /home/phme/pichit.me/phme_faraday/templates;
+                rewrite ^(.*)\$ /503.html break;
+
+        }
+	#return 503;
+
+	#log_format combined \$remote_addr - \$remote_user [\$time_local] "\$request" \$status \$body_bytes_sent "\$http_referer" "\$http_user_agent";
+    }
+
+    server {
+        listen 443 default;
+        client_max_body_size 4G;
+        large_client_header_buffers 4 64k;
+        server_name _;
+
+	location /robots.txt {
+	    alias /home/phme/html/robots.txt;
+	}
+
+        location /en/robots.txt {
+            alias /home/phme/html/robots.txt;
+        }
+
+        if (\$host = 'pichitmedev.com') {
+                rewrite ^/\$ https://\$host/en/ redirect;
+        }
+
+        ssl on;
+        ssl_certificate /etc/nginx/ssl/pichitmedev.com-wild.crt;
+        ssl_certificate_key /etc/nginx/ssl/pichitmedev.com-wild.key;
+
+        keepalive_timeout 30;
+
+        # path for static files
+        root /home/phme/pichit.me/phme_django/static;
+
+        # country flags
+        location /static/flags {
+            autoindex off;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django_countries/static/flags;
+            expires max;
+        }
+
+        # admin media
+        location /static/admin {
+            autoindex off;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django/contrib/admin/static/admin;
+            expires max;
+        }
+
+        # site static
+        location /static {
+            autoindex off;
+            alias /home/phme/pichit.me/phme_faraday/static;
+
+            add_header 'Access-Control-Allow-Origin' 'https://cycastportal.1net4u.com';
+            add_header 'Access-Control-Allow-Origin' 'https://cycastportal.cycast.se';
+
+        }
+
+        location /img {
+            autoindex off;
+            alias /home/phme/pichit.me/phme_faraday/static/img;
+        }
+
+        location /static_cms {
+            autoindex off;
+            alias /home/phme/phme_cms/static;
+            #rewrite ^/\$ https://phmedevcloud.blob.core.windows.net/cms-static/ redirect;
+        }
+
+        location /media {
+            autoindex off;
+            alias /home/phme/phme_cms/media;
+        }
+
+        location / {
+            # checks for static file, if not found proxy to app
+            try_files \$uri @proxy_to_app;
+        }
+
+        location /admin-cms {
+            # checks for static file, if not found proxy to app
+            try_files \$uri @proxy_to_cms;
+        }
+
+        location /en {
+            try_files \$uri @proxy_to_cms;
+        }
+
+        location @proxy_to_app {
+
+            proxy_read_timeout 1200;
+	    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
+            proxy_redirect off;
+
+	    proxy_set_header X-Scheme \$scheme;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
+
+            if (\$request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS, DELETE';
+                add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,PicHit-App,PicHit-Node,X-Forwarded-For,SimpleToken-Auth,Authorization';
+                add_header 'Content-Type' 'text/plain charset=UTF-8';
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+
+            uwsgi_pass   app_server;
+            include     /etc/nginx/uwsgi_params;
+
+            add_header 'Access-Control-Allow-Origin' '*';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS, DELETE';
+            add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,PicHit-App,PicHit-Node,X-Forwarded-For,SimpleToken-Auth,Authorization';
+            add_header PicHit-Node \$hostname;
+            proxy_intercept_errors on;
+            recursive_error_pages on;
+            error_page 404 = @proxy_to_cms;
+            log_not_found  off;
+        }
+
+        location @proxy_to_cms {
+            proxy_read_timeout 1200;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
+            proxy_redirect off;
+            uwsgi_pass   cms_server;
+            include     /etc/nginx/uwsgi_params;
+        }
+
+        error_page 500 502 504 /500.html;
+        location = /500.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 403 /403.html;
+        location = /403.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 503 /503.html;
+        location = /503.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 404 /404.html;
+        location = /404.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+
+	#log_format combined \$remote_addr - \$remote_user [\$time_local] "\$request" \$status \$body_bytes_sent "\$http_referer" "\$http_user_agent";
+    }
+
+EOL
+fi
+
+# TODO: Update live CMS config
+# if [ ${PICKIT_ENV} == "live" ]; then
+# fi
+
+if [ ${PICKIT_ENV} == "dev" ]; then
+cat >/home/phme/config/nginx.cms.pichitmedev.com <<EOL
+
+    upstream cms_app_server {
+        server unix:/tmp/uwsgi_cms.sock fail_timeout=0;
+        # For a TCP configuration:
+        # server localhost:8000 fail_timeout=0;
+    }
+
+    server {
+        # listen 80 default;
+        client_max_body_size 4G;
+        #large_client_header_buffers 4 64k;
+        server_name cms.*;
+        gzip            on;
+        gzip_min_length 1000;
+        gzip_proxied    expired no-cache no-store private auth;
+        gzip_types       text/html text/css text/javascript;
+        gzip_static on;
+        gzip_proxied any;
+        gzip_buffers 16 8k;
+
+        keepalive_timeout 5;
+
+        # path for static files
+        #root /home/phme/pichit.me/phme_django/static;
+        root /home/phme/phme_cms/static;
+
+	location /googlea35d4bea688aa54f.html {
+		alias /home/phme/pichit.me/phme_faraday/templates/googlea35d4bea688aa54f.html;
+	}
+
+        # country flags
+        location /static/flags {
+            autoindex on;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django_countries/static/flags;
+            expires max;
+        }
+
+        location /img {
+            autoindex on;
+            alias /home/phme/phme_cms/static/img;
+        }
+
+        # admin media
+        location /static/admin {
+            autoindex on;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django/contrib/admin/static/admin;
+            expires max;
+        }
+
+        # site static
+        location /static_cms {
+            autoindex on;
+            alias /home/phme/phme_cms/static;
+        }
+
+        location / {
+            # checks for static file, if not found proxy to app
+	   #return 503;
+           try_files \$uri @proxy_to_app;
+        }
+
+	#location /admin {
+    	#   return 301 https://\$http_host\$request_uri\$is_args\$query_string;
+	#}
+
+        location @proxy_to_app {
+	    proxy_read_timeout 1200;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
+            proxy_redirect off;
+
+            uwsgi_pass   cms_app_server;
+	    include     /etc/nginx/uwsgi_params;
+
+            add_header PicHit-Node \$hostname;
+        }
+
+        error_page 500 504 /500.html;
+        location = /500.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 502 /503.html;
+        location = /503.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 404 /404.html;
+        location = /404.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 503 @maintenance;
+        location @maintenance {
+                root /home/phme/pichit.me/phme_faraday/templates;
+                rewrite ^(.*)\$ /503.html break;
+
+        }
+    }
+
+    server {
+        listen 443;
+        client_max_body_size 4G;
+        server_name cms.*;
+
+        ssl on;
+        ssl_certificate /etc/nginx/ssl/pichitmedev.com-wild.crt;
+        ssl_certificate_key /etc/nginx/ssl/pichitmedev.com-wild.key;
+
+        keepalive_timeout 5;
+
+        # path for static files
+        #root /home/phme/pichit.me/phme_django/static;
+        root /home/phme/phme_cms/static;
+
+        # country flags
+        location /static/flags {
+            autoindex on;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django_countries/static/flags;
+            expires max;
+        }
+
+        # admin media
+        location /static/admin {
+            autoindex on;
+            alias /home/phme/pichit.me/lib/python2.7/site-packages/django/contrib/admin/static/admin;
+            expires max;
+        }
+
+        # site static
+        location /static {
+            autoindex on;
+            alias /home/phme/phme_cms/static;
+
+            add_header 'Access-Control-Allow-Origin' 'https://cycastportal.1net4u.com';
+            add_header 'Access-Control-Allow-Origin' 'https://cycastportal.cycast.se';
+
+        }
+
+        location /img {
+            autoindex on;
+            alias /home/phme/phme_cms/static/img;
+        }
+
+        location / {
+            # checks for static file, if not found proxy to app
+            try_files $uri @proxy_to_app;
+        }
+
+        location @proxy_to_app {
+
+            proxy_read_timeout 1200;
+	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $http_host;
+            proxy_redirect off;
+
+	    proxy_set_header X-Scheme $scheme;
+            proxy_set_header PICHIT_APP $http_x_pichit_app;
+
+            uwsgi_pass   cms_app_server;
+            include     /etc/nginx/uwsgi_params;
+
+            add_header PicHit-Node $hostname;
+        }
+
+        error_page 500 502 504 /500.html;
+        location = /500.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 503 /503.html;
+        location = /503.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+        error_page 404 /404.html;
+        location = /404.html {
+            root /home/phme/pichit.me/phme_faraday/templates;
+        }
+    }
+
+EOL
+fi
+
+# TODO: Update live CMS config
+# if [ ${PICKIT_ENV} == "live" ]; then
+# fi
+
 
 # uwsgi config
 
