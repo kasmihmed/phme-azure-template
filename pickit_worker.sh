@@ -635,6 +635,10 @@ runuser -l phme -c "mkdir -m 755 /home/phme/office_add_in/dev/office-add-in"
 runuser -l phme -c "mkdir -m 755 /home/phme/office_add_in/live/office-add-in"
 runuser -l phme -c "git clone -b master git@bitbucket.org:phme_admin/office-add-in.git /home/phme/office_add_in/dev/office-add-in"
 runuser -l phme -c "git clone -b live git@bitbucket.org:phme_admin/office-add-in.git /home/phme/office_add_in/live/office-add-in"
+
+runuser -l phme -c "npm install /home/phme/office_add_in/dev/office-add-in"
+runuser -l phme -c "npm install /home/phme/office_add_in/live/office-add-in"
+
 chown -R phme.phme /home/phme/*
 
 # install requirements
