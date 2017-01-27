@@ -100,6 +100,12 @@
       "metadata": {
         "description": "Size of each data disk attached to web nodes in (Gb)"
       }
+    },
+    "osSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Elasticsearch deployment platform settings"
+      }
     }
   },
   "variables":{
@@ -452,30 +458,28 @@
           },
 
           {
-      "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'),'/', variables('extensionName'))]",
-      "apiVersion": "[variables('apiVersion')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-      ],
-      "properties": {
-        "publisher": "Microsoft.Azure.Extensions",
-        "type": "CustomScript",
-        "typeHandlerVersion": "2.0",
-        "autoUpgradeMinorVersion": true,
-        "settings": {
-          "fileUris": "[split(parameters('fileUris'), ' ')]",
-          "commandToExecute": "[parameters('commandToExecute')]"
-        },
-        "protectedSettings": {
-          "storageAccountName": "[parameters('customScriptStorageAccountName')]",
-          "storageAccountKey": "[parameters('customScriptStorageAccountKey')]"
-        }
-      }
-    }
-
-
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(variables('vmName'),'/', variables('extensionName'))]",
+            "apiVersion": "[variables('apiVersion')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+            ],
+            "properties": {
+              "publisher": "Microsoft.Azure.Extensions",
+              "type": "CustomScript",
+              "typeHandlerVersion": "2.0",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                "fileUris": "[split(parameters('fileUris'), ' ')]",
+                "commandToExecute": "[parameters('commandToExecute')]"
+              },
+              "protectedSettings": {
+                "storageAccountName": "[parameters('customScriptStorageAccountName')]",
+                "storageAccountKey": "[parameters('customScriptStorageAccountKey')]"
+              }
+            }
+          }
         ]
       }
     }
