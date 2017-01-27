@@ -647,6 +647,220 @@ chown -R phme.phme /home/phme/*
 runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/worker/phme_faraday"
 chown -R phme.phme /home/phme/*
 
+# settings_local.py
+if [${PICKIT_ENV} == "dev"]; then
+cat >/home/phme/phme_faraday/settings/development/settings_local <<EOL
+DATABASES = {
+    'default': {
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '${PICKIT_POSTGRESQL_DATABASE}',                          # Or path to database file if using sqlite3.
+        'USER': '${PICKIT_POSTGRESQL_USER}',                         # Not used with sqlite3.
+        'PASSWORD': '${PICKIT_POSTGRESQL_PASSWORD}',     # Not used with sqlite3.
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '${PICKIT_POSTGRESQL_HOST}',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '${PICKIT_POSTGRESQL_PORT}',
+    },
+}
+
+DATABASE_ROUTERS = []
+
+REDIS_URL = "${PICKIT_REDIS_URL}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "{}/10".format(REDIS_URL),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
+}
+
+ALLOWED_HOSTS = [
+	'.pichitmedev.com',
+]
+
+BROKER_URL = "${PICKIT_CELERY_BROKER_URL}"
+
+EOL
+fi
+
+if [${PICKIT_ENV} == "live"]; then
+cat >/home/phme/phme_faraday/settings/live/settings_local <<EOL
+DATABASES = {
+    'default': {
+        # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '${PICKIT_POSTGRESQL_DATABASE}',                          # Or path to database file if using sqlite3.
+        'USER': '${PICKIT_POSTGRESQL_USER}',                         # Not used with sqlite3.
+        'PASSWORD': '${PICKIT_POSTGRESQL_PASSWORD}',     # Not used with sqlite3.
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '${PICKIT_POSTGRESQL_HOST}',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '${PICKIT_POSTGRESQL_PORT}',
+    },
+}
+
+REDIS_URL = "${PICKIT_REDIS_URL}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "{}/10".format(REDIS_URL),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
+}
+
+BROKER_URL = "${PICKIT_CELERY_BROKER_URL}"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'filename': '/home/phme/log/phme_django.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_cf': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_crowdflower.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_commands': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'filename': '/home/phme/log/phme_commands.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_search': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_search.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_exchange': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_currency_exchange.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'email_handlers.handlers.ThrottledAdminEmailHandler'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'logfile_analytics': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_analytics.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'graypy': {
+            'level': 'DEBUG',
+            'class': 'graypy.GELFHandler',
+            'host': '40.87.158.22',
+            'port': 12201,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'logfile', 'sentry', 'graypy'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+       'pyelasticsearch': {
+            'handlers': ['logfile', 'graypy'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'apps': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'haystack': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'piston': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'currency_exchange': {
+            'handlers': ['logfile_exchange', 'graypy'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'crowdflower': {
+            'handlers': ['logfile_cf', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'commands': {
+            'handlers': ['logfile_commands', 'graypy'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'search': {
+            'handlers': ['logfile_search', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'analytics': {
+            'handlers': ['logfile_analytics', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
+
+API_URL = "http://phme-web.cloudapp.net//api"
+SITE_URL = "http://phme-web.cloudapp.net/"
+EOL
+fi
+
 # crontab update
 log "** crontab update when first worker, worker-v{version}-{de/li}-0"
 if [[ $(hostname -s) = worker-v*-*-0 ]]; then
