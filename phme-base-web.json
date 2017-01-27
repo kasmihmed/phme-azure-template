@@ -259,6 +259,24 @@
         "description": "Two letters for environment: de, li, etc..."
       }
     },
+    "graylog_image_uri": {
+      "type": "string",
+      "metadata": {
+        "description": "Instance image_uri"
+      }
+    },
+    "graylog_storage_account": {
+      "type": "string",
+      "metadata": {
+        "description": "GrayLog storage account"
+      }
+    },
+    "vhd_storage_account": {
+      "type": "string",
+      "metadata": {
+        "description": "VHD storage account for instance disks"
+      }
+    },
     "GIT_PRIVATE_KEY": {"type": "securestring"},
     "GIT_PUBLIC_KEY": {"type": "securestring"},
     "NEWRELIC_LICENSE_KEY": {"type": "securestring"},
