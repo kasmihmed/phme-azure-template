@@ -714,7 +714,7 @@
             "value":"[parameters('location')]"
           },
           "vmssName":{
-            "value":"[concat('web-v2-', parameters('env'), '-')]"
+            "value":"[concat('web-v2-', parameters('env'))]"
           },
           "virtualNetworkName":{
             "value":"[parameters('virtualNetworkName')]"
