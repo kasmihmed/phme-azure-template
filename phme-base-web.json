@@ -706,6 +706,9 @@
           },
           "virtualNetworkName": {
             "value": "[parameters('virtualNetworkName')]"
+          },
+          "vhd_storage_account": {
+            "value": "[parameters('vhd_storage_account')]"
           }
         }
       }
