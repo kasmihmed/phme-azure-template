@@ -114,11 +114,11 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "[concat('pivhdsweb01', parameters('env'))]",
-      "[concat('pivhdsweb02', parameters('env'))]",
-      "[concat('pivhdsweb03', parameters('env'))]",
-      "[concat('pivhdsweb04', parameters('env'))]",
-      "[concat('pivhdsweb05', parameters('env'))]"
+      "[concat(parameters('vhd_storage_account'), '1')]",
+      "[concat(parameters('vhd_storage_account'), '2')]",
+      "[concat(parameters('vhd_storage_account'), '3')]",
+      "[concat(parameters('vhd_storage_account'), '4')]",
+      "[concat(parameters('vhd_storage_account'), '5')]"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
@@ -310,11 +310,11 @@
               "caching":"ReadOnly",
               "createOption":"FromImage",
               "vhdContainers": [
-                "[concat('http://',parameters('vhd_storage_account'),'1',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'2',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'3',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'4',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'5',parameters('env'),'.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+                "[concat('http://',parameters('vhd_storage_account'),'1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
               ]
             },
             "imageReference": {
