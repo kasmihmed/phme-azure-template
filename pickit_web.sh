@@ -145,6 +145,8 @@ help()
     echo "--django_settings_module"
     echo "--clarifai_app_id"
     echo "--clarifai_app_secret"
+    echo "--ssl_certificate_crt"
+    echo "--ssl_certificate_key"
 }
 
 # Log method to control/redirect log output
@@ -426,6 +428,8 @@ fi
 timedatectl set-timezone Europe/Stockholm
 log "** Europe/Stockholm timezone **"
 
+apt-get update
+
 apt-get install phantomjs -y > /dev/null
 log "** phantomjs **"
 apt-get install binutils libproj-dev gdal-bin -y > /dev/null
@@ -485,11 +489,11 @@ log "** enchant **"
 sudo apt-get install enchant -y > /dev/null
 
 log "** nginx **"
-sudo apt-get install nginx
+sudo apt-get install nginx -y > /dev/null
 log "** uwsgi **"
-sudo apt-get install uwsgi
+sudo apt-get install uwsgi -y > /dev/null
 log "** uwsgi-emperor **"
-sudo apt-get install uwsgi-emperor
+sudo apt-get install uwsgi-emperor -y > /dev/null
 sudo systemctl daemon-reload
 sudo systemctl enable uwsgi-emperor
 sudo service uwsgi-emperor start
@@ -681,6 +685,7 @@ runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_fara
 # install uwsgi into our environment pichit.me
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install uwsgi"
 
+mkdir -m 755 /etc/nginx/ssl
 if [ ${PICKIT_ENV} == "dev" ]; then
 # Copy certificate files
 echo -e ${ssl_certificate_crt} >> /etc/nginx/ssl/pichitmedev.com-wild.crt
@@ -696,6 +701,7 @@ fi
 # nginx config
 if [ ${PICKIT_ENV} == "dev" ]; then
 
+log "** nginx **"
 cat >/home/phme/config/nginx.pichitmedev.com <<EOL
 
     upstream app_server {
@@ -1180,17 +1186,17 @@ cat >/home/phme/config/nginx.cms.pichitmedev.com <<EOL
         location @proxy_to_app {
 
             proxy_read_timeout 1200;
-	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
+	    proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Host \$http_host;
             proxy_redirect off;
 
-	    proxy_set_header X-Scheme $scheme;
-            proxy_set_header PICHIT_APP $http_x_pichit_app;
+	    proxy_set_header X-Scheme \$scheme;
+            proxy_set_header PICHIT_APP \$http_x_pichit_app;
 
             uwsgi_pass   cms_app_server;
             include     /etc/nginx/uwsgi_params;
 
-            add_header PicHit-Node $hostname;
+            add_header PicHit-Node \$hostname;
         }
 
         error_page 500 502 504 /500.html;
@@ -1220,6 +1226,7 @@ fi
 # TODO: Define module based on live and first web instance !!!!!!!!, like module=phme_faraday.wsgi_newrelic
 
 if [ ${PICKIT_ENV} == "dev" ]; then
+log "** uwsgi **"
 cat >/home/phme/config/uwsgi.pichitmedev.com.ini <<EOL
 [uwsgi]
 plugins = python
@@ -1366,6 +1373,194 @@ fi
 # TODO: Update UWSGI live CMS config
 # if [ ${PICKIT_ENV} == "live" ]; then
 # fi
+
+# settings_local.py
+if [ ${PICKIT_ENV} == "dev" ]; then
+cat >/home/phme/phme_faraday/settings/development/settings_local.py <<EOL
+DEBUG = True
+
+STRIPE_PUBLIC_KEY = "${PICKIT_STRIPE_PUBLIC_KEY}"
+STRIPE_SECRET_KEY = "${PICKIT_STRIPE_SECRET_KEY}"
+
+# HTTPS_SUPPORT=False
+
+SESSION_COOKIE_DOMAIN = '.pichitmedev.com'
+
+REDIS_URL = "${PICKIT_REDIS_URL}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "{}/10".format(REDIS_URL),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
+}
+
+ALLOWED_HOSTS = [
+	'.pichitmedev.com',
+]
+
+BROKER_URL = "${PICKIT_CELERY_BROKER_URL}"
+EOL
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+cat >/home/phme/phme_faraday/settings/live/settings_local.py <<EOL
+REDIS_URL = "${PICKIT_REDIS_URL}"
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "{}/10".format(REDIS_URL),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
+        }
+    }
+}
+BROKER_URL = "${PICKIT_CELERY_BROKER_URL}"
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'standard': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'logfile': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'filename': '/home/phme/log/phme_django.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_cf': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_crowdflower.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_commands': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'DEBUG',
+            'filename': '/home/phme/log/phme_commands.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_search': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_search.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'logfile_exchange': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_currency_exchange.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'email_handlers.handlers.ThrottledAdminEmailHandler'
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+        },
+        'logfile_analytics': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'level': 'INFO',
+            'filename': '/home/phme/log/phme_analytics.log',
+            'maxBytes': 1024*1024*25,
+            'backupCount': 5,
+            'formatter': 'standard'
+        },
+        'graypy': {
+            'level': 'DEBUG',
+            'class': 'graypy.GELFHandler',
+            'host': '40.87.158.22',
+            'port': 12201,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'logfile', 'sentry', 'graypy'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+       'pyelasticsearch': {
+            'handlers': ['logfile', 'graypy'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'apps': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'haystack': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'piston': {
+            'handlers': ['logfile', 'sentry', 'graypy'],
+            'propagate': True,
+            'level': 'ERROR',
+        },
+        'currency_exchange': {
+            'handlers': ['logfile_exchange', 'graypy'],
+            'propagate': True,
+            'level': 'INFO',
+        },
+        'crowdflower': {
+            'handlers': ['logfile_cf', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'commands': {
+            'handlers': ['logfile_commands', 'graypy'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'search': {
+            'handlers': ['logfile_search', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'analytics': {
+            'handlers': ['logfile_analytics', 'graypy'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
+API_URL = "http://phme-web.cloudapp.net//api"
+SITE_URL = "http://phme-web.cloudapp.net/"
+EOL
+fi
 
 chown phme.phme /home/phme/config/*
 
