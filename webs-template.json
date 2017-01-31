@@ -114,20 +114,20 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "[concat(parameters('vhd_storage_account'), '1')]",
-      "[concat(parameters('vhd_storage_account'), '2')]",
-      "[concat(parameters('vhd_storage_account'), '3')]",
-      "[concat(parameters('vhd_storage_account'), '4')]",
-      "[concat(parameters('vhd_storage_account'), '5')]"
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '1')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '2')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '3')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '4')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '5')]"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
     "addressPrefix":"10.0.0.0/16",
     "subnetPrefix":"10.0.0.0/24",
     "virtualNetworkName":"[parameters('virtualNetworkName')]",
-    "publicIPAddressName":"[concat(parameters('vmssName'), 'pip')]",
+    "publicIPAddressName":"[concat(parameters('vmssName'), '-pip')]",
     "subnetName":"web",
-    "loadBalancerName":"[concat(parameters('vmssName'), 'lb')]",
+    "loadBalancerName":"[concat(parameters('vmssName'), '-lb')]",
     "publicIPAddressID":"[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
     "lbID":"[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "natPoolName":"[concat(parameters('vmssName'), 'natpool')]",
@@ -310,11 +310,11 @@
               "caching":"ReadOnly",
               "createOption":"FromImage",
               "vhdContainers": [
-                "[concat('http://',parameters('vhd_storage_account'),'1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
               ]
             },
             "imageReference": {
