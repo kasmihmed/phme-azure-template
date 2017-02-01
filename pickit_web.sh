@@ -500,6 +500,8 @@ sudo service uwsgi-emperor start
 log "** compass **"
 sudo gem install compass -v 1.0.3
 
+sudo apt-get install libjpeg-dev -y > /dev/null
+
 pip install graypy
 log "** graypy **"
 pip install --upgrade pip
@@ -661,12 +663,14 @@ mkdir -m 755 /home/phme/Mail
 mkdir -m 755 /home/phme/run
 mkdir -m 755 /home/phme/search
 mkdir -m 755 /home/phme/tmp
+mkdir -m 755 /home/phme/envs
 chown root.root /home/phme/run
 
 # virtualenv pichit.me
 log "** virtualenv pichit.me **"
 # cd /home/phme
 runuser -l phme -c "virtualenv /home/phme/pichit.me"
+runuser -l phme -c "virtualenv /home/phme/envs/phme_cms_env"
 
 # fetch pickit code
 log "** pull phme_faraday **"
@@ -677,13 +681,24 @@ runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/
 cd /home/phme
 runuser -l phme -c "ln -s pichit.me/phme_faraday"
 chown -R phme.phme /home/phme/*
+cd /home/phme
+runuser -l phme -c "git clone -b master git@bitbucket.org:phme_admin/phme_cms.git /home/phme/phme_cms"
 
 # install requirements
 log "** install requirements **"
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/dev/dev_requirements.txt"
+runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/pip install -r /home/phme/phme_cms/requirements.txt"
 
 # install uwsgi into our environment pichit.me
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install uwsgi"
+
+# Deploy CMS
+log "** Deploy CMS **"
+cd /home/phme/phme_cms
+runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py makemigrations --settings=cms_phme.settings.dev"
+runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py migrate --settings=cms_phme.settings.dev"
+runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py collectstatic --settings=cms_phme.settings.dev --noinput"
+
 
 mkdir -m 755 /etc/nginx/ssl
 if [ ${PICKIT_ENV} == "dev" ]; then
@@ -697,6 +712,17 @@ if [ ${PICKIT_ENV} == "live" ]; then
 echo -e ${ssl_certificate_crt} >> /etc/nginx/ssl/pickit.com.crt
 echo -e ${ssl_certificate_key} >> /etc/nginx/ssl/pickit.com.key
 fi
+
+# Make deployment steps for web
+log "** Make deployment steps for web **"
+runuser -l phme -c "cp /home/phme/phme_faraday/configs/dev/phme-node/package.json /home/phme/phme_faraday"
+cd /home/phme/phme_faraday
+runuser -l phme -c "npm install"
+runuser -l phme -c "grunt dist:dev"
+runuser -l phme -c "/home/phme/pichit.me/phme_faraday/scripts/make_lowercase.py"
+runuser -l phme -c "/home/phme/pichit.me/bin/python manage.py javascript_settings --static_path /home/phme/phme_faraday/static/"
+runuser -l phme -c "sed -i 's/configuration/pichitme_settings/g' /home/phme/phme_faraday/static/javascript-settings.js"
+runuser -l phme -c ""
 
 # nginx config
 if [ ${PICKIT_ENV} == "dev" ]; then
@@ -735,7 +761,7 @@ cat >/home/phme/config/nginx.pichitmedev.com <<EOL
             alias /home/phme/html/robots.txt;
         }
 
-        if ($host = 'pichitmedev.com') {
+        if (\$host = 'pichitmedev.com') {
 		rewrite ^/$ https://\$host/en/ redirect;
 	}
 
@@ -1220,13 +1246,53 @@ fi
 # if [ ${PICKIT_ENV} == "live" ]; then
 # fi
 
-
 # uwsgi config
+
+log "** uwsgi **"
 
 # TODO: Define module based on live and first web instance !!!!!!!!, like module=phme_faraday.wsgi_newrelic
 
+cat >/etc/uwsgi-emperor/emperor.ini <<EOL
+[uwsgi]
+
+# try to autoload appropriate plugin if "unknown" option has been specified
+autoload = true
+
+# enable master process manager
+master = true
+
+# spawn 2 uWSGI emperor worker processes
+workers = 2
+
+# automatically kill workers on master's death
+no-orphans = true
+
+# place timestamps into log
+log-date = true
+
+# user identifier of uWSGI processes
+uid = phme
+
+# group identifier of uWSGI processes
+gid = phme
+
+# vassals directory
+emperor = /etc/uwsgi-emperor/vassals
+EOL
+
+# link vassals
+log "** link vassals **"
+cd /etc/uwsgi-emperor/vassals
+ln -s /home/phme/config/uwsgi.pichitmedev.com.ini
+ln -s /home/phme/config/uwsgi.cms.pichitmedev.com.ini
+
+# link nginx services
+log "** link nginx services **"
+cd /etc/nginx/sites-enabled
+ln -s /home/phme/config/nginx.pichitmedev.com
+ln -s /home/phme/config/nginx.cms.pichitmedev.com
+
 if [ ${PICKIT_ENV} == "dev" ]; then
-log "** uwsgi **"
 cat >/home/phme/config/uwsgi.pichitmedev.com.ini <<EOL
 [uwsgi]
 plugins = python
@@ -1363,6 +1429,9 @@ EOL
 
 cp /home/phme/config/uwsgi.pichitmedev.com.ini /home/phme/config/uwsgi.pichitmedev.com-src.ini
 cp /home/phme/config/uwsgi.cms.pichitmedev.com.ini /home/phme/config/uwsgi.cms.pichitmedev.com-src.ini
+
+runuser -l phme -c "touch /home/phme/config/uwsgi.pichitmedev.com.ini"
+runuser -l phme -c "touch /home/phme/config/uwsgi.cms.pichitmedev.com.ini"
 
 fi
 
