@@ -415,9 +415,9 @@
           {
             "name": "Profile1",
             "capacity": {
-              "minimum": "1",
+              "minimum": "[parameters('instanceCount')]",
               "maximum": "10",
-              "default": "1"
+              "default": "[parameters('instanceCount')]"
             },
             "rules": [
               {
