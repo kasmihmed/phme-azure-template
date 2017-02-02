@@ -555,6 +555,77 @@ echo "DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE" >> /etc/environment
 echo "CLARIFAI_APP_ID=$CLARIFAI_APP_ID" >> /etc/environment
 echo "CLARIFAI_APP_SECRET=$CLARIFAI_APP_SECRET" >> /etc/environment
 
+
+export NEWRELIC_LICENSE_KEY="$NEWRELIC_LICENSE_KEY"
+export PICKIT_POSTGRESQL_USER="$PICKIT_POSTGRESQL_USER"
+export PICKIT_POSTGRESQL_DATABASE="$PICKIT_POSTGRESQL_DATABASE"
+export PICKIT_POSTGRESQL_HOST="$PICKIT_POSTGRESQL_HOST"
+export PICKIT_POSTGRESQL_PORT="$PICKIT_POSTGRESQL_PORT"
+export PICKIT_POSTGRESQL_PASSWORD="$PICKIT_POSTGRESQL_PASSWORD"
+export PICKIT_POSTGRESQL_REPLICA_USER="$PICKIT_POSTGRESQL_REPLICA_USER"
+export PICKIT_POSTGRESQL_REPLICA_DATABASE="$PICKIT_POSTGRESQL_REPLICA_DATABASE"
+export PICKIT_POSTGRESQL_REPLICA_HOST="$PICKIT_POSTGRESQL_REPLICA_HOST"
+export PICKIT_POSTGRESQL_REPLICA_PORT="$PICKIT_POSTGRESQL_REPLICA_PORT"
+export PICKIT_POSTGRESQL_REPLICA_PASSWORD="$PICKIT_POSTGRESQL_REPLICA_PASSWORD"
+export PICKIT_AZURE_ACCOUNT_NAME="$PICKIT_AZURE_ACCOUNT_NAME"
+export PICKIT_AZURE_ACCOUNT_KEY="$PICKIT_AZURE_ACCOUNT_KEY"
+export PICKIT_AZURE_PUBLIC_CONTAINER="$PICKIT_AZURE_PUBLIC_CONTAINER"
+export PICKIT_AZURE_PRIVATE_CONTAINER="$PICKIT_AZURE_PRIVATE_CONTAINER"
+export PICKIT_EMAIL_HOST_USER="$PICKIT_EMAIL_HOST_USER"
+export PICKIT_EMAIL_HOST_PASSWORD="$PICKIT_EMAIL_HOST_PASSWORD"
+export PICKIT_EMAIL_PORT="$PICKIT_EMAIL_PORT"
+export PICKIT_TWITTER_CONSUMER_KEY="$PICKIT_TWITTER_CONSUMER_KEY"
+export PICKIT_TWITTER_CONSUMER_SECRET="$PICKIT_TWITTER_CONSUMER_SECRET"
+export PICKIT_FACEBOOK_APP_ID="$PICKIT_FACEBOOK_APP_ID"
+export PICKIT_FACEBOOK_API_SECRET="$PICKIT_FACEBOOK_API_SECRET"
+export PICKIT_LINKEDIN_CONSUMER_KEY="$PICKIT_LINKEDIN_CONSUMER_KEY"
+export PICKIT_LINKEDIN_CONSUMER_SECRET="$PICKIT_LINKEDIN_CONSUMER_SECRET"
+export PICKIT_GOOGLE_OAUTH2_CLIENT_ID="$PICKIT_GOOGLE_OAUTH2_CLIENT_ID"
+export PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET="$PICKIT_GOOGLE_OAUTH2_CLIENT_SECRET"
+export PICKIT_PAYPAL_APPLICATION_ID="$PICKIT_PAYPAL_APPLICATION_ID"
+export PICKIT_PAYPAL_USERID="$PICKIT_PAYPAL_USERID"
+export PICKIT_PAYPAL_PASSWORD="$PICKIT_PAYPAL_PASSWORD"
+export PICKIT_PAYPAL_SIGNATURE="$PICKIT_PAYPAL_SIGNATURE"
+export PICKIT_PAYEX_ENCRYPTION_KEY="$PICKIT_PAYEX_ENCRYPTION_KEY"
+export PICKIT_PAYEX_MERCHANT_ACCOUNT="$PICKIT_PAYEX_MERCHANT_ACCOUNT"
+export PICKIT_CROWD_FLOWER_API_KEY_LOCAL="$PICKIT_CROWD_FLOWER_API_KEY_LOCAL"
+export PICKIT_CELERY_BROKER_URL="$PICKIT_CELERY_BROKER_URL"
+export PICKIT_CROWD_FLOWER_API_KEY="$PICKIT_CROWD_FLOWER_API_KEY"
+export PICKIT_REDIS_URL="$PICKIT_REDIS_URL"
+export PICKIT_MIXPANEL_TOKEN="$PICKIT_MIXPANEL_TOKEN"
+export PICKIT_POWERPOINT_USER="$PICKIT_POWERPOINT_USER"
+export PICKIT_ORBEUS_API_KEY="$PICKIT_ORBEUS_API_KEY"
+export PICKIT_ORBEUS_API_SECRET="$PICKIT_ORBEUS_API_SECRET"
+export PICKIT_SHUTTERSTOCK_API_CLIENT="$PICKIT_SHUTTERSTOCK_API_CLIENT"
+export PICKIT_SHUTTERSTOCK_API_SECRET="$PICKIT_SHUTTERSTOCK_API_SECRET"
+export PICKIT_STRIPE_PUBLIC_KEY_SANDBOX="$PICKIT_STRIPE_PUBLIC_KEY_SANDBOX"
+export PICKIT_STRIPE_SECRET_KEY_SANDBOX="$PICKIT_STRIPE_SECRET_KEY_SANDBOX"
+export PICKIT_STRIPE_PUBLIC_KEY="$PICKIT_STRIPE_PUBLIC_KEY"
+export PICKIT_STRIPE_SECRET_KEY="$PICKIT_STRIPE_SECRET_KEY"
+export PICKIT_MOBILE_SERVICE_TOKEN="$PICKIT_MOBILE_SERVICE_TOKEN"
+export PICKIT_BING_TRANSLATE_CLIENT_ID="$PICKIT_BING_TRANSLATE_CLIENT_ID"
+export PICKIT_BING_TRANSLATE_CLIENT_SECRET="$PICKIT_BING_TRANSLATE_CLIENT_SECRET"
+export PICKIT_NEW_RELIC_ACCOUNT_ID="$PICKIT_NEW_RELIC_ACCOUNT_ID"
+export PICKIT_NEW_RELIC_INSIGHTS_KEY="$PICKIT_NEW_RELIC_INSIGHTS_KEY"
+export PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID="$PICKIT_AZURE_MODERATION_SUBSCRIPTION_ID"
+export PICKIT_VATLAYER_ACCESS_KEY="$PICKIT_VATLAYER_ACCESS_KEY"
+export PICKIT_VATLAYER_ACCESS_DEV_KEY="$PICKIT_VATLAYER_ACCESS_DEV_KEY"
+export PICKIT_VISION_API_KEY="$PICKIT_VISION_API_KEY"
+export PICKIT_CMS_POSTGRESQL_USER="$PICKIT_CMS_POSTGRESQL_USER"
+export PICKIT_CMS_POSTGRESQL_DATABASE="$PICKIT_CMS_POSTGRESQL_DATABASE"
+export PICKIT_CMS_POSTGRESQL_HOST="$PICKIT_CMS_POSTGRESQL_HOST"
+export PICKIT_CMS_POSTGRESQL_PORT="$PICKIT_CMS_POSTGRESQL_PORT"
+export PICKIT_CMS_POSTGRESQL_PASSWORD="$PICKIT_CMS_POSTGRESQL_PASSWORD"
+export PICKIT_CMS_POSTGRESQL_REPLICA_USER="$PICKIT_CMS_POSTGRESQL_REPLICA_USER"
+export PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE="$PICKIT_CMS_POSTGRESQL_REPLICA_DATABASE"
+export PICKIT_CMS_POSTGRESQL_REPLICA_HOST="$PICKIT_CMS_POSTGRESQL_REPLICA_HOST"
+export PICKIT_CMS_POSTGRESQL_REPLICA_PORT="$PICKIT_CMS_POSTGRESQL_REPLICA_PORT"
+export PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD="$PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD"
+export PICKIT_ENV="$PICKIT_ENV"
+export DJANGO_SETTINGS_MODULE="$DJANGO_SETTINGS_MODULE"
+export CLARIFAI_APP_ID="$CLARIFAI_APP_ID"
+export CLARIFAI_APP_SECRET="${CLARIFAI_APP_SECRET}"
+
 . /etc/environment
 
 
@@ -623,6 +694,12 @@ mkdir -m 755 /home/phme/envs
 chown -R phme.phme /home/phme/*
 chown root.root /home/phme/run
 
+cat >/home/phme/log/uwsgi.log <<EOL
+EOL
+
+cat >/home/phme/log/uwsgi_cms.log <<EOL
+EOL
+
 # virtualenv pichit.me
 log "** virtualenv pichit.me **"
 # cd /home/phme
@@ -684,7 +761,6 @@ grunt dist:dev
 /home/phme/pichit.me/phme_faraday/scripts/make_lowercase.py
 /home/phme/pichit.me/bin/python manage.py javascript_settings --static_path /home/phme/phme_faraday/static/
 sed -i 's/configuration/pichitme_settings/g' /home/phme/phme_faraday/static/javascript-settings.js
-exit
 chown -R phme.phme /home/phme/*
 
 # nginx config
@@ -879,9 +955,9 @@ cat >/home/phme/config/nginx.pichitmedev.com <<EOL
         large_client_header_buffers 4 64k;
         server_name _;
 
-	location /robots.txt {
-	    alias /home/phme/html/robots.txt;
-	}
+        location /robots.txt {
+            alias /home/phme/html/robots.txt;
+        }
 
         location /en/robots.txt {
             alias /home/phme/html/robots.txt;
@@ -1169,7 +1245,7 @@ cat >/home/phme/config/nginx.cms.pichitmedev.com <<EOL
 
         location / {
             # checks for static file, if not found proxy to app
-            try_files $uri @proxy_to_app;
+            try_files \$uri @proxy_to_app;
         }
 
         location @proxy_to_app {
@@ -1208,6 +1284,8 @@ fi
 # TODO: Update live CMS config
 # if [ ${PICKIT_ENV} == "live" ]; then
 # fi
+
+rm /etc/nginx/sites-enabled/default
 
 # uwsgi config
 
@@ -1393,9 +1471,6 @@ EOL
 cp /home/phme/config/uwsgi.pichitmedev.com.ini /home/phme/config/uwsgi.pichitmedev.com-src.ini
 cp /home/phme/config/uwsgi.cms.pichitmedev.com.ini /home/phme/config/uwsgi.cms.pichitmedev.com-src.ini
 
-runuser -l phme -c "touch /home/phme/config/uwsgi.pichitmedev.com.ini"
-runuser -l phme -c "touch /home/phme/config/uwsgi.cms.pichitmedev.com.ini"
-
 fi
 
 # TODO: Update UWSGI live config
@@ -1441,6 +1516,9 @@ fi
 
 chown phme.phme /home/phme/config/*
 
+runuser -l phme -c "touch /home/phme/config/uwsgi.pichitmedev.com.ini"
+runuser -l phme -c "touch /home/phme/config/uwsgi.cms.pichitmedev.com.ini"
+
 # Copy GeoIP in ubuntu directory
 
 log "** Copy GeoIP.dat **"
@@ -1451,5 +1529,8 @@ mkdir -m 755 /home/ubuntu/pichit.me/include
 mkdir -m 755 /home/ubuntu/pichit.me/include/geoiplite
 cd /home/ubuntu/pichit.me/include/geoiplite
 wget https://phmecloud.blob.core.windows.net/system-public/GeoIP.dat
+
+service nginx restart
+service uwsgi-emperor restart
 
 exit 0
