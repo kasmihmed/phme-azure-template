@@ -620,6 +620,7 @@ mkdir -m 755 /home/phme/run
 mkdir -m 755 /home/phme/search
 mkdir -m 755 /home/phme/tmp
 mkdir -m 755 /home/phme/envs
+chown -R phme.phme /home/phme/*
 chown root.root /home/phme/run
 
 # virtualenv pichit.me
@@ -648,13 +649,16 @@ runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/pip install -r /home/phme/p
 # install uwsgi into our environment pichit.me
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install uwsgi"
 
+. /etc/environment
+
 # Deploy CMS
 log "** Deploy CMS **"
 cd /home/phme/phme_cms
-runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py makemigrations --settings=cms_phme.settings.dev"
-runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py migrate --settings=cms_phme.settings.dev"
-runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/python manage.py collectstatic --settings=cms_phme.settings.dev --noinput"
 
+/home/phme/envs/phme_cms_env/bin/python manage.py makemigrations --settings=cms_phme.settings.dev
+/home/phme/envs/phme_cms_env/bin/python manage.py migrate --settings=cms_phme.settings.dev
+/home/phme/envs/phme_cms_env/bin/python manage.py collectstatic --settings=cms_phme.settings.dev --noinput
+chown -R phme.phme /home/phme/*
 
 mkdir -m 755 /etc/nginx/ssl
 if [ ${PICKIT_ENV} == "dev" ]; then
@@ -671,14 +675,17 @@ fi
 
 # Make deployment steps for web
 log "** Make deployment steps for web **"
-runuser -l phme -c "cp /home/phme/phme_faraday/configs/dev/phme-node/package.json /home/phme/phme_faraday"
+cp /home/phme/phme_faraday/configs/dev/phme-node/package.json /home/phme/phme_faraday
 cd /home/phme/phme_faraday
-runuser -l phme -c "npm install"
-runuser -l phme -c "grunt dist:dev"
-runuser -l phme -c "/home/phme/pichit.me/phme_faraday/scripts/make_lowercase.py"
-runuser -l phme -c "/home/phme/pichit.me/bin/python manage.py javascript_settings --static_path /home/phme/phme_faraday/static/"
-runuser -l phme -c "sed -i 's/configuration/pichitme_settings/g' /home/phme/phme_faraday/static/javascript-settings.js"
-runuser -l phme -c ""
+# runuser -l phme -c "npm install"
+npm install
+grunt dist:dev
+
+/home/phme/pichit.me/phme_faraday/scripts/make_lowercase.py
+/home/phme/pichit.me/bin/python manage.py javascript_settings --static_path /home/phme/phme_faraday/static/
+sed -i 's/configuration/pichitme_settings/g' /home/phme/phme_faraday/static/javascript-settings.js
+exit
+chown -R phme.phme /home/phme/*
 
 # nginx config
 if [ ${PICKIT_ENV} == "dev" ]; then
