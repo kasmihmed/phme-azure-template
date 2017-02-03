@@ -44,6 +44,12 @@
       "metadata": {
         "description": "Platform and OS settings"
       }
+    },
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "Two letters for environment: de, li, etc..."
+      }
     }
   },
   "variables": {
@@ -135,7 +141,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('vmName')]",
+      "name": "[concat(variables('vmName'), '-', parameters('env'))]",
       "location": "[parameters('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
@@ -145,7 +151,7 @@
           "vmSize": "[variables('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('vmName')]",
+          "computerName": "[concat(variables('vmName'), '-', parameters('env'))]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -171,11 +177,11 @@
       "resources": [
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('vmName'), '/installkibana')]",
+        "name": "[concat(variables('vmName'), '-', parameters('env'), '/installkibana')]",
         "apiVersion": "2015-06-15",
         "location": "[parameters('location')]",
         "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), '-', parameters('env'))]"
         ],
         "properties": "[parameters('osSettings').extentionSettings.kibana]"
       }

@@ -63,7 +63,7 @@
     "vmStorageAccountContainerName": "vhd",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[parameters('storageAccountName')]",
-    "vmName": "masterVm"
+    "vmName": "[concat('esMaster-16-04-', parameters('env'))]"
   },
   "resources": [
     {
@@ -79,7 +79,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat('masterNodeNic', copyindex())]",
+      "name": "[concat('masterNodeNic-16-04-', parameters('env'), '-', copyindex())]",
       "location": "[parameters('location')]",
       "copy": {
         "name": "masterNodesNicLoop",
@@ -103,7 +103,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat('masterVm', copyindex(), parameters('env'))]",
+      "name": "[concat('esMaster-16-04-', parameters('env'), '-', copyindex())]",
       "tags": {
         "resource_type": "elasticsearch"
       },
@@ -113,7 +113,7 @@
         "count": 3
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', 'masterNodeNic', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', 'masterNodeNic-16-04-', parameters('env'), '-', copyindex())]",
         "[concat('Microsoft.Compute/availabilitySets/', 'elasticsearchMaster')]"
       ],
       "properties": {
@@ -124,7 +124,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('esMaster', copyIndex())]",
+          "computerName": "[concat('esMaster-16-04-', parameters('env'), '-', copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -133,7 +133,7 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), copyindex(), '-osdisk.vhd')]"
+              "uri": "[concat('http://',variables('storageAccountName'),'.blob.core.windows.net/vhds/', variables('vmName'), '-', copyindex(), '-osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
@@ -142,7 +142,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('masterNodeNic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('masterNodeNic-16-04-', parameters('env'), '-', copyindex()))]"
             }
           ]
         }
@@ -150,11 +150,11 @@
       "resources": [
         {
           "type": "Microsoft.Compute/virtualMachines/extensions",
-          "name": "[concat('masterVm', copyindex(), '/installelasticsearch')]",
+          "name": "[concat('esMaster-16-04-', parameters('env'), '-', copyindex(), '/installelasticsearch')]",
           "apiVersion": "2015-06-15",
           "location": "[parameters('location')]",
           "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', 'masterVm', copyindex())]"
+            "[concat('Microsoft.Compute/virtualMachines/', 'esMaster-16-04-', parameters('env'), '-', copyindex())]"
           ],
           "properties": "[parameters('osSettings').extentionSettings.master]"
         }

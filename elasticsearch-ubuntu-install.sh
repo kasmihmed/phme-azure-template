@@ -138,10 +138,11 @@ expand_ip_range() {
     #Get the IP Addresses on this machine
     declare -a MY_IPS=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'`
     declare -a EXPAND_STATICIP_RANGE_RESULTS=()
-    for (( n=0 ; n<("${HOST_IPS[1]}"+0) ; n++))
+    declare -a ips_number=$((${HOST_IPS[1]}))
+    for (( n=0 ; n<$ips_number ; n++))
     do
-        HOST="${HOST_IPS[0]}${n}"
-        if ! [[ "${MY_IPS[@]}" =~ "${HOST}" ]]; then
+        declare -a HOST="${HOST_IPS[0]}${n}"
+        if ! [[ "${MY_IPS[@]}" =~ $HOST ]]; then
             EXPAND_STATICIP_RANGE_RESULTS+=($HOST)
         fi
     done
@@ -184,6 +185,7 @@ install_es()
 	log "Download location - $DOWNLOAD_URL"
     sudo wget -q "$DOWNLOAD_URL" -O elasticsearch.deb
     sudo dpkg -i elasticsearch.deb
+    sudo systemctl enable elasticsearch.service
 }
 
 # Primary Install Tasks
@@ -312,8 +314,13 @@ echo "vm.max_map_count = 262144" >> /etc/sysctl.conf
 #Set Elasticsearch heap size to 50% of system memory
 #TODO: Move this to an init.d script so we can handle instance size increases
 ES_HEAP=`free -m |grep Mem | awk '{if ($2/2 >31744)  print 31744;else print $2/2;}'`
+ES_HEAP=${ES_HEAP%.*}
 log "Configure elasticsearch heap size - $ES_HEAP"
 echo "ES_HEAP_SIZE=${ES_HEAP}m" >> /etc/default/elasticsearch
+echo "DATA_DIR=/var/lib/elasticsearch" >> /etc/default/elasticsearch
+echo "LOG_DIR=/var/log/elasticsearch" >> /etc/default/elasticsearch
+echo "CONF_DIR=/etc/elasticsearch" >> /etc/default/elasticsearch
+echo "CONF_FILE=/etc/elasticsearch/elasticsearch.yml" >> /etc/default/elasticsearch
 
 #Optionally Install Marvel
 if [ ${INSTALL_MARVEL} -ne 0 ]; then
