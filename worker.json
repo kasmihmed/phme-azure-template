@@ -59,11 +59,7 @@
     },
     "ubuntuOSVersion":{
       "type":"string",
-      "defaultValue":"14.04.2-LTS",
-      "allowedValues":[
-        "15.04",
-        "14.04.2-LTS"
-      ],
+      "defaultValue":"16.04-LTS",
       "metadata":{
         "description":"The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 15.04, 14.04.2-LTS."
       }
@@ -73,8 +69,7 @@
       "defaultValue":"pivmsswor",
       "metadata":{
         "description":"String used as a base for naming resources (9 characters or less). A hash is prepended to this string for some resources, and resource-specific information is appended."
-      },
-      "maxLength":9
+      }
     },
     "virtualNetworkName":{
       "type":"string",
@@ -119,6 +114,12 @@
       "metadata": {
         "description": "VHD storage account for instance disks"
       }
+    },
+    "osSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Elasticsearch deployment platform settings"
+      }
     }
   },
   "variables":{
@@ -148,7 +149,7 @@
     "natStartPort":50000,
     "natEndPort":50099,
     "natBackendPort":22,
-    "nicName":"[concat(parameters('vmssName'), 'nic')]",
+    "nicName":"[concat(parameters('vmssName'), '-nic')]",
     "ipConfigName":"[concat(parameters('vmssName'), 'ipconfig')]",
     "frontEndIPConfigID":"[concat(variables('lbID'),'/frontendIPConfigurations/loadBalancerFrontEnd')]",
     "diagnosticsStorageAccountName":"[concat(variables('uniqueStringArray')[0], variables('newStorageAccountSuffix'))]",
@@ -171,7 +172,43 @@
   "resources":[
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('vhd_storage_account')]",
+      "name": "[concat(parameters('vhd_storage_account'), '1')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '2')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '3')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '4')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "Standard_GRS"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[concat(parameters('vhd_storage_account'), '5')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -184,7 +221,11 @@
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "dependsOn":[
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '1')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '2')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '3')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '4')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '5')]"
       ],
       "sku":{
         "name":"[parameters('vmSku')]",
@@ -201,10 +242,19 @@
               "name":"[variables('osDiskName')]",
               "caching":"ReadOnly",
               "createOption":"FromImage",
-              "osType": "Linux",
-              "image": {
-                "uri": "[parameters('worker_image_uri')]"
-              }
+              "vhdContainers": [
+                "[concat('http://',parameters('vhd_storage_account'),'1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',parameters('vhd_storage_account'),'5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+              ]
+            },
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "[parameters('ubuntuOSVersion')]",
+              "version": "latest"
             }
           },
           "osProfile":{
@@ -262,6 +312,10 @@
                     "storageAccountEndPoint": "https://core.windows.net"
                   }
                 }
+              },
+              {
+                "name": "PickitWorker",
+                "properties": "[parameters('osSettings').extentionSettings.pickit_worker]"
               }
             ]
           }
@@ -271,13 +325,13 @@
     {
       "type": "Microsoft.Insights/autoscaleSettings",
       "apiVersion": "2015-04-01",
-      "name": "autoscalewadw",
+      "name": "[concat(parameters('vmssName'), '-scale')]",
       "location":"[parameters('resourceLocation')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
       ],
       "properties": {
-        "name": "autoscalewadw",
+        "name": "[concat(parameters('vmssName'), '-scale')]",
         "targetResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
         "enabled": true,
         "profiles": [
