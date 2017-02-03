@@ -34,10 +34,11 @@
     },
     "ubuntuOSVersion":{
       "type":"string",
-      "defaultValue":"15.04",
+      "defaultValue":"16.04.0-LTS",
       "allowedValues":[
         "15.04",
-        "14.04.2-LTS"
+        "14.04.2-LTS",
+        "16.04.0-LTS"
       ],
       "metadata":{
         "description":"The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 15.04, 14.04.2-LTS."
@@ -49,6 +50,12 @@
         "description":"String used as a base for naming resources (9 characters or less). A hash is prepended to this string for some resources, and resource-specific information is appended."
       },
       "maxLength":9
+    },
+    "vhd_storage_account":{
+      "type":"string",
+      "metadata":{
+        "description":"String used as a base for naming vhd storage account"
+      }
     },
     "virtualNetworkName":{
       "type":"string",
@@ -93,6 +100,12 @@
       "metadata": {
         "description": "Size of each data disk attached to web nodes in (Gb)"
       }
+    },
+    "osSettings": {
+      "type": "object",
+      "metadata": {
+        "description": "Elasticsearch deployment platform settings"
+      }
     }
   },
   "variables":{
@@ -101,20 +114,20 @@
     "saCount":5,
     "newStorageAccountSuffix":"[concat(parameters('vmssName'), 'sa')]",
     "uniqueStringArray":[
-      "[concat('pivhdsweb01', parameters('env'))]",
-      "[concat('pivhdsweb02', parameters('env'))]",
-      "[concat('pivhdsweb03', parameters('env'))]",
-      "[concat('pivhdsweb04', parameters('env'))]",
-      "[concat('pivhdsweb05', parameters('env'))]"
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '1')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '2')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '3')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '4')]",
+      "[concat(parameters('vhd_storage_account'), parameters('env'), '5')]"
     ],
     "vhdContainerName":"[concat(parameters('vmssName'), 'vhd')]",
     "osDiskName":"[concat(parameters('vmssName'), 'osdisk')]",
     "addressPrefix":"10.0.0.0/16",
     "subnetPrefix":"10.0.0.0/24",
     "virtualNetworkName":"[parameters('virtualNetworkName')]",
-    "publicIPAddressName":"[concat(parameters('vmssName'), 'pip')]",
+    "publicIPAddressName":"[concat(parameters('vmssName'), '-pip')]",
     "subnetName":"web",
-    "loadBalancerName":"[concat(parameters('vmssName'), 'lb')]",
+    "loadBalancerName":"[concat(parameters('vmssName'), '-lb')]",
     "publicIPAddressID":"[resourceId('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]",
     "lbID":"[resourceId('Microsoft.Network/loadBalancers',variables('loadBalancerName'))]",
     "natPoolName":"[concat(parameters('vmssName'), 'natpool')]",
@@ -296,10 +309,19 @@
               "name":"[variables('osDiskName')]",
               "caching":"ReadOnly",
               "createOption":"FromImage",
-              "osType": "Linux",
-              "image": {
-                "uri": "[parameters('web_image_uri')]"
-              }
+              "vhdContainers": [
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',parameters('vhd_storage_account'), parameters('env'), '5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+              ]
+            },
+            "imageReference": {
+              "publisher": "Canonical",
+              "offer": "UbuntuServer",
+              "sku": "[parameters('ubuntuOSVersion')]",
+              "version": "latest"
             }
           },
           "osProfile":{
@@ -367,6 +389,10 @@
                     "storageAccountEndPoint": "https://core.windows.net"
                   }
                 }
+              },
+              {
+                "name": "PickitWeb",
+                "properties": "[parameters('osSettings').extentionSettings.pickit_web]"
               }
             ]
           }
@@ -376,41 +402,60 @@
     {
       "type": "Microsoft.Insights/autoscaleSettings",
       "apiVersion": "2015-04-01",
-      "name": "autoscalewad",
+      "name": "[concat(parameters('vmssName'), '-scale')]",
       "location":"[parameters('resourceLocation')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]"
       ],
       "properties": {
-        "name": "autoscalewad",
+        "name": "[concat(parameters('vmssName'), '-scale')]",
         "targetResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
         "enabled": true,
         "profiles": [
           {
             "name": "Profile1",
             "capacity": {
-              "minimum": "1",
+              "minimum": "[parameters('instanceCount')]",
               "maximum": "10",
-              "default": "1"
+              "default": "[parameters('instanceCount')]"
             },
             "rules": [
               {
                 "metricTrigger": {
-                  "metricName": "\\Processor\\PercentProcessorTime",
+                  "metricName": "Percentage CPU",
                   "metricNamespace": "",
-                  "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
+                  "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmssName'))]",
                   "timeGrain": "PT1M",
                   "statistic": "Average",
                   "timeWindow": "PT5M",
                   "timeAggregation": "Average",
                   "operator": "GreaterThan",
-                  "threshold": 50.0
+                  "threshold": 60.0
                 },
                 "scaleAction": {
                   "direction": "Increase",
                   "type": "ChangeCount",
                   "value": "1",
                   "cooldown": "PT1M"
+                }
+              },
+              {
+                "metricTrigger": {
+                  "metricName": "Percentage CPU",
+                  "metricNamespace": "",
+                  "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmssName'))]",
+                  "timeGrain": "PT1M",
+                  "statistic": "Average",
+                  "timeWindow": "PT5M",
+                  "timeAggregation": "Average",
+                  "operator": "LessThan",
+                  "threshold": 30.0
+                },
+                "scaleAction": {
+                  "direction": "Decrease",
+                  "type": "ChangeCount",
+                  "value": "1",
+                  "cooldown": "PT5M"
                 }
               }
             ]
