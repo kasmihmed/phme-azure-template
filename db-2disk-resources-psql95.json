@@ -65,8 +65,8 @@
     "namespace": "[parameters('commonSettings').namespace]",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').name, variables('namespace'))]",
-    "vmName": "[concat(variables('namespace'), 'psql95vm')]",
-    "nicName": "[concat(variables('namespace'), '-psql95-', 'nic')]",
+    "vmName": "[concat(variables('namespace'), '-v2')]",
+    "nicName": "[concat(variables('namespace'), '-v2-', 'nic')]",
     "adminUsername": "[parameters('commonSettings').adminUsername]",
     "vmCount": "[parameters('machineSettings').vmCount]"
   },
@@ -97,7 +97,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmName'), copyindex(), parameters('env'))]",
+      "name": "[concat(variables('vmName'), '-', parameters('env'), '-', copyindex())]",
       "location": "[variables('region')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyindex())]"
@@ -114,7 +114,7 @@
           "vmSize": "[parameters('machineSettings').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'), copyindex(), parameters('env'))]",
+          "computerName": "[concat(variables('vmName'), '-', parameters('env'), '-', copyindex())]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -154,7 +154,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), copyindex()) )]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), '-', copyindex()) )]"
             }
           ]
         }
