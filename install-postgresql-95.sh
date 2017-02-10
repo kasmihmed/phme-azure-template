@@ -105,12 +105,12 @@ install_postgresql_service() {
 	logger "Done installing PostgreSQL..."
 
 	# Create the custom user and DBs
-	sudo su postgres
-	createuser -h 10.0.4.4 --pwprompt pickit
-	createdb phme_db
-	createdb phme_cms_db
-	grant all privileges on all tables in schema public to pickit;
-	grant all privileges on all sequences in schema public to pickit;
+	# sudo su postgres
+	# createuser -h localhost --pwprompt pickit
+	# createdb phme_db
+	# createdb phme_cms_db
+	# grant all privileges on all tables in schema public to pickit;
+	# grant all privileges on all sequences in schema public to pickit;
 }
 
 setup_datadisks() {
@@ -160,8 +160,9 @@ configure_streaming_replication() {
 		# Allow access from other servers in the same subnet
 		echo "" >> pg_hba.conf
 		echo "# install_postgresql.sh" >> pg_hba.conf
-		echo "host replication replicator $SUBNETADDRESS md5" >> pg_hba.conf
-		echo "hostssl replication replicator $SUBNETADDRESS md5" >> pg_hba.conf
+		echo "host    all             all             10.0.0.0/0               md5" >> pg_hba.conf
+		echo "host replication rep $SUBNETADDRESS md5" >> pg_hba.conf
+		echo "hostssl replication rep $SUBNETADDRESS md5" >> pg_hba.conf
 		echo "" >> pg_hba.conf
 			
 		logger "Updated pg_hba.conf"
@@ -181,9 +182,10 @@ configure_streaming_replication() {
 		echo "max_wal_senders = 10" >> postgresql.conf
 		echo "wal_keep_segments = 500" >> postgresql.conf
 		echo "checkpoint_segments = 8" >> postgresql.conf
-		echo "archive_mode = on" >> postgresql.conf
-		#echo "archive_command = 'cd .'" >> postgresql.conf
+		# echo "archive_mode = on" >> postgresql.conf
+		# echo "archive_command = 'cd .'" >> postgresql.conf
 		echo "hot_standby = on" >> postgresql.conf
+		echo "data_directory = '/var/lib/kafkadir/main'" >> postgresql.conf
 		echo "" >> postgresql.conf
 		
 		logger "Updated postgresql.conf"
