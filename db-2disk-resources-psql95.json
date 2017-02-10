@@ -65,8 +65,8 @@
     "namespace": "[parameters('commonSettings').namespace]",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').name, variables('namespace'))]",
-    "vmName": "[concat(variables('namespace'))]",
-    "nicName": "[concat(variables('namespace'), '-nic')]",
+    "vmName": "[concat(variables('namespace'), '-' + parameters('env'))]",
+    "nicName": "[concat(variables('namespace'), '-' + parameters('env'), '-nic')]",
     "adminUsername": "[parameters('commonSettings').adminUsername]",
     "vmCount": "[parameters('machineSettings').vmCount]"
   },
@@ -97,7 +97,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmName'), '-', parameters('env'), '-', copyindex())]",
+      "name": "[concat(variables('vmName'), '-', copyindex())]",
       "location": "[variables('region')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '-', copyindex())]"
@@ -114,7 +114,7 @@
           "vmSize": "[parameters('machineSettings').vmSize]"
         },
         "osProfile": {
-          "computerName": "[concat(variables('vmName'), '-', parameters('env'), '-', copyindex())]",
+          "computerName": "[concat(variables('vmName'), '-', copyindex())]",
           "adminUsername": "[variables('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -162,11 +162,11 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'), copyindex(), parameters('env'), '/install_postgresql')]",
+      "name": "[concat(variables('vmName'), '-', copyindex(), '/install_postgresql')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[variables('region')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), '-', parameters('env'), '-', copyindex())]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), '-', copyindex())]"
       ],
       "copy": {
         "name": "scriptCopyLoop",
