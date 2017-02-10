@@ -276,7 +276,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "ms"
+              "namespace": "db-master-v2"
             }
           },
           "storageSettings": {
@@ -341,7 +341,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "sl"
+              "namespace": "db-slave-v2"
             }
           },
           "storageSettings": {
