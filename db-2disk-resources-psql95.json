@@ -162,7 +162,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'), '-', copyindex(), '/install_postgresql')]",
+      "name": "[concat(variables('vmName'), '-', copyindex(), '/install_postgresql_95')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[variables('region')]",
       "dependsOn": [
