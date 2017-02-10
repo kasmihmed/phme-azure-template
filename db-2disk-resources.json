@@ -162,7 +162,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(variables('vmName'), copyindex(), '/install_postgresql')]",
+      "name": "[concat(variables('vmName'), copyindex(), '/install_postgresql_95')]",
       "apiVersion": "2015-05-01-preview",
       "location": "[variables('region')]",
       "dependsOn": [
@@ -178,7 +178,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": "[parameters('osSettings').scripts]",
-          "commandToExecute": "[concat('bash install_postgresql.sh -m ', parameters('masterIpAddress'), ' -s ', parameters('subnet').prefix, ' -t ', parameters('dbType') , ' -p ', parameters('replicatorPassword') )]"
+          "commandToExecute": "[concat('bash install_postgresql_95.sh -m ', parameters('masterIpAddress'), ' -s ', parameters('subnet').prefix, ' -t ', parameters('dbType') , ' -p ', parameters('replicatorPassword') )]"
         }
       }
     }
