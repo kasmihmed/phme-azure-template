@@ -65,8 +65,8 @@
     "namespace": "[parameters('commonSettings').namespace]",
     "subnetRef": "[concat(resourceId('Microsoft.Network/virtualNetworks', parameters('subnet').vnet), '/subnets/', parameters('subnet').name)]",
     "storageAccountName": "[concat(parameters('storageSettings').name, variables('namespace'))]",
-    "vmName": "[concat(variables('namespace'), '-v2')]",
-    "nicName": "[concat(variables('namespace'), '-v2-', 'nic')]",
+    "vmName": "[concat(variables('namespace'))]",
+    "nicName": "[concat(variables('namespace'), '-nic')]",
     "adminUsername": "[parameters('commonSettings').adminUsername]",
     "vmCount": "[parameters('machineSettings').vmCount]"
   },
@@ -166,7 +166,7 @@
       "apiVersion": "2015-05-01-preview",
       "location": "[variables('region')]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), copyindex(), parameters('env'))]"
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmName'), '-', parameters('env'), '-', copyindex())]"
       ],
       "copy": {
         "name": "scriptCopyLoop",
@@ -178,7 +178,7 @@
         "typeHandlerVersion": "1.2",
         "settings": {
           "fileUris": "[parameters('osSettings').scripts]",
-          "commandToExecute": "[concat('bash install_postgresql.sh -m ', parameters('masterIpAddress'), ' -s ', parameters('subnet').prefix, ' -t ', parameters('dbType') , ' -p ', parameters('replicatorPassword') )]"
+          "commandToExecute": "[concat('bash install_postgresql_95.sh -m ', parameters('masterIpAddress'), ' -s ', parameters('subnet').prefix, ' -t ', parameters('dbType') , ' -p ', parameters('replicatorPassword') )]"
         }
       }
     }

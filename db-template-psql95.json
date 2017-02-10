@@ -194,12 +194,12 @@
       "subnets": {
         "dbdmz": {
           "name": "dbdmz",
-          "prefix": "10.0.0.0/24",
+          "prefix": "10.0.5.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         },
         "db": {
           "name": "db",
-          "prefix": "10.0.1.0/24",
+          "prefix": "10.0.4.0/24",
           "vnet": "[parameters('virtualNetworkName')]"
         }
       }
@@ -276,7 +276,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "ms"
+              "namespace": "db-master-v2"
             }
           },
           "storageSettings": {
@@ -341,7 +341,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "sl"
+              "namespace": "db-slave-v2"
             }
           },
           "storageSettings": {
