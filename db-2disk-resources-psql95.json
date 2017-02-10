@@ -100,7 +100,7 @@
       "name": "[concat(variables('vmName'), '-', parameters('env'), '-', copyindex())]",
       "location": "[variables('region')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), copyindex())]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'), '-', copyindex())]"
       ],
       "copy": {
         "name": "vmCopyLoop",
