@@ -328,7 +328,7 @@
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "db-jumpbox"
+              "namespace": "db-jumpbox-v2"
             }
           },
           "adminPassword": {
