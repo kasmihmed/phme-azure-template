@@ -322,7 +322,7 @@
             }
           },
           "dnsName": {
-            "value": "[concat(parameters('domainName'), parameters('env'))]"
+            "value": "[concat(parameters('domainName'), '-', parameters('env'))]"
           },
           "commonSettings": {
             "value": {

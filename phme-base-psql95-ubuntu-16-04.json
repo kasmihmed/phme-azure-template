@@ -735,7 +735,7 @@
             "value":"[concat('pipsqldbsa', parameters('env'))]"
           },
           "domainName":{
-            "value":"phme-jumpbox"
+            "value":"jumpbox-v2"
           },
           "adminUsername":{
             "value":"[parameters('adminUsername')]"
