@@ -194,7 +194,6 @@ configure_streaming_replication() {
 	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
 	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
 
-
 	# Synchronize the slave
 	if [ "$NODETYPE" == "SLAVE" ];
 	then
