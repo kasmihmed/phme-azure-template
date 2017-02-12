@@ -105,12 +105,12 @@ install_postgresql_service() {
 	
 	logger "Done installing PostgreSQL..."
 
+	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PGPASSWORD';"
+
 	# Create the custom user and DBs
 	# Create these commands with runuser, as in main scripts with web and worker
-	sudo -u postgres createdb phme_db
-	sudo -u postgres createdb phme_cms_db
-
-	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PGPASSWORD';"
+	sudo -u postgres createdb phme_db --owner=pickit
+	sudo -u postgres createdb phme_cms_db --owner=pickit
 	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
 	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
 }
