@@ -101,10 +101,12 @@ install_postgresql_service() {
 	then
 	  apt-get -y install postgresql-9.5
 	fi
+	systemctl enable postgresql
 	
 	logger "Done installing PostgreSQL..."
 
 	# Create the custom user and DBs
+	# Create these commands with runuser, as in main scripts with web and worker
 	# sudo su postgres
 	# createuser -h localhost --pwprompt pickit
 	# createdb phme_db
@@ -127,7 +129,7 @@ setup_datadisks() {
 		echo "Moving PostgreSQL data to the $MOUNTPOINT/kafkadir"
 		service postgresql stop
 		mkdir $MOUNTPOINT/kafkadir
-		mv -f /var/lib/kafkadir $MOUNTPOINT/kafkadir
+		mv -f /var/lib/postgresql/* $MOUNTPOINT/kafkadir
 
 		# Create symbolic link so that configuration files continue to use the default folders
 		logger "Create symbolic link from /var/lib/kafkadir to $MOUNTPOINT/kafkadir"
@@ -137,6 +139,9 @@ setup_datadisks() {
 
 configure_streaming_replication() {
 	logger "Starting configuring PostgreSQL streaming replication..."
+
+	cd /etc/postgresql/9.5/main
+	# Update configuration files
 	
 	# Configure the MASTER node
 	if [ "$NODETYPE" == "MASTER" ];
@@ -148,9 +153,6 @@ configure_streaming_replication() {
 
 	# Stop service
 	service postgresql stop
-
-	# Update configuration files
-	cd /etc/postgresql/9.1/main
 
 	if grep -Fxq "# install_postgresql.sh" pg_hba.conf
 	then
@@ -181,11 +183,11 @@ configure_streaming_replication() {
 		echo "wal_level = hot_standby" >> postgresql.conf
 		echo "max_wal_senders = 10" >> postgresql.conf
 		echo "wal_keep_segments = 500" >> postgresql.conf
-		echo "checkpoint_segments = 8" >> postgresql.conf
+		# echo "checkpoint_segments = 8" >> postgresql.conf
 		# echo "archive_mode = on" >> postgresql.conf
 		# echo "archive_command = 'cd .'" >> postgresql.conf
 		echo "hot_standby = on" >> postgresql.conf
-		echo "data_directory = '/var/lib/kafkadir/main'" >> postgresql.conf
+		echo "data_directory = '/var/lib/kafkadir/9.5/main'" >> postgresql.conf
 		echo "" >> postgresql.conf
 		
 		logger "Updated postgresql.conf"
