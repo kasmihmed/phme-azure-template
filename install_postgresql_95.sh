@@ -28,7 +28,6 @@
 # You must be root to run this script
 if [ "${UID}" -ne 0 ];
 then
-    log "Script executed without root permissions"
     echo "You must be root to run this program." >&2
     exit 3
 fi
@@ -59,7 +58,6 @@ REPLICATORPASSWORD=""
 
 #Loop through options passed
 while getopts :m:s:t:p: optname; do
-    log "Option $optname set with value ${OPTARG}"
   case $optname in
     m)
       MASTERIP=${OPTARG}
@@ -104,15 +102,6 @@ install_postgresql_service() {
 	systemctl enable postgresql
 	
 	logger "Done installing PostgreSQL..."
-
-	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PGPASSWORD';"
-
-	# Create the custom user and DBs
-	# Create these commands with runuser, as in main scripts with web and worker
-	sudo -u postgres createdb phme_db --owner=pickit
-	sudo -u postgres createdb phme_cms_db --owner=pickit
-	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
-	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
 }
 
 setup_datadisks() {
@@ -195,6 +184,16 @@ configure_streaming_replication() {
         echo "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
         sudo -u postgres psql -c "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
 	fi
+
+	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PGPASSWORD';"
+
+	# Create the custom user and DBs
+	# Create these commands with runuser, as in main scripts with web and worker
+	sudo -u postgres createdb phme_db --owner=pickit
+	sudo -u postgres createdb phme_cms_db --owner=pickit
+	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
+	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
+
 
 	# Synchronize the slave
 	if [ "$NODETYPE" == "SLAVE" ];
