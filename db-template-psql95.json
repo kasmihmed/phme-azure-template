@@ -208,7 +208,8 @@
       "name": "pgsqlAvailabilitySet",
       "fdCount": 3,
       "udCount": 5
-    }
+    },
+    "PICKIT_POSTGRESQL_PASSWORD":  {"type": "securestring"}
   },
   "resources": [
     {
@@ -298,6 +299,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "PICKIT_POSTGRESQL_PASSWORD": {
+            "value": "[parameters('PICKIT_POSTGRESQL_PASSWORD')]"
           }
         }
       }
@@ -363,6 +367,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "PICKIT_POSTGRESQL_PASSWORD": {
+            "value": "[parameters('PICKIT_POSTGRESQL_PASSWORD')]"
           }
         }
       }

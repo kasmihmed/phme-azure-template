@@ -57,7 +57,7 @@ NODETYPE=""
 REPLICATORPASSWORD=""
 
 #Loop through options passed
-while getopts :m:s:t:p: optname; do
+while getopts :m:s:t:p:n: optname; do
   case $optname in
     m)
       MASTERIP=${OPTARG}
@@ -70,6 +70,9 @@ while getopts :m:s:t:p: optname; do
       ;;
     p) #Replication Password
       REPLICATORPASSWORD=${OPTARG}
+      ;;
+    n) #Pickit Password
+      PICKITPASSWORD=${OPTARG}
       ;;
     h)  #show help
       help
@@ -185,7 +188,9 @@ configure_streaming_replication() {
         sudo -u postgres psql -c "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
 	fi
 
-	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PGPASSWORD';"
+	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PICKITPASSWORD';"
+
+	sudo -u postgres psql -c "ALTER ROLE postgres WITH UNENCRYPTED PASSWORD '$PGPASSWORD';"
 
 	# Create the custom user and DBs
 	# Create these commands with runuser, as in main scripts with web and worker
