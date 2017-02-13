@@ -194,24 +194,26 @@ configure_streaming_replication() {
 	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
 	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
 
+	service postgresql stop
+
 	# Synchronize the slave
 	if [ "$NODETYPE" == "SLAVE" ];
 	then
         # Remove all files from the slave data directory
         logger "Remove all files from the slave data directory"
-        sudo -u postgres rm -rf /var/lib/kafkadir/main
+        sudo -u postgres rm -rf /var/lib/kafkadir/9.5/main
 
         # Make a binary copy of the database cluster files while making sure the system is put in and out of backup mode automatically
         logger "Make binary copy of the data directory from master"
-        sudo PGPASSWORD=$PGPASSWORD -u postgres pg_basebackup -h $MASTERIP -D /var/lib/kafkadir/main -U replicator -x
+        sudo PGPASSWORD=$PGPASSWORD -u postgres pg_basebackup -h $MASTERIP -D /var/lib/kafkadir/9.5/main -U rep -x
 
         # Create recovery file
         logger "Create recovery.conf file"
-        cd /var/lib/kafkadir/main/
+        cd /var/lib/kafkadir/9.5/main/
 
         sudo -u postgres echo "standby_mode = 'on'" > recovery.conf
         sudo -u postgres echo "primary_conninfo = 'host=$MASTERIP port=5432 user=rep password=$PGPASSWORD'" >> recovery.conf
-        sudo -u postgres echo "trigger_file = '/var/lib/kafkadir/main/failover'" >> recovery.conf
+        sudo -u postgres echo "trigger_file = '/var/lib/kafkadir/9.5/main/failover'" >> recovery.conf
 	fi
 	
 	logger "Done configuring PostgreSQL streaming replication"
