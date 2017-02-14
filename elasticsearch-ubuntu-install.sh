@@ -341,6 +341,11 @@ log "Starting Elasticsearch on ${HOSTNAME}"
 update-rc.d elasticsearch defaults 95 10
 sudo service elasticsearch start
 log "complete elasticsearch setup and started"
+
+if [ ${DATA_NODE} -ne 0 ]; then
+sudo service elasticsearch stop
+fi
+
 exit 0
 
 #Script Extras
