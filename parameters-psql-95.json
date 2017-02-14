@@ -1,0 +1,96 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "phme"
+    },
+    "location": {
+      "value":"North Europe"
+    },
+    "adminPassword": {
+      "value": "phme2013#"
+    },
+    "virtualNetworkName": {
+      "value": "pickitdevvn"
+    },
+    "storagePhotoAccountName": {
+      "value": "pickitdevcloud"
+    },
+    "storageBackupAccountName": {
+      "value": "pickitdevbackup"
+    },
+    "esClusterName": {
+      "value": "elasticsearch"
+    },
+    "loadBalancerType": {
+      "value": "internal"
+    },
+    "vmSizeDataNodes": {
+      "value": "Standard_D1"
+    },
+    "vmDataNodeCount": {
+      "value": 5
+    },
+    "vmSizeMasterNodes": {
+      "value": "Standard_D1"
+    },
+    "vmSizeClientNodes": {
+      "value": "Standard_D1"
+    },
+    "vmClientNodeCount": {
+      "value": 2
+    },
+    "marvel": {
+      "value": "yes"
+    },
+    "kibana": {
+      "value": "yes"
+    },
+    "tshirtSize": {
+      "value": "Small"
+    },
+    "dbAdminUsername": {
+      "value": "postgres"
+    },
+    "dbAdminPassword": {
+      "value": "cgq9m8fkvbul9di4y5d96ltjeju5tk4juzmye0yfh0o"
+    },
+    "replicatorPassword": {
+      "value": "cgq9m8fkvbul9di4y5d96ltjeju5tk4juzmye0yfh0o"
+    },
+    "OS": {
+      "value": "ubuntu"
+    },
+    "esVersion": {
+      "value": "1.5.2"
+    },
+    "elasticBlobStorageKey": {
+      "value": "{blob storage key, only needed for ES templates}"
+    },
+    "web_image_uri": {
+      "value": "https://portalvhdsctqhxxq53f3s1.blob.core.windows.net/vhds/dev-web-os-2016-05-03-7F1B19CB.vhd"
+    },
+    "worker_image_uri": {
+      "value": "https://portalvhdsctqhxxq53f3s1.blob.core.windows.net/vhds/dev-ubuntu-upgrade-20170104-185270-os-2017-01-04-10F4E57A.vhd"
+    },
+    "number_webs": {
+      "value": 2
+    },
+    "number_workers": {
+      "value": 1
+    },
+    "vmSizeWebs": {
+      "value": "Standard_D3"
+    },
+    "vmSizeWorkers": {
+      "value": "Standard_D1"
+    },
+    "env": {
+      "value": "de"
+    },
+	"vhd_storage_account": {
+      "value": "pivhdsubunde"
+    }
+  }
+}
