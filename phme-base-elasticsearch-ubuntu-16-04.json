@@ -706,6 +706,56 @@
       }
     },
     {
+      "name": "data-nodes",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared-es')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('dataTemplateUrl')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "adminPassword": {
+            "value": "[parameters('adminPassword')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "storageSettings": {
+            "value": "[variables('dataNodeStorageSettings')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.data]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSizeDataNodes')]"
+          },
+          "vmCount": {
+            "value": "[parameters('vmDataNodeCount')]"
+          },
+          "namespace": {
+            "value": "esData-v2"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          },
+          "lbBackendPools": {
+            "value": "[variables('dataLBSettings')]"
+          },
+          "env": {
+            "value": "[parameters('env')]"
+          }
+        }
+      }
+    },
+    {
       "name": "es-jumpbox",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
