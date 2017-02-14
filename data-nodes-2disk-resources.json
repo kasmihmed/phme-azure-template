@@ -145,7 +145,7 @@
         "count": "[parameters('vmCount')]"
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), 'nic', copyindex())]",
+        "[concat('Microsoft.Network/networkInterfaces/', parameters('namespace'), '-nic-', parameters('env'), '-', copyindex())]",
         "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'), parameters('storageSettings').mapping[copyindex()])]"
       ],
       "properties": {
@@ -196,7 +196,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('namespace'),'nic', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('namespace'), '-nic-', parameters('env'), '-', copyindex()))]"
             }
           ]
         }
