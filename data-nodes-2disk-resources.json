@@ -196,7 +196,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('namespace'), '-nic-', parameters('env'), '-', copyindex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('namespace'), '-nic-', parameters('env'), '-', copyindex()))]"
             }
           ]
         }
