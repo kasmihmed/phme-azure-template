@@ -99,12 +99,12 @@
     }
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
     "sharedTemplateUrl": "[concat(variables('templateBaseUrl'), 'db-shared-resources.json')]",
     "tshirtSizeSmall": {
       "vmSize": "Standard_D1",
       "diskSize": 1023,
-      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources-psql95.json')]",
       "vmCount": 2,
       "slaveCount": 1,
       "storage": {
@@ -121,7 +121,7 @@
     "tshirtSizeMedium": {
       "vmSize": "Standard_D3",
       "diskSize": 1023,
-      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources.json')]",
+      "vmTemplate": "[concat(variables('templateBaseUrl'), 'db-2disk-resources-psql95.json')]",
       "vmCount": 2,
       "slaveCount": 1,
       "storage": {
@@ -178,13 +178,13 @@
     "jumpboxTemplateUrl": "[concat(variables('templateBaseUrl'), variables(concat('jumpboxTemplate',parameters('jumpbox'))))]",
     "osSettings": {
       "scripts": [
-        "[concat(variables('templateBaseUrl'), 'install_postgresql.sh')]",
+        "[concat(variables('templateBaseUrl'), 'install_postgresql_95.sh')]",
         "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/shared_scripts/ubuntu/vm-disk-utils-0.1.sh"
       ],
       "imageReference": {
         "publisher": "Canonical",
         "offer": "UbuntuServer",
-        "sku": "14.04.2-LTS",
+        "sku": "16.04-LTS",
         "version": "latest"
       }
     },
@@ -208,7 +208,8 @@
       "name": "pgsqlAvailabilitySet",
       "fdCount": 3,
       "udCount": 5
-    }
+    },
+    "PICKIT_POSTGRESQL_PASSWORD":  {"type": "securestring"}
   },
   "resources": [
     {
@@ -298,6 +299,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "PICKIT_POSTGRESQL_PASSWORD": {
+            "value": "[parameters('PICKIT_POSTGRESQL_PASSWORD')]"
           }
         }
       }
@@ -363,6 +367,9 @@
           },
           "env": {
             "value": "[parameters('env')]"
+          },
+          "PICKIT_POSTGRESQL_PASSWORD": {
+            "value": "[parameters('PICKIT_POSTGRESQL_PASSWORD')]"
           }
         }
       }
@@ -387,13 +394,13 @@
             }
           },
           "dnsName": {
-            "value": "[concat(parameters('domainName'), parameters('env'))]"
+            "value": "[concat(parameters('domainName'), '-', parameters('env'))]"
           },
           "commonSettings": {
             "value": {
               "region": "[parameters('region')]",
               "adminUsername": "[parameters('adminUsername')]",
-              "namespace": "db-jumpbox"
+              "namespace": "db-jumpbox-v2"
             }
           },
           "adminPassword": {

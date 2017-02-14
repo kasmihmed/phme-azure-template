@@ -28,7 +28,6 @@
 # You must be root to run this script
 if [ "${UID}" -ne 0 ];
 then
-    log "Script executed without root permissions"
     echo "You must be root to run this program." >&2
     exit 3
 fi
@@ -58,8 +57,7 @@ NODETYPE=""
 REPLICATORPASSWORD=""
 
 #Loop through options passed
-while getopts :m:s:t:p: optname; do
-    log "Option $optname set with value ${OPTARG}"
+while getopts :m:s:t:p:n: optname; do
   case $optname in
     m)
       MASTERIP=${OPTARG}
@@ -72,6 +70,9 @@ while getopts :m:s:t:p: optname; do
       ;;
     p) #Replication Password
       REPLICATORPASSWORD=${OPTARG}
+      ;;
+    n) #Pickit Password
+      PICKITPASSWORD=${OPTARG}
       ;;
     h)  #show help
       help
@@ -101,16 +102,9 @@ install_postgresql_service() {
 	then
 	  apt-get -y install postgresql-9.5
 	fi
+	systemctl enable postgresql
 	
 	logger "Done installing PostgreSQL..."
-
-	# Create the custom user and DBs
-	sudo su postgres
-	createuser -h 10.0.4.4 --pwprompt pickit
-	createdb phme_db
-	createdb phme_cms_db
-	grant all privileges on all tables in schema public to pickit;
-	grant all privileges on all sequences in schema public to pickit;
 }
 
 setup_datadisks() {
@@ -127,7 +121,7 @@ setup_datadisks() {
 		echo "Moving PostgreSQL data to the $MOUNTPOINT/kafkadir"
 		service postgresql stop
 		mkdir $MOUNTPOINT/kafkadir
-		mv -f /var/lib/kafkadir $MOUNTPOINT/kafkadir
+		mv -f /var/lib/postgresql/* $MOUNTPOINT/kafkadir
 
 		# Create symbolic link so that configuration files continue to use the default folders
 		logger "Create symbolic link from /var/lib/kafkadir to $MOUNTPOINT/kafkadir"
@@ -137,20 +131,12 @@ setup_datadisks() {
 
 configure_streaming_replication() {
 	logger "Starting configuring PostgreSQL streaming replication..."
-	
-	# Configure the MASTER node
-	if [ "$NODETYPE" == "MASTER" ];
-	then
-		logger "Create user replicator..."
-		echo "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
-		sudo -u postgres psql -c "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
-	fi
+
+	cd /etc/postgresql/9.5/main
+	# Update configuration files
 
 	# Stop service
 	service postgresql stop
-
-	# Update configuration files
-	cd /etc/postgresql/9.1/main
 
 	if grep -Fxq "# install_postgresql.sh" pg_hba.conf
 	then
@@ -160,8 +146,9 @@ configure_streaming_replication() {
 		# Allow access from other servers in the same subnet
 		echo "" >> pg_hba.conf
 		echo "# install_postgresql.sh" >> pg_hba.conf
-		echo "host replication replicator $SUBNETADDRESS md5" >> pg_hba.conf
-		echo "hostssl replication replicator $SUBNETADDRESS md5" >> pg_hba.conf
+		echo "host    all             all             10.0.0.0/0               md5" >> pg_hba.conf
+		echo "host replication rep $SUBNETADDRESS md5" >> pg_hba.conf
+		echo "hostssl replication rep $SUBNETADDRESS md5" >> pg_hba.conf
 		echo "" >> pg_hba.conf
 			
 		logger "Updated pg_hba.conf"
@@ -180,34 +167,58 @@ configure_streaming_replication() {
 		echo "wal_level = hot_standby" >> postgresql.conf
 		echo "max_wal_senders = 10" >> postgresql.conf
 		echo "wal_keep_segments = 500" >> postgresql.conf
-		echo "checkpoint_segments = 8" >> postgresql.conf
-		echo "archive_mode = on" >> postgresql.conf
-		#echo "archive_command = 'cd .'" >> postgresql.conf
+		# echo "checkpoint_segments = 8" >> postgresql.conf
+		# echo "archive_mode = on" >> postgresql.conf
+		# echo "archive_command = 'cd .'" >> postgresql.conf
 		echo "hot_standby = on" >> postgresql.conf
+		echo "data_directory = '/var/lib/kafkadir/9.5/main'" >> postgresql.conf
 		echo "" >> postgresql.conf
 		
 		logger "Updated postgresql.conf"
 		echo "Updated postgresql.conf"
 	fi
 
+	service postgresql start
+
+	# Configure the MASTER node
+	if [ "$NODETYPE" == "MASTER" ];
+	then
+        logger "Create user replicator..."
+        echo "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
+        sudo -u postgres psql -c "CREATE USER rep WITH REPLICATION PASSWORD '$PGPASSWORD';"
+	fi
+
+	sudo -u postgres psql -c "CREATE ROLE pickit WITH CREATEDB LOGIN UNENCRYPTED PASSWORD '$PICKITPASSWORD';"
+
+	sudo -u postgres psql -c "ALTER ROLE postgres WITH UNENCRYPTED PASSWORD '$PGPASSWORD';"
+
+	# Create the custom user and DBs
+	# Create these commands with runuser, as in main scripts with web and worker
+	sudo -u postgres createdb phme_db --owner=pickit
+	sudo -u postgres createdb phme_cms_db --owner=pickit
+	sudo -u postgres psql -c "grant all privileges on all tables in schema public to pickit;"
+	sudo -u postgres psql -c "grant all privileges on all sequences in schema public to pickit;"
+
+	service postgresql stop
+
 	# Synchronize the slave
 	if [ "$NODETYPE" == "SLAVE" ];
 	then
-		# Remove all files from the slave data directory
-		logger "Remove all files from the slave data directory"
-		sudo -u postgres rm -rf /var/lib/kafkadir/main
+        # Remove all files from the slave data directory
+        logger "Remove all files from the slave data directory"
+        sudo -u postgres rm -rf /var/lib/kafkadir/9.5/main
 
-		# Make a binary copy of the database cluster files while making sure the system is put in and out of backup mode automatically
-		logger "Make binary copy of the data directory from master"
-		sudo PGPASSWORD=$PGPASSWORD -u postgres pg_basebackup -h $MASTERIP -D /var/lib/kafkadir/main -U replicator -x
-		 
-		# Create recovery file
-		logger "Create recovery.conf file"
-		cd /var/lib/kafkadir/main/
-		
-		sudo -u postgres echo "standby_mode = 'on'" > recovery.conf
-		sudo -u postgres echo "primary_conninfo = 'host=$MASTERIP port=5432 user=rep password=$PGPASSWORD'" >> recovery.conf
-		sudo -u postgres echo "trigger_file = '/var/lib/kafkadir/main/failover'" >> recovery.conf
+        # Make a binary copy of the database cluster files while making sure the system is put in and out of backup mode automatically
+        logger "Make binary copy of the data directory from master"
+        sudo PGPASSWORD=$PGPASSWORD -u postgres pg_basebackup -h $MASTERIP -D /var/lib/kafkadir/9.5/main -U rep -x
+
+        # Create recovery file
+        logger "Create recovery.conf file"
+        cd /var/lib/kafkadir/9.5/main/
+
+        sudo -u postgres echo "standby_mode = 'on'" > recovery.conf
+        sudo -u postgres echo "primary_conninfo = 'host=$MASTERIP port=5432 user=rep password=$PGPASSWORD'" >> recovery.conf
+        sudo -u postgres echo "trigger_file = '/var/lib/kafkadir/9.5/main/failover'" >> recovery.conf
 	fi
 	
 	logger "Done configuring PostgreSQL streaming replication"
