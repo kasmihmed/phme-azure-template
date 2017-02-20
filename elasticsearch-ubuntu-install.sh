@@ -346,6 +346,8 @@ if [ ${DATA_NODE} -ne 0 ]; then
 sudo service elasticsearch stop
 fi
 
+sudo service elasticsearch stop
+
 exit 0
 
 #Script Extras
