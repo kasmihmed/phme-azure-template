@@ -37,12 +37,6 @@
     "virtualNetworkName": {
       "type": "string",
       "defaultValue": "pickitvn"
-    },
-    "vhd_storage_account": {
-      "type": "string",
-      "metadata": {
-        "description": "VHD storage account for instance disks"
-      }
     }
   },
   "variables": {
@@ -135,16 +129,6 @@
            "properties": {
                "accountType": "Standard_GRS"
            }
-      },
-      {
-           "type": "Microsoft.Storage/storageAccounts",
-           "name": "[parameters('vhd_storage_account')]",
-           "apiVersion": "2015-06-15",
-           "location": "[parameters('location')]",
-           "properties": {
-               "accountType": "Standard_GRS"
-           }
       }
-
   ]
 }
