@@ -96,7 +96,8 @@
       "metadata": {
         "description": "Two letters for environment: de, li, etc..."
       }
-    }
+    },
+    "PICKIT_POSTGRESQL_PASSWORD":  {"type": "securestring"}
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
