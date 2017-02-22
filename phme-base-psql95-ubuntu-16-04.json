@@ -352,7 +352,7 @@
     "SSL_CERTIFICATE_KEY": {"type": "securestring"}
   },
   "variables": {
-    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/psql_95/",
+    "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/master/",
     "locationMap": {
         "ResourceGroup":"[resourceGroup().location]",
         "West US":"[parameters('location')]",
