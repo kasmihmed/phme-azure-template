@@ -432,6 +432,15 @@ sudo apt-get install binutils libproj-dev gdal-bin -y > /dev/null
 log "** enchant **"
 sudo apt-get install enchant -y > /dev/null
 
+log "** jpeg **"
+sudo apt-get install libjpeg-dev -y > /dev/null
+sudo apt-get install libjpeg8-dev -y > /dev/null
+
+log "** ffmpeg **"
+add-apt-repository ppa:kirillshkrogalev/ffmpeg-next -y > /dev/null
+apt-get update -y > /dev/null
+apt-get install ffmpeg -y > /dev/null
+
 pip install graypy
 log "** graypy **"
 pip install --upgrade pip
@@ -608,6 +617,9 @@ mkdir -m 755 /home/phme/run
 mkdir -m 755 /home/phme/search
 mkdir -m 755 /home/phme/tmp
 chown root.root /home/phme/run
+
+mkdir /mnt/tmp
+chown phme.phme /mnt/tmp
 
 # office_add_in pull
 mkdir -m 755 /home/phme/office_add_in/dev
