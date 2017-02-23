@@ -666,8 +666,15 @@ export CLARIFAI_APP_SECRET="${CLARIFAI_APP_SECRET}"
 # This is an interim fix for hostname resolution in current VM
 
 # /etc/hosts mappings
+if [ ${PICKIT_ENV} == "dev" ]; then
 echo "10.0.2.15  phme-dev-data" >> /etc/hosts
 echo "10.0.2.16  phme-dev-data" >> /etc/hosts
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+echo "10.0.4.6	phme-data-01" >> /etc/hosts
+echo "10.0.4.7	phme-data-02" >> /etc/hosts
+fi
 
 #drwxrwxr-x  2 phme phme  4096 Mar 31  2015 bin
 #drwxrwxr-x  2 phme phme  4096 Mar 31  2015 celery
