@@ -389,10 +389,6 @@
                     "storageAccountEndPoint": "https://core.windows.net"
                   }
                 }
-              },
-              {
-                "name": "PickitWeb",
-                "properties": "[parameters('osSettings').extentionSettings.pickit_web]"
               }
             ]
           }
