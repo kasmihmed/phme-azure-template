@@ -1850,13 +1850,13 @@ if [ ${PICKIT_ENV} == "dev" ]; then
 cd /etc/nginx/sites-enabled
 ln -s /home/phme/config/nginx.pichitmedev.com
 ln -s /home/phme/config/nginx.cms.pichitmedev.com
-li
+fi
 
 if [ ${PICKIT_ENV} == "live" ]; then
 cd /etc/nginx/sites-enabled
 ln -s /home/phme/config/nginx.pickit.com
 ln -s /home/phme/config/nginx.cms
-li
+fi
 
 if [ ${PICKIT_ENV} == "dev" ]; then
 cat >/home/phme/config/uwsgi.pichitmedev.com.ini <<EOL
