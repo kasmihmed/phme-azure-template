@@ -721,7 +721,15 @@ log "** pull phme_faraday **"
 runuser -l phme -c 'ssh-keyscan bitbucket.org >> /home/phme/.ssh/known_hosts'
 runuser -l phme -c 'ssh-keyscan 104.192.143.1 >> /home/phme/.ssh/known_hosts'
 cd /home/phme/pichit.me
-runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+
+if [ ${PICKIT_ENV} == "dev" ]; then
+runuser -l phme -c "git clone -b master git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+runuser -l phme -c "git clone -b pickit_live_v2 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+fi
+
 cd /home/phme
 runuser -l phme -c "ln -s pichit.me/phme_faraday"
 chown -R phme.phme /home/phme/*
@@ -1817,15 +1825,31 @@ EOL
 
 # link vassals
 log "** link vassals **"
+if [ ${PICKIT_ENV} == "dev" ]; then
 cd /etc/uwsgi-emperor/vassals
 ln -s /home/phme/config/uwsgi.pichitmedev.com.ini
 ln -s /home/phme/config/uwsgi.cms.pichitmedev.com.ini
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+cd /etc/uwsgi-emperor/vassals
+ln -s /home/phme/config/uwsgi.pichit.me.ini
+ln -s /home/phme/config/uwsgi.cms.ini
+fi
 
 # link nginx services
 log "** link nginx services **"
+if [ ${PICKIT_ENV} == "dev" ]; then
 cd /etc/nginx/sites-enabled
 ln -s /home/phme/config/nginx.pichitmedev.com
 ln -s /home/phme/config/nginx.cms.pichitmedev.com
+li
+
+if [ ${PICKIT_ENV} == "live" ]; then
+cd /etc/nginx/sites-enabled
+ln -s /home/phme/config/nginx.pickit.com
+ln -s /home/phme/config/nginx.cms
+li
 
 if [ ${PICKIT_ENV} == "dev" ]; then
 cat >/home/phme/config/uwsgi.pichitmedev.com.ini <<EOL
@@ -2108,6 +2132,9 @@ env=PICKIT_CMS_POSTGRESQL_REPLICA_PORT=${PICKIT_CMS_POSTGRESQL_REPLICA_PORT}
 env=PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD=${PICKIT_CMS_POSTGRESQL_REPLICA_PASSWORD}
 EOL
 
+cp /home/phme/config/uwsgi.pichit.me.ini /home/phme/config/uwsgi.pichit.me-src.ini
+cp /home/phme/config/uwsgi.cms.ini /home/phme/config/uwsgi.cms-src.ini
+
 fi
 
 # settings_local.py
@@ -2157,8 +2184,15 @@ fi
 
 chown phme.phme /home/phme/config/*
 
+if [ ${PICKIT_ENV} == "dev" ]; then
 runuser -l phme -c "touch /home/phme/config/uwsgi.pichitmedev.com.ini"
 runuser -l phme -c "touch /home/phme/config/uwsgi.cms.pichitmedev.com.ini"
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+runuser -l phme -c "touch /home/phme/config/uwsgi.pichit.me.ini"
+runuser -l phme -c "touch /home/phme/config/uwsgi.cms.ini"
+fi
 
 # Copy GeoIP in ubuntu directory
 
