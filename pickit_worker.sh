@@ -637,7 +637,15 @@ log "** pull phme_faraday **"
 runuser -l phme -c 'ssh-keyscan bitbucket.org >> /home/phme/.ssh/known_hosts'
 runuser -l phme -c 'ssh-keyscan 104.192.143.1 >> /home/phme/.ssh/known_hosts'
 cd /home/phme/pichit.me
-runuser -l phme -c "git clone -b master_django_1_8 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+
+if [ ${PICKIT_ENV} == "dev" ]; then
+runuser -l phme -c "git clone -b master git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+fi
+
+if [ ${PICKIT_ENV} == "live" ]; then
+runuser -l phme -c "git clone -b live_v2 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+fi
+
 cd /home/phme
 runuser -l phme -c "ln -s pichit.me/phme_faraday"
 chown -R phme.phme /home/phme/*
@@ -1036,7 +1044,7 @@ autostart=true
 autorestart=true
 startsecs=10
 
-numprocs=1
+numprocs=3
 process_name=%(program_name)s_%(process_num)02d
 
 ; Need to wait for currently executing tasks to finish at shutdown.
@@ -1049,5 +1057,7 @@ priority=997
 EOL
 
 supervisorctl reload
+
+supervisorctl stop all
 
 exit 0
