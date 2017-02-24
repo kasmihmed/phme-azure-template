@@ -674,6 +674,8 @@ fi
 if [ ${PICKIT_ENV} == "live" ]; then
 echo "10.0.4.6	phme-data-01" >> /etc/hosts
 echo "10.0.4.7	phme-data-02" >> /etc/hosts
+echo "10.0.2.19     phme-search" >> /etc/hosts
+echo "10.0.2.18     phme-search" >> /etc/hosts
 fi
 
 #drwxrwxr-x  2 phme phme  4096 Mar 31  2015 bin
