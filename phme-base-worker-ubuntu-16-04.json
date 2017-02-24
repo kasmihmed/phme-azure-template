@@ -347,7 +347,9 @@
     "PICKIT_ENV":  {"type": "securestring"},
     "DJANGO_SETTINGS_MODULE": {"type": "securestring"},
     "CLARIFAI_APP_ID": {"type": "securestring"},
-    "CLARIFAI_APP_SECRET": {"type": "securestring"}
+    "CLARIFAI_APP_SECRET": {"type": "securestring"},
+    "SSL_CERTIFICATE_CRT": {"type": "securestring"},
+    "SSL_CERTIFICATE_KEY": {"type": "securestring"}
   },
   "variables": {
     "templateBaseUrl": "https://raw.githubusercontent.com/kasmihmed/phme-azure-template/worker/",
