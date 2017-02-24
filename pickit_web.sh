@@ -745,7 +745,12 @@ runuser -l phme -c "git clone -b master git@bitbucket.org:phme_admin/phme_cms.gi
 
 # install requirements
 log "** install requirements **"
+if [ ${PICKIT_ENV} == "dev" ]; then
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/dev/dev_requirements.txt"
+fi
+if [ ${PICKIT_ENV} == "live" ]; then
+runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/prod/prod_requirements.txt"
+fi
 runuser -l phme -c "/home/phme/envs/phme_cms_env/bin/pip install -r /home/phme/phme_cms/requirements.txt"
 
 # install uwsgi into our environment pichit.me
