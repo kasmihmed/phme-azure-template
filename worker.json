@@ -167,12 +167,13 @@
       "sku":"[parameters('ubuntuOSVersion')]",
       "version":"latest"
     },
-    "imageReference":"[variables('osType')]"
+    "imageReference":"[variables('osType')]",
+    "storageAccountPrefix":"pivhdworkv2"
   },
   "resources":[
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('vhd_storage_account'), '1')]",
+      "name": "[concat(variables('storageAccountPrefix'), '1')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -181,7 +182,7 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('vhd_storage_account'), '2')]",
+      "name": "[concat(variables('storageAccountPrefix'), '2')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -190,7 +191,7 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('vhd_storage_account'), '3')]",
+      "name": "[concat(variables('storageAccountPrefix'), '3')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -199,7 +200,7 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('vhd_storage_account'), '4')]",
+      "name": "[concat(variables('storageAccountPrefix'), '4')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -208,7 +209,7 @@
     },
     {
       "type": "Microsoft.Storage/storageAccounts",
-      "name": "[concat(parameters('vhd_storage_account'), '5')]",
+      "name": "[concat(variables('storageAccountPrefix'), '5')]",
       "apiVersion": "2015-06-15",
       "location": "[parameters('location')]",
       "properties": {
@@ -221,11 +222,11 @@
       "location":"[parameters('resourceLocation')]",
       "apiVersion":"[variables('apiVersion')]",
       "dependsOn":[
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '1')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '2')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '3')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '4')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('vhd_storage_account'), '5')]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix'), '1')]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix'), '2')]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix'), '3')]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix'), '4')]",
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountPrefix'), '5')]"
       ],
       "sku":{
         "name":"[parameters('vmSku')]",
@@ -243,11 +244,11 @@
               "caching":"ReadOnly",
               "createOption":"FromImage",
               "vhdContainers": [
-                "[concat('http://',parameters('vhd_storage_account'),'1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
-                "[concat('http://',parameters('vhd_storage_account'),'5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
+                "[concat('http://',variables('storageAccountPrefix'),'1','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-1')))]",
+                "[concat('http://',variables('storageAccountPrefix'),'2','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-2')))]",
+                "[concat('http://',variables('storageAccountPrefix'),'3','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-3')))]",
+                "[concat('http://',variables('storageAccountPrefix'),'4','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-4')))]",
+                "[concat('http://',variables('storageAccountPrefix'),'5','.blob.core.windows.net/', uniqueString(concat(parameters('vmssName'), '-osdisk-5')))]"
               ]
             },
             "imageReference": {
