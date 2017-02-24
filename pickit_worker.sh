@@ -663,7 +663,12 @@ chown -R phme.phme /home/phme/*
 
 # install requirements
 log "** install requirements **"
+if [ ${PICKIT_ENV} == "dev" ]; then
 runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/dev/dev_requirements.txt"
+fi
+if [ ${PICKIT_ENV} == "live" ]; then
+runuser -l phme -c "/home/phme/pichit.me/bin/pip install -r /home/phme/phme_faraday/configs/prod/prod_requirements.txt"
+fi
 
 # worker phme_faraday directories
 log "** pull worker directory for phme_faraday **"
