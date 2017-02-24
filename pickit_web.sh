@@ -788,7 +788,12 @@ cp /home/phme/phme_faraday/configs/dev/phme-node/package.json /home/phme/phme_fa
 cd /home/phme/phme_faraday
 # runuser -l phme -c "npm install"
 npm install
+if [ ${PICKIT_ENV} == "dev" ]; then
 grunt dist:dev
+fi
+if [ ${PICKIT_ENV} == "live" ]; then
+grunt dist:live
+fi
 
 /home/phme/pichit.me/phme_faraday/scripts/make_lowercase.py
 /home/phme/pichit.me/bin/python manage.py javascript_settings --static_path /home/phme/phme_faraday/static/
