@@ -649,10 +649,12 @@ cd /home/phme/pichit.me
 
 if [ ${PICKIT_ENV} == "dev" ]; then
 runuser -l phme -c "git clone -b master git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+runuser -l phme -c "git clone -b master git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/worker/phme_faraday"
 fi
 
 if [ ${PICKIT_ENV} == "live" ]; then
 runuser -l phme -c "git clone -b live_v2 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/phme_faraday"
+runuser -l phme -c "git clone -b live_v2 git@bitbucket.org:clasperson/phme_faraday.git /home/phme/pichit.me/worker/phme_faraday"
 fi
 
 cd /home/phme
