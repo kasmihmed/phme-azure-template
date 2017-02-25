@@ -987,7 +987,7 @@ cat >/home/phme/config/nginx.pichitmedev.com <<EOL
     }
 
     server {
-        listen 443 default;
+        listen 443 http2 default;
         client_max_body_size 4G;
         large_client_header_buffers 4 64k;
         server_name _;
@@ -1302,7 +1302,7 @@ cat >/home/phme/config/nginx.pickit.com <<EOL
     }
 
     server {
-        listen 443 default;
+        listen 443 http2 default;
         client_max_body_size 4G;
         large_client_header_buffers 4 64k;
         server_name *.pickit.com;
@@ -1560,7 +1560,7 @@ cat >/home/phme/config/nginx.cms.pichitmedev.com <<EOL
     }
 
     server {
-        listen 443;
+        listen 443 http2;
         client_max_body_size 4G;
         server_name cms.*;
 
@@ -1726,7 +1726,7 @@ cat >/home/phme/config/nginx.cms <<EOL
     }
 
     server {
-        listen 443;
+        listen 443 http2;
         client_max_body_size 4G;
         server_name cms.pickit.com;
 

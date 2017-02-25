@@ -449,6 +449,8 @@ log "** pip **"
 apt-get install virtualenv -y > /dev/null
 log "** virtualenv **"
 
+apt-get install libmagickwand-dev -y > /dev/null
+
 runuser -l phme -c 'ssh-keyscan bitbucket.org >> /home/phme/.ssh/known_hosts'
 runuser -l phme -c 'ssh-keyscan 104.192.143.1 >> /home/phme/.ssh/known_hosts'
 curl -O http://github-media-downloads.s3.amazonaws.com/osx/git-credential-osxkeychain
